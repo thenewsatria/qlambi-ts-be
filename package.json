@@ -2,12 +2,12 @@
   "name": "qlambi-ts-be",
   "version": "1.0.0",
   "description": "backend for qlambi writtend in typescript",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --coverage",
     "build": "npx tsc",
-    "start": "node build/frameworks/web/index.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q build/frameworks/web/index.js\""
+    "start": "node build/frameworks/web/server.js",
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q build/frameworks/web/server.js\""
   },
   "author": "",
   "license": "ISC",
@@ -17,9 +17,14 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
+    "@types/jest": "^29.4.0",
     "@types/node": "^18.14.2",
+    "@types/supertest": "^2.0.12",
     "concurrently": "^7.6.0",
+    "jest": "^29.4.3",
     "nodemon": "^2.0.20",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.0.5",
     "typescript": "^4.9.5"
   }
 }
