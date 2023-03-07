@@ -1,8 +1,8 @@
 import express from 'express'
-import ExpressControllerFactory from '../../controllers/factories/ExpressControllerFactory'
+import ControllerFactoryExpress from '../../controllers/factories/ControllerFactoryExpress'
 const authRoutes = express.Router()
 
-const controllerFactory = ExpressControllerFactory.getInstance()
+const controllerFactory = ControllerFactoryExpress.getInstance()
 const authController = controllerFactory.createAuthController()
 authRoutes.get("/signin", authController.userLogin())
 

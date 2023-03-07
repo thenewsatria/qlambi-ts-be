@@ -1,16 +1,16 @@
-import ExpressAuthController from '../../../../src/application/controllers/express/ExpressAuthController'
+import AuthControllerExpress from '../../../../src/application/controllers/express/AuthControllerExpress'
 import {Response, Request} from 'express'
 import AuthController from '../../../../src/interfaces/controllers/AuthController'
 
 describe('Express Auth Controller', () => {
-    const currentAuthController = ExpressAuthController.getInstance()
+    const currentAuthController = AuthControllerExpress.getInstance()
     
     it("Should be singleton, have same instance as previous instace declared ", () => {
-        const localAuthController = ExpressAuthController.getInstance()
-        expect(localAuthController).toBeInstanceOf(ExpressAuthController)
+        const localAuthController = AuthControllerExpress.getInstance()
+        expect(localAuthController).toBeInstanceOf(AuthControllerExpress)
         expect(localAuthController ===  currentAuthController).toBe(true)
-        expect(localAuthController ===  new ExpressAuthController()).toBe(false)
-        expect(currentAuthController ===  new ExpressAuthController()).toBe(false)
+        expect(localAuthController ===  new AuthControllerExpress()).toBe(false)
+        expect(currentAuthController ===  new AuthControllerExpress()).toBe(false)
     })
     
     it("Should be implementing all the AuthController interface method", () => {
@@ -19,10 +19,10 @@ describe('Express Auth Controller', () => {
     })
 
     it("Should called getInstance method correctly", () => {
-        const getInstanceSpy = jest.spyOn(ExpressAuthController, 'getInstance');
-        const currentAuthController = ExpressAuthController.getInstance()
+        const getInstanceSpy = jest.spyOn(AuthControllerExpress, 'getInstance');
+        const currentAuthController = AuthControllerExpress.getInstance()
         expect(getInstanceSpy).toReturnWith(currentAuthController)
-        expect(getInstanceSpy).toReturnWith(ExpressAuthController.getInstance())
+        expect(getInstanceSpy).toReturnWith(AuthControllerExpress.getInstance())
         expect(getInstanceSpy).toBeCalledTimes(2)
         expect(getInstanceSpy).toBeCalledWith()
     })

@@ -1,10 +1,12 @@
 import express, {Express, Request, Response} from 'express'
+import { initMiddleware } from '../../middlewares/express'
 import authRoutes from './authRoutes'
 const APIRouter = express.Router()
 const V1Router = express.Router()
 
-function routeApp(app: Express) {
+export function routeApp(app: Express) {
     app.use('/api', APIRouter)
+    initMiddleware(app)
     APIRouter.use('/v1', V1Router)
 
     V1Router.get("/", (req: Request, res: Response) => {
@@ -15,5 +17,3 @@ function routeApp(app: Express) {
 
     V1Router.use('/auth', authRoutes)
 }
-
-export default routeApp

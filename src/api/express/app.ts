@@ -1,5 +1,5 @@
 import express, {Express, Request, Response} from 'express'
-import routeApp from '../../application/routes/express'
+import {routeApp} from '../../application/routes/express/index'
 
 const app:Express = express()
 
