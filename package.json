@@ -4,10 +4,10 @@
   "description": "backend for qlambi writtend in typescript",
   "main": "server.js",
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest",
     "build": "npx tsc",
-    "start": "node build/frameworks/web/server.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q build/frameworks/web/server.js\""
+    "start": "node build/server.js",
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q build/server.js\""
   },
   "author": "",
   "license": "ISC",
