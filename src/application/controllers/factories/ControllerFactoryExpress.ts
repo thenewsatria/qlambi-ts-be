@@ -1,5 +1,6 @@
 import AuthController from "../../../interfaces/controllers/AuthController";
 import ControllerFactory from "../../../interfaces/factories/ControllerFactory";
+import RegisterUseCase from "../../usecases/auth/RegisterUseCase";
 import AuthControllerExpress from "../express/AuthControllerExpress";
 
 class ControllerFactoryExpress implements ControllerFactory {
@@ -15,8 +16,8 @@ class ControllerFactoryExpress implements ControllerFactory {
         return ControllerFactoryExpress.instance;
     }
 
-    createAuthController(): AuthController {
-        return AuthControllerExpress.getInstance()
+    createAuthController(registerUseCase: RegisterUseCase): AuthController {
+        return new AuthControllerExpress(registerUseCase)
     }
 }
 

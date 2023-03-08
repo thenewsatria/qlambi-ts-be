@@ -1,21 +1,31 @@
 import { Request, Response } from "express"
+import RegisterUseCase from "../../../application/usecases/auth/RegisterUseCase"
 import AuthController from "../../../interfaces/controllers/AuthController"
+import { registerSuccessReponse } from "../../presenters/express/test"
 
 class AuthControllerExpress implements AuthController {
- 
-    private static instance: AuthControllerExpress
+    private registerUseCase: RegisterUseCase
 
-    public static getInstance(): AuthControllerExpress {
-        if(!AuthControllerExpress.instance) {
-            AuthControllerExpress.instance = new AuthControllerExpress()
-        }
-
-        return AuthControllerExpress.instance
+    constructor(registerUseCase: RegisterUseCase) {
+        this.registerUseCase = registerUseCase
     }
-    
+
+    userRegister(): (...args: any[]) => any {
+        return async (req: Request, res: Response) => {
+            try{
+                const tokens = await this.registerUseCase.execute({...req.body})
+                return registerSuccessReponse(res, tokens)
+
+            }catch(err) {
+
+            }
+            
+        }
+    }
+
     userLogin(): (...args: any[]) => any {
-        return (req: Request, res: Response) => {
-            res.status(404).json({
+        return async (req: Request, res: Response) => {
+            return res.status(404).json({
                 rute: "signin"
             })
         }

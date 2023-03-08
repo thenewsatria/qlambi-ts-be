@@ -1,5 +1,6 @@
 import RepositoryFactory from "../../../interfaces/factories/RepositoryFactory";
 import UserRepository from "../../../interfaces/repositories/UserRepository";
+import UserRepositoryPrisma from "../prisma/UserRepositoryPrisma";
 
 class RepositoryFactoryPrisma implements RepositoryFactory {
     private static instance: RepositoryFactoryPrisma
@@ -13,7 +14,7 @@ class RepositoryFactoryPrisma implements RepositoryFactory {
     }
 
     createUserRepository(): UserRepository {
-        return {} as UserRepository
+        return UserRepositoryPrisma.getInstance()
     }
 }
 

@@ -5,8 +5,8 @@ const APIRouter = express.Router()
 const V1Router = express.Router()
 
 export function routeApp(app: Express) {
-    app.use('/api', APIRouter)
     initMiddleware(app)
+    app.use('/api', APIRouter)
     APIRouter.use('/v1', V1Router)
 
     V1Router.get("/", (req: Request, res: Response) => {

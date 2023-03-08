@@ -60,6 +60,5 @@ describe('User entities', () => {
         user.updated()
         expect(updatedAtSpy).toBeCalled()
         expect(user.getUpdatedAt()?.getTime()).toBeGreaterThan(new Date("2022-03-25").getTime())
-        // expect(user.getUpdatedAt()?.getTime() > new Date("2022-03-25")).toBe(true)
     })
  })

@@ -1,5 +1,5 @@
-import {Express, json} from 'express'
+import express, {Express}from 'express'
 
 export function initMiddleware(app: Express) {
-    app.use(json())
+    app.use(express.json())
 }

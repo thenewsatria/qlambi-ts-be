@@ -12,7 +12,7 @@ class UserRepositoryPrisma implements UserRepository {
     }
 
     createUser(user: User): Promise<User> {
-        throw new Error("Method not implemented.");
+        return Promise.resolve(user)
     }
 }
 

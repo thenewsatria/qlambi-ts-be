@@ -1,6 +1,6 @@
 import User from '../entities/User'
 import UserRepository from "../../interfaces/repositories/UserRepository";
-import CreateUserDTO from '../../interfaces/dtos/user/CreateUserDTO'
+import RegisterRequestDTO from '../../interfaces/dtos/auth/RegisterRequestDTO';
 
 class UserService {
     private readonly repository: UserRepository
@@ -9,8 +9,10 @@ class UserService {
         this.repository = repository
     }
 
-    async insertUser(data: CreateUserDTO): Promise<User> {
-        return Promise.resolve({} as User)
+    async insertUser(data: RegisterRequestDTO): Promise<User> {
+        const newUser = new User(data.email, data.username, data.password)
+        const insertedUser = await this.repository.createUser(newUser)
+        return Promise.resolve(insertedUser)
     }
 }
 

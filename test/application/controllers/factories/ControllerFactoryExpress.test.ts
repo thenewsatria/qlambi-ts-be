@@ -1,6 +1,7 @@
 import ControllerFactory from '../../../../src/interfaces/factories/ControllerFactory'
 import AuthControllerExpress from '../../../../src/application/controllers/express/AuthControllerExpress'
 import ControllerFactoryExpress from '../../../../src/application/controllers/factories/ControllerFactoryExpress'
+import RegisterUseCase from '../../../../src/application/usecases/auth/RegisterUseCase'
 
 describe('Express Controller Factory', () => {
     const currentControllerFactory = ControllerFactoryExpress.getInstance()
@@ -28,11 +29,19 @@ describe('Express Controller Factory', () => {
     })
     it("Should have implemented createAuthController correctly", () => {
         const createAuthSpy = jest.spyOn(currentControllerFactory, 'createAuthController')
-        const authController = currentControllerFactory.createAuthController()
+        const localRegisterUC= {} as RegisterUseCase
+        createAuthSpy.mockImplementation((registerUC: RegisterUseCase) => {
+            return new AuthControllerExpress(registerUC)
+        })
+
+        const authController = currentControllerFactory.createAuthController(localRegisterUC)
         expect(authController).toBeInstanceOf(AuthControllerExpress)
-        expect(currentControllerFactory.createAuthController()).toBe(authController)
-        expect(currentControllerFactory.createAuthController()).not.toBe(new AuthControllerExpress())
-        expect(createAuthSpy).toBeCalledTimes(3)
-        expect(createAuthSpy).toBeCalledWith()
+        expect(currentControllerFactory.createAuthController(localRegisterUC)).toEqual(authController)
+        expect(currentControllerFactory.createAuthController({} as RegisterUseCase)).not.toBe(authController)
+        expect(currentControllerFactory.createAuthController({} as RegisterUseCase)).toEqual(new AuthControllerExpress({} as RegisterUseCase))
+        expect(currentControllerFactory.createAuthController({} as RegisterUseCase)).not.toBe(new AuthControllerExpress({} as RegisterUseCase))
+        expect(createAuthSpy).toBeCalledTimes(5)
+        expect(createAuthSpy).toBeCalledWith({} as RegisterUseCase)
+        expect(createAuthSpy).toReturnWith(new AuthControllerExpress({} as RegisterUseCase))
     })
  })
