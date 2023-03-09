@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import RegisterUseCase from "../../../application/usecases/auth/RegisterUseCase"
 import AuthController from "../../../interfaces/controllers/AuthController"
-import { registerSuccessReponse } from "../../presenters/express/test"
+import { registerSuccessReponse } from "../../presenters/express/presenter"
 
 class AuthControllerExpress implements AuthController {
     private registerUseCase: RegisterUseCase

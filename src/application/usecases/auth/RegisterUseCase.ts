@@ -1,10 +1,10 @@
 import UserService from "../../../domain/services/UserService";
 import RegisterRequestDTO from "../../../interfaces/dtos/auth/RegisterRequestDTO";
-import User from "../../../domain/entities/User";
 import RegisterResponseDTO from "../../../interfaces/dtos/auth/RegisterResponseDTO";
 
 class RegisterUseCase {
     private readonly userService: UserService
+
     constructor(userService: UserService) {
         this.userService = userService
     }

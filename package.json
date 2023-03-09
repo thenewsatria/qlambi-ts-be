@@ -2,12 +2,12 @@
   "name": "qlambi-ts-be",
   "version": "1.0.0",
   "description": "backend for qlambi writtend in typescript",
-  "main": "server.js",
+  "main": "build/server.js",
   "scripts": {
     "test": "jest",
     "build": "npx tsc",
     "start": "node build/server.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q build/server.js\""
+    "dev": "concurrently \"rm -rf build\" \"npx tsc --watch\" \"nodemon -q build/server.js\""
   },
   "author": "",
   "license": "ISC",
