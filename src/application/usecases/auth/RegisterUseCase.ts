@@ -13,22 +13,19 @@ class RegisterUseCase {
     }
 
     async execute(data: RegisterRequestDTO, schema: any): Promise<RegisterResponseDTO> {
-        try{
-            // Validasi body data
-            this.validator.validate(schema, data)
-            // Cek apakah email dan username sudah digunakan
-            // Cek apakah confirmPassword dan password sama
-            // Hash password
-            // Masukan pada database
-            await this.userService.insertUser(data)
-            // generate accesstoken dan refreshToken
-            // masukan pasangan username / email + refreshtoken kedalam database
-            // kirimkan user kembali ke controller
-            return Promise.resolve({} as RegisterResponseDTO)
-        }catch(error: any) {
-            // tangkap error
-            return Promise.reject("x")
-        }
+        // Validasi body data
+        await this.validator.validate(schema, data)
+
+        // Cek apakah email dan username sudah digunakan
+        
+        // Cek apakah confirmPassword dan password sama
+        // Hash password
+        // Masukan pada database
+        await this.userService.insertUser(data)
+        // generate accesstoken dan refreshToken
+        // masukan pasangan username / email + refreshtoken kedalam database
+        // kirimkan user kembali ke controller
+        return Promise.resolve({} as RegisterResponseDTO)
     }
 }
 

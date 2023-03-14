@@ -1,6 +1,9 @@
-import { ZodError } from "zod";
+import { ZodError, ZodIssue } from "zod";
+import AppOperationType from "../../../interfaces/enums/AppOperationType";
 import Validator from "../../../interfaces/validators/Validator";
-import APIError from "../../errors/apis/APIError";
+import AppError from "../../errors/app/AppError";
+import ValidationError from "../../errors/app/ValidationError";
+import BaseError from "../../errors/BaseError";
 
 class ValidatorZod implements Validator {
     private static instance: ValidatorZod
@@ -21,14 +24,16 @@ class ValidatorZod implements Validator {
             if(error instanceof Error) {
                 if(error instanceof ZodError){
                     return Promise.reject(
-                        new Error("x")
+                        new ValidationError<ZodIssue>(error.message, true, error.issues, error, error.name)
                     )
                 }
                 return Promise.reject(
-                    new Error("y")
+                    new AppError(error.message, true, AppOperationType.VALIDATION, error, error.name)
                 )
             }
-            return Promise.reject("z")
+            return Promise.reject(
+                new BaseError("Unknown error occured ", false, error)
+            )
         }
     }
 }

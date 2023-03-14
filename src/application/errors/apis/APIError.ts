@@ -5,10 +5,10 @@ class APIError extends BaseError {
     name: string = "APIError"
     domain: string = "API"
     statusCode: HttpStatusCode
-    originalName?: string
-    payload?: any
 
-    constructor(message: string, isOperational: boolean = true, statusCode: HttpStatusCode, payload?: any, originalName?: string) {
+    constructor(message: string, isOperational: boolean = true, 
+        statusCode: HttpStatusCode = HttpStatusCode.INTERNAL_SERVER_ERROR, payload?: any, originalName?: string) {
+        
         super(message, isOperational, payload, originalName)
         this.statusCode = statusCode
     }

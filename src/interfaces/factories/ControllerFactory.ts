@@ -1,9 +1,10 @@
-import RegisterUseCase from "../../application/usecases/auth/RegisterUseCase"
+import ErrorTranslator from "../../application/errors/ErrorTranslator"
 import AuthController from "../controllers/AuthController"
+import JsendPresenter from "../presenters/JsendPresenter"
 import AuthVSchema from "../validators/schemas/AuthVSchema"
 
 interface ControllerFactory {
-    createAuthController(registerUseCase: RegisterUseCase, authSchemas: AuthVSchema): AuthController
+    createAuthController(authSchemas: AuthVSchema, presenter: JsendPresenter, errorTranslator: ErrorTranslator): AuthController
 }
 
 export default ControllerFactory
