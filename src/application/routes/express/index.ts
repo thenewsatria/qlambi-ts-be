@@ -1,5 +1,6 @@
 import express, {Express, Request, Response} from 'express'
 import { initMiddleware, handleErrors } from '../../middlewares/express'
+import ExpressJsendPresenter from '../../presenters/express/ExpressJsendPresenter'
 import authRoutes from './authRoutes'
 const APIRouter = express.Router()
 const V1Router = express.Router()
@@ -16,5 +17,5 @@ export function routeApp(app: Express) {
     })
 
     V1Router.use('/auth', authRoutes)
-    handleErrors(app)
+    handleErrors(app, ExpressJsendPresenter.getInstance())
 }

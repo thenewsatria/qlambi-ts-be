@@ -1,10 +1,7 @@
 import APIError from "./apis/APIError";
 import BadRequestError from "./apis/BadRequestError";
 import InternalServerError from "./apis/InternalServerError";
-import AppError from "./app/AppError";
 import ValidationError from "./app/ValidationError";
-import BaseError from "./BaseError";
-import DatabaseError from "./databases/DatabaseError";
 
 class ErrorTranslator {
     private static instance: ErrorTranslator
@@ -27,7 +24,7 @@ class ErrorTranslator {
             case "BaseError":
                 return new InternalServerError(error.message, true, error, error.name)
             default:
-                return new InternalServerError(error.message, false, error, error.name)
+                return new InternalServerError(error.message, true, error, error.name)
         }
     }
 }

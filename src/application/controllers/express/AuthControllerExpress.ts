@@ -33,7 +33,7 @@ class AuthControllerExpress implements AuthController {
                     const apiError = this.errorTranslator.xErrorToAPIError(error)
                     next(apiError)
                 }else{
-                    Promise.reject(new BaseError("Unkown Error Occured", false, error))
+                    next(new BaseError("Unkown Error Occured", false, error))
                 }
             }
             
