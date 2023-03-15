@@ -48,6 +48,72 @@ class UserRepositoryPrisma implements UserRepository {
             return Promise.reject(new BaseError("Unknown error occured", false, error))
         }
     }
+
+    async readByEmail(email: string): Promise<User | null> {
+        try{
+            let user: User|null = null
+            const result = await this._client.user.findUnique({
+                where: {
+                    email: email
+                }
+            })
+
+            if(result) {
+                user = new User(result.email, result.username, result.password)
+                user.setId(result.id+"")
+                user.setCreatedAt(result.createdAt)
+                user.setUpdatedAt(result.updatedAt)   
+            }
+
+            return Promise.resolve(user)
+        }catch(error: any) {
+            if (error instanceof Error) {
+                if (error.name.includes('Prisma')){
+                    return Promise.reject(
+                        new DatabaseError(error.message, true, DatabaseOperation.READ, error, error.name)
+                    )
+                }else{
+                    return Promise.reject(
+                        new BaseError(error.message, false, error, error.name)
+                    )
+                }
+            }
+            return Promise.reject(new BaseError("Unknown error occured", false, error))
+        }
+    }
+
+    async readByUsername(username: string): Promise<User| null> {
+        try{
+            let user: User|null = null
+            const result = await this._client.user.findUnique({
+                where: {
+                    username: username
+                }
+            })
+
+            if(result) {
+                user = new User(result.email, result.username, result.password)
+                user.setId(result.id+"")
+                user.setCreatedAt(result.createdAt)
+                user.setUpdatedAt(result.updatedAt)   
+            }
+
+            return Promise.resolve(user)
+        }catch(error: any) {
+            if (error instanceof Error) {
+                if (error.name.includes('Prisma')){
+                    return Promise.reject(
+                        new DatabaseError(error.message, true, DatabaseOperation.READ, error, error.name)
+                    )
+                }else{
+                    return Promise.reject(
+                        new BaseError(error.message, false, error, error.name)
+                    )
+                }
+            }
+            return Promise.reject(new BaseError("Unknown error occured", false, error))
+        }
+    }
 }
 
 export default UserRepositoryPrisma

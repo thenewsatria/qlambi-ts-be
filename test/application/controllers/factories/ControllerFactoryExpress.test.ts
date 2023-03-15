@@ -2,6 +2,9 @@ import ControllerFactory from '../../../../src/interfaces/factories/ControllerFa
 import AuthControllerExpress from '../../../../src/application/controllers/express/AuthControllerExpress'
 import ControllerFactoryExpress from '../../../../src/application/controllers/factories/ControllerFactoryExpress'
 import RegisterUseCase from '../../../../src/application/usecases/auth/RegisterUseCase'
+import AuthVSchema from '../../../../src/interfaces/validators/schemas/AuthVSchema'
+import ExpressJsendPresenter from '../../../../src/application/presenters/express/ExpressJsendPresenter'
+import ErrorTranslator from '../../../../src/application/errors/ErrorTranslator'
 
 describe('Express Controller Factory', () => {
     const currentControllerFactory = ControllerFactoryExpress.getInstance()
@@ -29,19 +32,30 @@ describe('Express Controller Factory', () => {
     })
     it("Should have implemented createAuthController correctly", () => {
         const createAuthSpy = jest.spyOn(currentControllerFactory, 'createAuthController')
-        const localRegisterUC= {} as RegisterUseCase
-        createAuthSpy.mockImplementation((registerUC: RegisterUseCase) => {
-            return new AuthControllerExpress(registerUC)
+        const localAuthVschema= {} as AuthVSchema
+        const localExpressJsendPresenter= {} as ExpressJsendPresenter
+        const localErrorTranslator= {} as ErrorTranslator
+        createAuthSpy.mockImplementation((authSchemas: AuthVSchema, presenter: ExpressJsendPresenter, errorTranslator: ErrorTranslator) => {
+            return new AuthControllerExpress(authSchemas, presenter, errorTranslator)
         })
 
-        const authController = currentControllerFactory.createAuthController(localRegisterUC)
+        const authController = currentControllerFactory
+            .createAuthController(localAuthVschema, localExpressJsendPresenter, localErrorTranslator)
         expect(authController).toBeInstanceOf(AuthControllerExpress)
-        expect(currentControllerFactory.createAuthController(localRegisterUC)).toEqual(authController)
-        expect(currentControllerFactory.createAuthController({} as RegisterUseCase)).not.toBe(authController)
-        expect(currentControllerFactory.createAuthController({} as RegisterUseCase)).toEqual(new AuthControllerExpress({} as RegisterUseCase))
-        expect(currentControllerFactory.createAuthController({} as RegisterUseCase)).not.toBe(new AuthControllerExpress({} as RegisterUseCase))
+        expect(currentControllerFactory
+            .createAuthController(localAuthVschema, localExpressJsendPresenter, localErrorTranslator))
+            .toEqual(authController)
+        expect(currentControllerFactory
+            .createAuthController({} as AuthVSchema, {} as ExpressJsendPresenter, {} as ErrorTranslator))
+            .not.toBe(authController)
+        expect(currentControllerFactory
+            .createAuthController({} as AuthVSchema, {} as ExpressJsendPresenter, {} as ErrorTranslator))
+            .toEqual(new AuthControllerExpress({} as AuthVSchema, {} as ExpressJsendPresenter, {} as ErrorTranslator))
+        expect(currentControllerFactory
+            .createAuthController({} as AuthVSchema, {} as ExpressJsendPresenter, {} as ErrorTranslator))
+            .not.toBe(new AuthControllerExpress({} as AuthVSchema, {} as ExpressJsendPresenter, {} as ErrorTranslator))
         expect(createAuthSpy).toBeCalledTimes(5)
-        expect(createAuthSpy).toBeCalledWith({} as RegisterUseCase)
-        expect(createAuthSpy).toReturnWith(new AuthControllerExpress({} as RegisterUseCase))
+        expect(createAuthSpy).toBeCalledWith({} as AuthVSchema, {} as ExpressJsendPresenter, {} as ErrorTranslator)
+        expect(createAuthSpy).toReturnWith(new AuthControllerExpress({} as AuthVSchema, {} as ExpressJsendPresenter, {} as ErrorTranslator))
     })
  })
