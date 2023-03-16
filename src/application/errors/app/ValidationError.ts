@@ -3,7 +3,6 @@ import AppError from "./AppError";
 
 class ValidationError<ErrObjectT> extends AppError{
     name: string = "ValidationError"
-    domain: string = "App"
     issues: ErrObjectT[]
 
     constructor(message: string, isOperational: boolean, issues: ErrObjectT[], payload?: any, originalName?: any) {

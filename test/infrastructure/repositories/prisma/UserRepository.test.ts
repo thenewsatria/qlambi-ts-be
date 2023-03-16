@@ -400,7 +400,7 @@ describe('User Repository Prisma Implementation', () => {
                 }
             })
             try{
-                await userRepository.readByEmail("email")
+                await userRepository.readByUsername("username")
             }catch(error: any){
                 if (error instanceof Error) {
                     if (error.name.includes('Prisma')){
@@ -416,8 +416,8 @@ describe('User Repository Prisma Implementation', () => {
             }
         })
         it("Should handle other prisma error correctly", async() => {
-            const readByEmailSpy = jest.spyOn(userRepository, "readByEmail")
-            readByEmailSpy.mockImplementation((email: string): Promise<User | null> => {
+            const readByUsernameSpy = jest.spyOn(userRepository, "readByUsername")
+            readByUsernameSpy.mockImplementation((username: string): Promise<User | null> => {
                 try{
                     throw new PrismaClientInitializationError("test2", "test2")
                 }catch(error: any) {
@@ -436,7 +436,7 @@ describe('User Repository Prisma Implementation', () => {
                 }
             })
             try{
-                await userRepository.readByEmail("email")
+                await userRepository.readByUsername("username")
             }catch(error: any){
                 if (error instanceof Error) {
                     if (error.name.includes('Prisma')){
@@ -450,8 +450,8 @@ describe('User Repository Prisma Implementation', () => {
             }
         })
         it("Should handle other error correctly", async() => {
-            const readByEmailSpy = jest.spyOn(userRepository, "readByEmail")
-            readByEmailSpy.mockImplementation((email: string): Promise<User | null> => {
+            const readByUsernameSpy = jest.spyOn(userRepository, "readByUsername")
+            readByUsernameSpy.mockImplementation((username: string): Promise<User | null> => {
                 try{
                     throw new Error("test3")
                 }catch(error: any) {
@@ -470,7 +470,7 @@ describe('User Repository Prisma Implementation', () => {
                 }
             })
             try{
-                await userRepository.readByEmail("email")
+                await userRepository.readByUsername("username")
             }catch(error: any){
                 if (error instanceof Error) {
                     expect(error).toBeInstanceOf(BaseError)
@@ -483,8 +483,8 @@ describe('User Repository Prisma Implementation', () => {
             }
         })
         it("Should handle random throw value correctly", async() => {
-            const readByEmailSpy = jest.spyOn(userRepository, "readByEmail")
-            readByEmailSpy.mockImplementation((email: string): Promise<User | null> => {
+            const readByusernameSpy = jest.spyOn(userRepository, "readByUsername")
+            readByusernameSpy.mockImplementation((username: string): Promise<User | null> => {
                 try{
                     throw "testing"
                 }catch(error: any) {
@@ -503,7 +503,7 @@ describe('User Repository Prisma Implementation', () => {
                 }
             })
             try{
-                await userRepository.createUser({} as User)
+                await userRepository.readByUsername("username")
             }catch(error: any){
                 const currentErr = (error as BaseError)
                 expect(currentErr).toBeInstanceOf(BaseError)

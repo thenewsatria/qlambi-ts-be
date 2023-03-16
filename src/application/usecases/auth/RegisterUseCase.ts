@@ -1,7 +1,9 @@
 import UserService from "../../../domain/services/UserService";
 import RegisterRequestDTO from "../../../interfaces/dtos/auth/RegisterRequestDTO";
 import RegisterResponseDTO from "../../../interfaces/dtos/auth/RegisterResponseDTO";
+import ResourceType from "../../../interfaces/enums/ResourceType";
 import Validator from "../../../interfaces/validators/Validator";
+import ResourceConflict from "../../errors/app/ResourceConflictError";
 
 class RegisterUseCase {
     private readonly userService: UserService
@@ -14,18 +16,30 @@ class RegisterUseCase {
 
     async execute(data: RegisterRequestDTO, schema: any): Promise<RegisterResponseDTO> {
         // Validasi body data
-        await this.validator.validate(schema, data)
+        await this.validator.validate(schema, data) //throwing error
 
         // Cek apakah email dan username sudah digunakan
-        
-        // Cek apakah confirmPassword dan password sama
+        const emailIsUsed = await this.userService.isEmailExist({email: data.email})
+        if(emailIsUsed) {
+            return Promise.reject(
+                new ResourceConflict("Email is already used", true, ResourceType.USER, ["email"])
+            )
+        }
+        const usernameIsUsed = await this.userService.isUsernameExist({username: data.username})
+        if(usernameIsUsed) {
+            return Promise.reject(
+                new ResourceConflict("Username is already used", true, ResourceType.USER, ["username"])
+            )
+        }
+        // Cek apakah confirmPassword dan password sama [Dilakukan pada validator]
         // Hash password
+
         // Masukan pada database
         await this.userService.insertUser(data)
         // generate accesstoken dan refreshToken
         // masukan pasangan username / email + refreshtoken kedalam database
         // kirimkan user kembali ke controller
-        return Promise.resolve({} as RegisterResponseDTO)
+        return Promise.resolve({accessToken: "testat", refreshToken: "testrt"})
     }
 }
 
