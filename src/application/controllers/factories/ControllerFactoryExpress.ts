@@ -1,8 +1,8 @@
 import AuthController from "../../../interfaces/controllers/AuthController";
 import ControllerFactory from "../../../interfaces/factories/ControllerFactory";
+import JsendPresenter from "../../../interfaces/presenters/JsendPresenter";
 import AuthVSchema from "../../../interfaces/validators/schemas/AuthVSchema";
 import ErrorTranslator from "../../errors/ErrorTranslator";
-import ExpressJsendPresenter from "../../presenters/express/ExpressJsendPresenter";
 import AuthControllerExpress from "../express/AuthControllerExpress";
 
 class ControllerFactoryExpress implements ControllerFactory {
@@ -18,7 +18,7 @@ class ControllerFactoryExpress implements ControllerFactory {
         return ControllerFactoryExpress.instance;
     }
 
-    createAuthController(authSchemas: AuthVSchema, presenter: ExpressJsendPresenter, errorTranslator: ErrorTranslator): AuthController {
+    createAuthController(authSchemas: AuthVSchema, presenter: JsendPresenter, errorTranslator: ErrorTranslator): AuthController {
         return new AuthControllerExpress(authSchemas, presenter, errorTranslator)
     }
 }
