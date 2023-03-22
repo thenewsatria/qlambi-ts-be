@@ -2,8 +2,6 @@ import APIError from "./apis/APIError";
 import BadRequestError from "./apis/BadRequestError";
 import ForbiddenError from "./apis/ForbiddenError";
 import InternalServerError from "./apis/InternalServerError";
-import ResourceConflictError from "./app/ResourceConflictError";
-import ResourceConflict from "./app/ResourceConflictError";
 import ValidationError from "./app/ValidationError";
 
 class ErrorTranslator {

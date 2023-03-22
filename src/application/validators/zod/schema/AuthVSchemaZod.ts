@@ -26,7 +26,9 @@ class AuthVSchemasZod implements AuthVSchema {
             password: z.string()
                 .min(8),
             confirmPassword: z.string()
-                .min(8)
+                .min(8),
+            IP: z.string().ip(),
+            userAgent: z.string()
         })
         .required()
         .refine(({password, confirmPassword}) => password === confirmPassword, {

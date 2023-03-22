@@ -1,5 +1,7 @@
 import RepositoryFactory from "../../../interfaces/factories/RepositoryFactory";
+import TokenRepository from "../../../interfaces/repositories/TokenRepository";
 import UserRepository from "../../../interfaces/repositories/UserRepository";
+import TokenRepositoryPrisma from "../prisma/TokenRepositoryPrisma";
 import UserRepositoryPrisma from "../prisma/UserRepositoryPrisma";
 
 class RepositoryFactoryPrisma implements RepositoryFactory {
@@ -15,6 +17,10 @@ class RepositoryFactoryPrisma implements RepositoryFactory {
 
     createUserRepository(): UserRepository {
         return UserRepositoryPrisma.getInstance()
+    }
+
+    createTokenRepository(): TokenRepository {
+        return TokenRepositoryPrisma.getInstance()
     }
 }
 

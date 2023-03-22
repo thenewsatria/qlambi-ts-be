@@ -3,15 +3,16 @@ import UserRepository from "../../interfaces/repositories/UserRepository";
 import UserCreationDTO from '../../interfaces/dtos/auth/UserCreationDTO';
 import EmailDTO from '../../interfaces/dtos/auth/singular/EmailDTO';
 import UsernameDTO from '../../interfaces/dtos/auth/singular/UsernameDTO';
-import PasswordDTO from '../../interfaces/dtos/auth/singular/PasswordDTO';
-import Hasher from '../../interfaces/utils/encryption/Hasher';
-import { hash } from 'bcrypt';
+import Validator from '../../interfaces/validators/Validator';
 
 class UserService {
     private readonly repository: UserRepository
+    private readonly validator: Validator
     
-    constructor(repository: UserRepository) {
+    
+    constructor(repository: UserRepository, validator: Validator) {
         this.repository = repository
+        this.validator = validator
     }
 
     async insertUser(data: UserCreationDTO): Promise<User> {
@@ -30,8 +31,8 @@ class UserService {
         return Promise.resolve(condition)
     }
 
-    async hashPassword(data: PasswordDTO, hasher: Hasher): Promise<string> {
-       return hasher.hash(data.password, 10)
+    async validateData<DataT>(schema: any, data: DataT): Promise<DataT> {
+        return this.validator.validate<DataT>(schema, data)
     }
 }
 

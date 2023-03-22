@@ -8,6 +8,7 @@ import RegisterUseCase from '../../usecases/auth/RegisterUseCase'
 import BcryptHasher from '../../utils/encryption/bcrypt/BcryptHasher'
 import VSchemaFactoryZod from '../../validators/factories/VSchemaFactoryZod'
 import ValidatorZod from '../../validators/zod/ValidatorZod'
+
 const authRoutes = express.Router()
 
 const validator = ValidatorZod.getInstance()
@@ -21,9 +22,9 @@ const repositoryFactory = RepositoryFactoryPrisma.getInstance()
 
 
 const userRepository = repositoryFactory.createUserRepository()
-const userService = new UserService(userRepository)
+const userService = new UserService(userRepository, validator)
 
-const registerUseCase = new RegisterUseCase(userService, validator, hasher)
+const registerUseCase = new RegisterUseCase(userService, hasher)
 
 const authController = controllerFactory.createAuthController(schemas, presenter, errorTranslator)
 authRoutes.get("/signin", authController.userLogin())

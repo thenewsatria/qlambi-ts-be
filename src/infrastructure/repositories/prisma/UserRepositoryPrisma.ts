@@ -3,6 +3,7 @@ import BaseError from "../../../application/errors/BaseError";
 import DatabaseError from "../../../application/errors/databases/DatabaseError";
 import User from "../../../domain/entities/User";
 import DatabaseOperation from "../../../interfaces/enums/DatabaseOperationType";
+import DatabaseResourceType from "../../../interfaces/enums/DatabaseResourceType";
 import UserRepository from "../../../interfaces/repositories/UserRepository";
 
 import prismaClient from "../../databases/prisma/client";
@@ -37,7 +38,7 @@ class UserRepositoryPrisma implements UserRepository {
             if (error instanceof Error) {
                 if (error.name.includes('Prisma')){
                     return Promise.reject(
-                        new DatabaseError(error.message, true, DatabaseOperation.CREATE, error, error.name)
+                        new DatabaseError(error.message, true, DatabaseOperation.CREATE, DatabaseResourceType.USER, error, error.name)
                     )
                 }else{
                     return Promise.reject(
@@ -70,7 +71,7 @@ class UserRepositoryPrisma implements UserRepository {
             if (error instanceof Error) {
                 if (error.name.includes('Prisma')){
                     return Promise.reject(
-                        new DatabaseError(error.message, true, DatabaseOperation.READ, error, error.name)
+                        new DatabaseError(error.message, true, DatabaseOperation.READ, DatabaseResourceType.USER, error, error.name)
                     )
                 }else{
                     return Promise.reject(
@@ -103,7 +104,7 @@ class UserRepositoryPrisma implements UserRepository {
             if (error instanceof Error) {
                 if (error.name.includes('Prisma')){
                     return Promise.reject(
-                        new DatabaseError(error.message, true, DatabaseOperation.READ, error, error.name)
+                        new DatabaseError(error.message, true, DatabaseOperation.READ, DatabaseResourceType.USER, error, error.name)
                     )
                 }else{
                     return Promise.reject(

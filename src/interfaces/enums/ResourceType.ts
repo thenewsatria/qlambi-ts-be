@@ -1,5 +1,6 @@
 enum ResourceType {
-    USER = "USER"
+    USER = "USER",
+    TOKEN = "TOKEN"
 }
 
 export default ResourceType

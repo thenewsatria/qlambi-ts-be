@@ -24,7 +24,7 @@ class AuthControllerExpress implements AuthController {
         return async (req: Request, res: Response, next: NextFunction) => {
             try{
                 const tokens = await useCase.execute(
-                    {...req.body},
+                    {...req.body, IP: req.ip, userAgent: req.headers["user-agent"]},
                     this.authSchemas.getRegisterRequestSchema(),
                 )
                 return this.presenter.successReponse<RegisterResponseDTO>(res, 200, tokens)

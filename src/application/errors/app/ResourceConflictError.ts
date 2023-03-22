@@ -7,8 +7,8 @@ class ResourceConflictError extends AppError{
     resource: ResourceType
     attribute: string[]
 
-    constructor(message: string, isOperational: boolean, resource: ResourceType, attribute: string[], payload?: any, originalName?: any) {
-        super(message, isOperational, AppOperationType.VALIDATION, payload, originalName)
+    constructor(message: string, isOperational: boolean, type: AppOperationType,  resource: ResourceType, attribute: string[], payload?: any, originalName?: any) {
+        super(message, isOperational, type, payload, originalName)
         this.resource = resource,
         this.attribute = attribute
     }
