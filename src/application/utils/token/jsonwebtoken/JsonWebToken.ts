@@ -1,4 +1,4 @@
-import jwt, {JsonWebTokenError, NotBeforeError, SignOptions, TokenExpiredError, VerifyErrors, VerifyOptions} from "jsonwebtoken"
+import jwt, {SignOptions, TokenExpiredError, VerifyOptions} from "jsonwebtoken"
 import AppOperationType from "../../../../interfaces/enums/AppOperationType"
 import ResourceType from "../../../../interfaces/enums/ResourceType"
 import TokenDecoder from "../../../../interfaces/utils/token/TokenDecoder"

@@ -1,4 +1,5 @@
 import express from 'express'
+import TokenService from '../../../domain/services/TokenService'
 import UserService from '../../../domain/services/UserService'
 import RepositoryFactoryPrisma from '../../../infrastructure/repositories/factories/RepositoryFactoryPrisma'
 import ControllerFactoryExpress from '../../controllers/factories/ControllerFactoryExpress'
@@ -6,6 +7,7 @@ import ErrorTranslator from '../../errors/ErrorTranslator'
 import ExpressPresenterFactory from '../../presenters/factories/ExpressPresenterFactory'
 import RegisterUseCase from '../../usecases/auth/RegisterUseCase'
 import BcryptHasher from '../../utils/encryption/bcrypt/BcryptHasher'
+import JsonWebToken from '../../utils/token/jsonwebtoken/JsonWebToken'
 import VSchemaFactoryZod from '../../validators/factories/VSchemaFactoryZod'
 import ValidatorZod from '../../validators/zod/ValidatorZod'
 
@@ -24,7 +26,11 @@ const repositoryFactory = RepositoryFactoryPrisma.getInstance()
 const userRepository = repositoryFactory.createUserRepository()
 const userService = new UserService(userRepository, validator)
 
-const registerUseCase = new RegisterUseCase(userService, hasher)
+const tokenRepository = repositoryFactory.createTokenRepository()
+const tokenTools = new JsonWebToken()
+const tokenService = new TokenService(tokenRepository, tokenTools)
+
+const registerUseCase = new RegisterUseCase(userService, tokenService, hasher)
 
 const authController = controllerFactory.createAuthController(schemas, presenter, errorTranslator)
 authRoutes.get("/signin", authController.userLogin())

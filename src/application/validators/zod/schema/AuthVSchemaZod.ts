@@ -15,24 +15,45 @@ class AuthVSchemasZod implements AuthVSchema {
     
     getRegisterRequestSchema(): ZodSchema<RegisterRequestDTO> {
         return z.object({
-            username: z.string()
-                .min(5)
-                .max(25)
+            username: z.string({
+                    required_error: "Username is required",
+                    invalid_type_error: "Username must be a string"
+                })
+                .min(5, {
+                    message: "username must be at least 5 character"
+                })
+                .max(25, {
+                    message: "username must be less than 25 character"
+                })
                 .regex(/^[a-z0-9_.]+$/, {
                     message: "Username can only contain lowercase characters, period, and underscores"
                 }),
-            email: z.string()
-                .email(),
+            email: z.string({
+                    required_error: "Email is required",
+                    invalid_type_error: "Email must be a string"
+                })
+                .email({
+                    message: "Invalid email"
+                }),
             password: z.string()
-                .min(8),
+                .min(8, {
+                    message: "Password must be at least 8 characters long"
+                }),
             confirmPassword: z.string()
-                .min(8),
+                .min(8, {
+                    message: "Confirm password must be at least 8 characters long"
+                }),
             IP: z.string().ip(),
             userAgent: z.string()
         })
-        .required()
+        .required({
+            username: true,
+            email: true,
+            password: true,
+            confirmPassword: true
+        })
         .refine(({password, confirmPassword}) => password === confirmPassword, {
-            message: "Password don't match",
+            message: "Confirm password don't match",
             path: ["confirmPassword"]
         })
     }
