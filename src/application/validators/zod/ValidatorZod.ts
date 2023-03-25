@@ -1,4 +1,4 @@
-import { ZodError, ZodIssue } from "zod";
+import { ZodError, ZodIssue, ZodSchema } from "zod";
 import AppOperationType from "../../../interfaces/enums/AppOperationType";
 import Validator from "../../../interfaces/validators/Validator";
 import AppError from "../../errors/app/AppError";
@@ -14,9 +14,8 @@ class ValidatorZod implements Validator {
 
         return ValidatorZod.instance
     }
-
     
-    validate<DataT>(schema: any, data: DataT): Promise<DataT> {
+    validate<DataT>(schema: ZodSchema, data: DataT): Promise<DataT> {
         try{
             schema.parse(data)
             return Promise.resolve(data)
@@ -35,6 +34,11 @@ class ValidatorZod implements Validator {
                 new BaseError("Unknown error occured ", false, error)
             )
         }
+    }
+
+    isValid<DataT>(schema: ZodSchema, data: DataT): Promise<Boolean> {
+        const result = schema.safeParse(data)
+        return Promise.resolve(result.success)
     }
 }
 

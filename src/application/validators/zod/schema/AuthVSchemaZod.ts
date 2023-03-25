@@ -1,4 +1,5 @@
 import {z, ZodSchema} from "zod";
+import LoginRequestDTO from "../../../../interfaces/dtos/auth/LoginRequestDTO";
 import RegisterRequestDTO from "../../../../interfaces/dtos/auth/RegisterRequestDTO";
 import AuthVSchema from "../../../../interfaces/validators/schemas/AuthVSchema";
 
@@ -39,10 +40,7 @@ class AuthVSchemasZod implements AuthVSchema {
                 .min(8, {
                     message: "Password must be at least 8 characters long"
                 }),
-            confirmPassword: z.string()
-                .min(8, {
-                    message: "Confirm password must be at least 8 characters long"
-                }),
+            confirmPassword: z.string(),
             IP: z.string().ip(),
             userAgent: z.string()
         })
@@ -58,8 +56,27 @@ class AuthVSchemasZod implements AuthVSchema {
         })
     }
 
-    getLoginRequestSchema() {
-        throw new Error("Method not implemented.");
+    getLoginRequestSchema(): ZodSchema<LoginRequestDTO> {
+        return z.object({
+            credential: z.string({
+                required_error: "Email or username is required",
+                invalid_type_error: "Email or username must be a string"
+            }),
+            password: z.string({
+                required_error: "Password is required",
+                invalid_type_error: "Password must be a string"
+            }),
+            IP: z.string().ip(),
+            userAgent: z.string()
+        })
+        .required({
+            credential: true,
+            password: true
+        })
+    }
+
+    getValidEmailSchema(): ZodSchema<string> {
+        return z.string().email()
     }
 }
 

@@ -1,7 +1,9 @@
 enum AppOperationType {
     VALIDATION = "validation",
-    TOKEN_GENERATION = "token_generation",
-    TOKEN_DECODING = "token_decoding"
+    GENERATION = "generation",
+    DECODING = "decoding",
+    FETCHING = "fetching"
+    
 }
 
 export default AppOperationType

@@ -1,8 +1,8 @@
 import User from '../entities/User'
 import UserRepository from "../../interfaces/repositories/UserRepository";
-import UserCreationDTO from '../../interfaces/dtos/auth/UserCreationDTO';
-import EmailDTO from '../../interfaces/dtos/auth/singular/EmailDTO';
-import UsernameDTO from '../../interfaces/dtos/auth/singular/UsernameDTO';
+import UserCreationDTO from '../../interfaces/dtos/user/UserCreationDTO';
+import EmailDTO from '../../interfaces/dtos/user/singular/EmailDTO';
+import UsernameDTO from '../../interfaces/dtos/user/singular/UsernameDTO';
 import Validator from '../../interfaces/validators/Validator';
 
 class UserService {
@@ -21,6 +21,16 @@ class UserService {
         return Promise.resolve(insertedUser)
     }
 
+    async fetchByEmail(data: EmailDTO): Promise<User | null> {
+        const user = await this.repository.readByEmail(data.email)
+        return Promise.resolve(user)
+    }
+    
+    async fetchByUsername(data: UsernameDTO): Promise<User|null> {
+        const user = await this.repository.readByUsername(data.username)
+        return Promise.resolve(user)
+    }
+
     async isEmailExist(data: EmailDTO): Promise<boolean> {
         const condition = await this.repository.readByEmail(data.email) != null
         return Promise.resolve(condition)
@@ -33,6 +43,10 @@ class UserService {
 
     async validateData<DataT>(schema: any, data: DataT): Promise<DataT> {
         return this.validator.validate<DataT>(schema, data)
+    }
+
+    async isValid<DataT>(schema: any, data: DataT): Promise<Boolean> {
+        return this.validator.isValid<DataT>(schema, data)
     }
 }
 

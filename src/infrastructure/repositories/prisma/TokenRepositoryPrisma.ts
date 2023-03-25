@@ -1,5 +1,4 @@
 import {PrismaClient} from '@prisma/client'
-import { create } from 'domain';
 import BaseError from '../../../application/errors/BaseError';
 import DatabaseError from '../../../application/errors/databases/DatabaseError';
 import Token from "../../../domain/entities/Token";
@@ -69,6 +68,23 @@ class TokenRepositoryPrisma implements TokenRepository {
         }
         
         return Promise.resolve(userToken)
+    }
+
+    async updateToken(token: Token): Promise<Token> {
+        const updateRes = await this._client.token.update({
+            where: {
+                id: +token.getId()!
+            },
+            data: {
+                refreshToken: token.getRefreshToken(),
+                IP: token.getIP(),
+                userAgent: token.getUserAgent(),
+                isBlocked: token.getIsBlocked()
+            }
+        })
+
+        token.setUpdatedAt(updateRes.updatedAt)
+        return Promise.resolve(token)
     }
 }
 

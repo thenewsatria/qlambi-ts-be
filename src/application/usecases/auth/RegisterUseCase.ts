@@ -60,7 +60,7 @@ class RegisterUseCase {
         
         // masukan pasangan username / email + refreshtoken kedalam database
         await this.tokenService.insertToken({
-            email: data.email,
+            userEmail: data.email,
             IP: data.IP,
             refreshToken: refreshToken,
             isBlocked: false,

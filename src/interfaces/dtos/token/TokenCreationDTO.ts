@@ -1,5 +1,5 @@
 interface TokenCreationDTO {
-    email: string
+    userEmail: string
     refreshToken: string
     IP: string
     userAgent: string

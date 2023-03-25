@@ -5,6 +5,7 @@ import RepositoryFactoryPrisma from '../../../infrastructure/repositories/factor
 import ControllerFactoryExpress from '../../controllers/factories/ControllerFactoryExpress'
 import ErrorTranslator from '../../errors/ErrorTranslator'
 import ExpressPresenterFactory from '../../presenters/factories/ExpressPresenterFactory'
+import LoginUseCase from '../../usecases/auth/LoginUseCase'
 import RegisterUseCase from '../../usecases/auth/RegisterUseCase'
 import BcryptHasher from '../../utils/encryption/bcrypt/BcryptHasher'
 import JsonWebToken from '../../utils/token/jsonwebtoken/JsonWebToken'
@@ -31,10 +32,12 @@ const tokenTools = new JsonWebToken()
 const tokenService = new TokenService(tokenRepository, tokenTools)
 
 const registerUseCase = new RegisterUseCase(userService, tokenService, hasher)
+const loginUseCase = new LoginUseCase(userService, tokenService, hasher)
 
 const authController = controllerFactory.createAuthController(schemas, presenter, errorTranslator)
-authRoutes.get("/signin", authController.userLogin())
+
 authRoutes.post("/signup", authController.userRegister(registerUseCase))
+authRoutes.post("/signin", authController.userLogin(loginUseCase))
 
 
 export default authRoutes
