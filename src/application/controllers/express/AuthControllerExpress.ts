@@ -62,6 +62,12 @@ class AuthControllerExpress implements AuthController {
             }
         }
     }
+
+    userLogout(): (...args: any[]) => any {
+        return (req: Request, res: Response, next: NextFunction) => {
+            return this.presenter.successReponse(res, 200, res.locals.currentLoggedUser.getEmail())
+        }
+    }
 }
 
 export default AuthControllerExpress

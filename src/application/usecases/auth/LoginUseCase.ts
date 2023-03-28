@@ -74,13 +74,13 @@ class LoginUseCase {
         const accessToken = await this.tokenService.generateToken<EmailDTO, SignOptions>(
             {email: loggedUser.getEmail()},
             process.env.ACC_TOKEN_SECRET!,
-            {expiresIn: "1d"}
+            {expiresIn: process.env.ACC_TOKEN_EXPIRE}
         )
 
         const refreshToken = await this.tokenService.generateToken<EmailDTO, SignOptions>(
             {email: loggedUser.getEmail()},
             process.env.REF_TOKEN_SECRET!,
-            {expiresIn: "2 weeks"}
+            {expiresIn: process.env.REF_TOKEN_EXPIRE}
         )
 
         loggedUserToken.setRefreshToken(refreshToken)
