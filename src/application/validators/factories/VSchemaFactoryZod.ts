@@ -1,6 +1,8 @@
 import VSchemaFactory from "../../../interfaces/factories/VSchemaFactory";
 import AuthVSchema from "../../../interfaces/validators/schemas/AuthVSchema";
-import RequestsVSchemasZod from "../zod/schema/AuthVSchemaZod";
+import TokenVSchema from "../../../interfaces/validators/schemas/TokenVSchema";
+import AuthVSchemaZod from "../zod/schema/AuthVSchemaZod";
+import TokenVSchemaZod from "../zod/schema/TokenVSchemaZod";
 
 class VSchemaFactoryZod implements VSchemaFactory {
     private static instance: VSchemaFactoryZod
@@ -8,11 +10,15 @@ class VSchemaFactoryZod implements VSchemaFactory {
         if(!VSchemaFactoryZod.instance){
             VSchemaFactoryZod.instance = new VSchemaFactoryZod()
         }
-
+        
         return VSchemaFactoryZod.instance
     }
     createAuthVSchema(): AuthVSchema {
-        return RequestsVSchemasZod.getInstance()
+        return AuthVSchemaZod.getInstance()
+    }
+
+    createTokenVSchema(): TokenVSchema {
+        return TokenVSchemaZod.getInstance()
     }
 }
 

@@ -5,15 +5,23 @@ import TokenRepository from "../../interfaces/repositories/TokenRepository";
 import TokenChecker from "../../interfaces/utils/token/TokenChecker";
 import TokenDecoder from "../../interfaces/utils/token/TokenDecoder";
 import TokenGenerator from "../../interfaces/utils/token/TokenGenerator";
+import Validator from "../../interfaces/validators/Validator";
 import Token from "../entities/Token";
 
 class TokenService {
     private readonly repository: TokenRepository
     private readonly tokenTools: TokenGenerator & TokenDecoder & TokenChecker
+    private readonly validator: Validator
     
-    constructor(repository: TokenRepository, tokenTools: TokenGenerator & TokenDecoder & TokenChecker) {
+    constructor(repository: TokenRepository, 
+        tokenTools: TokenGenerator & TokenDecoder & TokenChecker, validator: Validator) {
         this.repository = repository
         this.tokenTools = tokenTools
+        this.validator = validator
+    }
+
+    async validateData<DataT>(schema: any, data: DataT): Promise<DataT> {
+        return this.validator.validate<DataT>(schema, data)
     }
 
     async generateToken<PayloadT, OptionsT>(payload: PayloadT, key: string, options: OptionsT): Promise<string> {

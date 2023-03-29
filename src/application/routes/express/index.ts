@@ -2,6 +2,7 @@ import express, {Express, Request, Response} from 'express'
 import ExpressJsendPresenter from '../../presenters/express/ExpressJsendPresenter'
 import authRoutes from './authRoutes'
 import MiddlewareFactoryExpress from '../../middlewares/factories/MiddlewareFactoryExpress'
+import tokenRoutes from './tokenRoutes'
 const APIRouter = express.Router()
 const V1Router = express.Router()
 
@@ -22,5 +23,6 @@ export function routeApp(app: Express) {
     })
 
     V1Router.use('/auth', authRoutes)
+    V1Router.use('/token', tokenRoutes)
     app.use(handlerMW.handleErrors(ExpressJsendPresenter.getInstance()))
 }

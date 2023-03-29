@@ -32,7 +32,7 @@ const userService = new UserService(userRepository, validator)
 
 const tokenRepository = repositoryFactory.createTokenRepository()
 const tokenTools = new JsonWebToken()
-const tokenService = new TokenService(tokenRepository, tokenTools)
+const tokenService = new TokenService(tokenRepository, tokenTools, validator)
 
 const authMW = middlewareFactory.createAuthMiddleware(tokenTools, errorTranslator)
 
