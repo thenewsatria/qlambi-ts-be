@@ -1,3 +1,4 @@
+import ErrorTranslator from "../../../interfaces/errors/ErrorTranslator";
 import MiddlewareFactory from "../../../interfaces/factories/MiddlewareFactory";
 import AuthMiddleware from "../../../interfaces/middlewares/AuthMiddleware";
 import HandlerMiddleware from "../../../interfaces/middlewares/HandlerMiddleware";
@@ -17,8 +18,8 @@ class MiddlewareFactoryExpress implements MiddlewareFactory {
 
         return MiddlewareFactoryExpress.instance
     }
-    createAuthMiddleware(tokenTools: TokenDecoder & TokenChecker): AuthMiddleware {
-        return new AuthMiddlewareExpress(tokenTools)
+    createAuthMiddleware(tokenTools: TokenDecoder & TokenChecker, errorTranslator: ErrorTranslator): AuthMiddleware {
+        return new AuthMiddlewareExpress(tokenTools, errorTranslator)
     }
     createSetupMiddleware(): SetupMiddleware {
         return new SetupMiddlewareExpress()

@@ -1,5 +1,5 @@
-import ErrorTranslator from "../../application/errors/ErrorTranslator"
 import AuthController from "../controllers/AuthController"
+import ErrorTranslator from "../errors/ErrorTranslator"
 import JsendPresenter from "../presenters/JsendPresenter"
 import AuthVSchema from "../validators/schemas/AuthVSchema"
 

@@ -1,3 +1,4 @@
+import ErrorTranslator from "../../interfaces/errors/ErrorTranslator";
 import APIError from "./apis/APIError";
 import BadRequestError from "./apis/BadRequestError";
 import ForbiddenError from "./apis/ForbiddenError";
@@ -6,17 +7,17 @@ import NotFoundError from "./apis/NotFoundError";
 import UnauthorizedError from "./apis/UnauthorizedError";
 import ValidationError from "./app/ValidationError";
 
-class ErrorTranslator {
+class AllErrorToAPIErrorTranslator implements ErrorTranslator {
     private static instance: ErrorTranslator
 
     public static getInstance(): ErrorTranslator {
-        if(!ErrorTranslator.instance){
-            ErrorTranslator.instance = new ErrorTranslator()
+        if(!AllErrorToAPIErrorTranslator.instance){
+            AllErrorToAPIErrorTranslator.instance = new AllErrorToAPIErrorTranslator()
         }
-        return ErrorTranslator.instance
+        return AllErrorToAPIErrorTranslator.instance
     }
 
-    xErrorToAPIError(error: Error): APIError {
+    translateError(error: Error): APIError {
         switch(error.name) {
             case "ValidationError":
                 return new BadRequestError(error.message, (error as ValidationError<any>).issues)
@@ -40,4 +41,4 @@ class ErrorTranslator {
     }
 }
 
-export default ErrorTranslator
+export default AllErrorToAPIErrorTranslator
