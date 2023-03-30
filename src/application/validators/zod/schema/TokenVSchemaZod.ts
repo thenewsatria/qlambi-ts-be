@@ -1,4 +1,3 @@
-import { throws } from "assert";
 import z, { ZodEffects, ZodPipeline, ZodString } from "zod";
 import TokenVSchema from "../../../../interfaces/validators/schemas/TokenVSchema";
 
@@ -32,6 +31,19 @@ class TokenVSchemaZod implements TokenVSchema {
                 z.string({
                     required_error: "Refresh Token is required",
                     invalid_type_error: "Refresh Token must be a string"
+                })
+            )
+        })
+        .required()
+    }
+
+    getStringTokenSchema() {
+        return z.object({
+            token: this.setNoEmptyString(
+                "Token",
+                z.string({
+                    required_error: "Token is required",
+                    invalid_type_error: "Token must be a string"
                 })
             )
         })

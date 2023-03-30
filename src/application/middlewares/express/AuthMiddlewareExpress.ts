@@ -1,22 +1,21 @@
 import {Request, Response, NextFunction} from 'express'
+import TokenService from '../../../domain/services/TokenService'
 import ErrorTranslator from '../../../interfaces/errors/ErrorTranslator'
 import AuthMiddleware from '../../../interfaces/middlewares/AuthMiddleware'
-import TokenChecker from '../../../interfaces/utils/token/TokenChecker'
-import TokenDecoder from '../../../interfaces/utils/token/TokenDecoder'
+import TokenVSchema from '../../../interfaces/validators/schemas/TokenVSchema'
 import UnauthorizedError from '../../errors/apis/UnauthorizedError'
 import BaseError from '../../errors/BaseError'
-import GetUserByEmailUsecase from '../../usecases/middleware/GetUserByEmailUseCase'
-
+import GetUserByAccesTokenUseCase from '../../usecases/middleware/GetUserByAccesTokenUseCase'
 class AuthMiddlewareExpress implements AuthMiddleware {
-    private readonly tokenTools: TokenDecoder & TokenChecker
+    private readonly tokenSchemas: TokenVSchema
     private readonly errorTranslator: ErrorTranslator
 
-    constructor(tokenTools: TokenDecoder & TokenChecker, errorTranslator: ErrorTranslator) {
-        this.tokenTools = tokenTools
+    constructor(tokenSchemas: TokenVSchema, errorTranslator: ErrorTranslator) {
+        this.tokenSchemas = tokenSchemas
         this.errorTranslator = errorTranslator
     }
 
-    protect(useCase: GetUserByEmailUsecase): (req: Request, res: Response, next: NextFunction) => void {
+    protect(useCase: GetUserByAccesTokenUseCase): (req: Request, res: Response, next: NextFunction) => void {
         return async(req: Request, res: Response, next: NextFunction) => {
             try {
                 const token = req.get("authorization")?.split(" ")[1]
@@ -25,14 +24,8 @@ class AuthMiddlewareExpress implements AuthMiddleware {
                          new UnauthorizedError("There's no token provided, please login", true)
                      )
                 }
-                const tokenIsExpired = await this.tokenTools.isExpired(token!, process.env.ACC_TOKEN_SECRET!)
-                if(tokenIsExpired) {
-                    return next(
-                        new UnauthorizedError("Token is expired, please renew it", true)
-                    )
-                }
-                const decoded = await this.tokenTools.decode(token!, process.env.ACC_TOKEN_SECRET!)
-                const loggedUser = await useCase.execute({email: decoded.email})
+                
+                const loggedUser = await useCase.execute({token: token}, this.tokenSchemas.getStringTokenSchema())
                 res.locals.currentLoggedUser = loggedUser
                 next()
             }catch(error: unknown){

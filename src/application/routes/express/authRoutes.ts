@@ -9,7 +9,7 @@ import ExpressPresenterFactory from '../../presenters/factories/ExpressPresenter
 import LoginUseCase from '../../usecases/auth/LoginUseCase'
 import LogoutUseCase from '../../usecases/auth/LogoutUseCase'
 import RegisterUseCase from '../../usecases/auth/RegisterUseCase'
-import GetUserByEmailUsecase from '../../usecases/middleware/GetUserByEmailUseCase'
+import GetUserByAccesTokenUseCase from '../../usecases/middleware/GetUserByAccesTokenUseCase'
 import BcryptHasher from '../../utils/encryption/bcrypt/BcryptHasher'
 import JsonWebToken from '../../utils/token/jsonwebtoken/JsonWebToken'
 import VSchemaFactoryZod from '../../validators/factories/VSchemaFactoryZod'
@@ -34,11 +34,13 @@ const tokenRepository = repositoryFactory.createTokenRepository()
 const tokenTools = new JsonWebToken()
 const tokenService = new TokenService(tokenRepository, tokenTools, validator)
 
-const authMW = middlewareFactory.createAuthMiddleware(tokenTools, errorTranslator)
+const tokenSchemas = VSchemaFactoryZod.getInstance().createTokenVSchema()
+
+const authMW = middlewareFactory.createAuthMiddleware(tokenSchemas, errorTranslator)
 
 const registerUseCase = new RegisterUseCase(userService, tokenService, hasher)
 const loginUseCase = new LoginUseCase(userService, tokenService, hasher)
-const getUserByEmailMWUseCase = new GetUserByEmailUsecase(userService)
+const getUserByAccessTokenUseCase = new GetUserByAccesTokenUseCase(tokenService, userService)
 const logoutUseCase = new LogoutUseCase(tokenService)
 
 const authController = controllerFactory.createAuthController(schemas, presenter, errorTranslator)
@@ -46,7 +48,7 @@ const authController = controllerFactory.createAuthController(schemas, presenter
 authRoutes.post("/signup", authController.userRegister(registerUseCase))
 authRoutes.post("/signin", authController.userLogin(loginUseCase))
 
-authRoutes.use(authMW.protect(getUserByEmailMWUseCase))
+authRoutes.use(authMW.protect(getUserByAccessTokenUseCase))
 authRoutes.post('/logout', authController.userLogout(logoutUseCase))
 
 
