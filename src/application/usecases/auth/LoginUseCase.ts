@@ -56,7 +56,7 @@ class LoginUseCase {
         const isPasswordCorrect = await this.hasher.compare(data.password, loggedUser.getPassword())
         if(!isPasswordCorrect) {
             return Promise.reject(
-                new ResourceProtectedError("Password provided doesn't matcth", true,
+                new ResourceProtectedError("Password provided doesn't match", true,
                     AppOperationType.VALIDATION, ResourceType.USER)
             )
         }

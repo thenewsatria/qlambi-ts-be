@@ -70,6 +70,26 @@ class TokenRepositoryPrisma implements TokenRepository {
         return Promise.resolve(userToken)
     }
 
+    async readByRefreshToken(refreshToken: string): Promise<Token | null> {
+        let userToken: Token | null = null
+
+        const tokenResult = await this._client.token.findFirst({
+            where: {
+                refreshToken: refreshToken
+            }
+        })
+
+        if (tokenResult) {
+            userToken = new Token(tokenResult.userEmail, tokenResult.refreshToken, 
+                tokenResult.IP, tokenResult.userAgent, tokenResult.isBlocked)
+            userToken.setId(tokenResult.id+"")
+            userToken.setCreatedAt(tokenResult.createdAt)
+            userToken.setUpdatedAt(tokenResult.updatedAt)
+        }
+
+        return Promise.resolve(userToken)
+    }
+
     async updateToken(token: Token): Promise<Token> {
         const updateRes = await this._client.token.update({
             where: {

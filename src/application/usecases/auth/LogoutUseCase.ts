@@ -1,6 +1,5 @@
 import TokenService from "../../../domain/services/TokenService";
 import LogoutResponseDTO from "../../../interfaces/dtos/auth/LogoutResponseDTO";
-import TokenUpdateDTO from "../../../interfaces/dtos/token/TokenUpdateDTO";
 import UserEmailDTO from "../../../interfaces/dtos/token/singular/UserEmailDTO";
 import ResourceNotFoundError from "../../errors/app/ResourceNotFoundError";
 import AppOperationType from "../../../interfaces/enums/AppOperationType";

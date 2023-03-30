@@ -1,5 +1,6 @@
 import express from 'express'
 import TokenService from '../../../domain/services/TokenService'
+import UserService from '../../../domain/services/UserService'
 import RepositoryFactoryPrisma from '../../../infrastructure/repositories/factories/RepositoryFactoryPrisma'
 import ControllerFactoryExpress from '../../controllers/factories/ControllerFactoryExpress'
 import AllErrorToAPIErrorTranslator from '../../errors/AllErrorToAPIErrorTranslator'
@@ -22,8 +23,13 @@ const controllerFactory = ControllerFactoryExpress.getInstance()
 const tokenTools = new JsonWebToken()
 
 const tokenRepository = repositoryFactory.createTokenRepository()
+const userRepository = repositoryFactory.createUserRepository()
+
 const tokenService = new TokenService(tokenRepository, tokenTools, validator)
-const renewAccessTokenUC = new RenewAccessTokenUseCase(tokenService)
+const userService = new UserService(userRepository, validator)
+
+const renewAccessTokenUC = new RenewAccessTokenUseCase(tokenService, userService)
+
 const tokenController = controllerFactory.createTokenController(schema, presenter, errorTranslator)
 
 tokenRoutes.post("/refresh", tokenController.refreshToken(renewAccessTokenUC))

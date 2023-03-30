@@ -1,6 +1,8 @@
+import { JwtPayload } from "jsonwebtoken";
+import StringTokenDTO from "../../interfaces/dtos/token/singular/StringTokenDTO";
+import TokenDTO from "../../interfaces/dtos/token/singular/TokenDTO";
 import UserEmailDTO from "../../interfaces/dtos/token/singular/UserEmailDTO";
 import TokenCreationDTO from "../../interfaces/dtos/token/TokenCreationDTO";
-import TokenUpdateDTO from "../../interfaces/dtos/token/TokenUpdateDTO";
 import TokenRepository from "../../interfaces/repositories/TokenRepository";
 import TokenChecker from "../../interfaces/utils/token/TokenChecker";
 import TokenDecoder from "../../interfaces/utils/token/TokenDecoder";
@@ -28,6 +30,14 @@ class TokenService {
         const generatedToken = await this.tokenTools.generate(payload, key, options)
         return Promise.resolve(generatedToken)
     }
+    
+    async checkTokenIsExpired(data: StringTokenDTO, key:string): Promise<Boolean> {
+        return this.tokenTools.isExpired(data.token, key)
+    }
+
+    async decodeToken(data: StringTokenDTO, key:string): Promise<JwtPayload> {
+        return this.tokenTools.decode(data.token, key)
+    }
 
     async insertToken(token: TokenCreationDTO): Promise<Token>{
         const newToken = new Token(token.userEmail, token.refreshToken, token.IP, token.userAgent, token.isBlocked)
@@ -40,7 +50,12 @@ class TokenService {
         return Promise.resolve(token)
     }
 
-    async updateToken(data: TokenUpdateDTO): Promise<Token>{
+    async fetchByRefreshToken(data: StringTokenDTO): Promise<Token|null> {
+        const token = await this.repository.readByRefreshToken(data.token)
+        return Promise.resolve(token)
+    }
+
+    async updateToken(data: TokenDTO): Promise<Token>{
         const updatedToken = await this.repository.updateToken(data.token)
         return Promise.resolve(updatedToken)
     }
