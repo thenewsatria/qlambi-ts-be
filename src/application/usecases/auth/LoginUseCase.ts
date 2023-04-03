@@ -84,6 +84,7 @@ class LoginUseCase {
         )
 
         loggedUserToken.setRefreshToken(refreshToken)
+        loggedUserToken.setIsInvalidated(false)
         loggedUserToken.setIP(data.IP)
         loggedUserToken.setUserAgent(data.userAgent)
 

@@ -23,11 +23,12 @@ class TokenRepositoryPrisma implements TokenRepository {
         try{
             const createdToken = await this._client.token.create({
                 data: {
-                    userEmail: token.getEmail(),
+                    userEmail: token.getUserEmail(),
                     refreshToken: token.getRefreshToken(),
                     IP: token.getIP(),
                     userAgent: token.getUserAgent(),
-                    isBlocked: token.getIsBlocked()
+                    isBlocked: token.getIsBlocked(),
+                    isInvalidated: token.getIsInvalidated()
                 }
             })
     
@@ -61,7 +62,7 @@ class TokenRepositoryPrisma implements TokenRepository {
 
         if(tokenResult) {
             userToken = new Token(tokenResult.userEmail, tokenResult.refreshToken, 
-                tokenResult.IP, tokenResult.userAgent, tokenResult.isBlocked)
+                tokenResult.IP, tokenResult.userAgent, tokenResult.isBlocked, tokenResult.isInvalidated)
             userToken.setId(tokenResult.id+"")
             userToken.setCreatedAt(tokenResult.createdAt)
             userToken.setUpdatedAt(tokenResult.updatedAt)
@@ -81,7 +82,7 @@ class TokenRepositoryPrisma implements TokenRepository {
 
         if (tokenResult) {
             userToken = new Token(tokenResult.userEmail, tokenResult.refreshToken, 
-                tokenResult.IP, tokenResult.userAgent, tokenResult.isBlocked)
+                tokenResult.IP, tokenResult.userAgent, tokenResult.isBlocked, tokenResult.isInvalidated)
             userToken.setId(tokenResult.id+"")
             userToken.setCreatedAt(tokenResult.createdAt)
             userToken.setUpdatedAt(tokenResult.updatedAt)
@@ -99,7 +100,8 @@ class TokenRepositoryPrisma implements TokenRepository {
                 refreshToken: token.getRefreshToken(),
                 IP: token.getIP(),
                 userAgent: token.getUserAgent(),
-                isBlocked: token.getIsBlocked()
+                isBlocked: token.getIsBlocked(),
+                isInvalidated: token.getIsInvalidated()
             }
         })
 
