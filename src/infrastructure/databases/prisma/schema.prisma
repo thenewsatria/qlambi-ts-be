@@ -11,13 +11,14 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  email     String    @unique
-  username  String    @unique
-  password  String
-  token     Token?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  username      String    @unique
+  password      String
+  token         Token?
+  previousToken UsedToken?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
 model Token {
@@ -28,6 +29,16 @@ model Token {
   IP            String
   userAgent     String
   isBlocked     Boolean
+  isInvalidated Boolean
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+}
+
+model UsedToken {
+  id                Int       @id @default(autoincrement())
+  user              User      @relation(fields: [userEmail], references: [email])
+  userEmail         String    @unique
+  usedRefreshToken  String   
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 }
