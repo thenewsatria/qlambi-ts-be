@@ -26,7 +26,7 @@ class UserRepositoryPrisma implements UserRepository {
                 data: {
                     email: user.getEmail(),
                     username: user.getUsername(),
-                    password: user.getPassword()
+                    password: user.getPassword(),
                 }
             })
             user.setId(newUser.id+"")

@@ -1,4 +1,5 @@
 import { SignOptions } from "jsonwebtoken";
+import Role from "../../../domain/enums/Role";
 import TokenService from "../../../domain/services/TokenService";
 import UserService from "../../../domain/services/UserService";
 import RegisterRequestDTO from "../../../interfaces/dtos/auth/RegisterRequestDTO";
@@ -55,8 +56,8 @@ class RegisterUseCase {
             {expiresIn: process.env.REF_TOKEN_EXPIRE}
         )
 
-        // Masukan pada database]
-        await this.userService.insertUser({...data, password: hashedPassword}) 
+        // Masukan pada database
+        await this.userService.insertUser({...data, password: hashedPassword, role: Role.USER}) 
         
         // masukan pasangan username / email + refreshtoken kedalam database
         await this.tokenService.insertToken({

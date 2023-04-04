@@ -16,7 +16,7 @@ class UserService {
     }
 
     async insertUser(data: UserCreationDTO): Promise<User> {
-        const newUser = new User(data.email, data.username, data.password)
+        const newUser = new User(data.email, data.username, data.password, data.role)
         const insertedUser = await this.repository.createUser(newUser)
         return Promise.resolve(insertedUser)
     }

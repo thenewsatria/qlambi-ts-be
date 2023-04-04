@@ -1,28 +1,23 @@
+import Role from "../enums/Role"
 import Token from "./Token"
 import UsedToken from "./UsedToken"
 
 class User {
-//     id            Int       @id @default(autoincrement())
-//   email         String    @unique
-//   username      String    @unique
-//   password      String
-//   token         Token?
-//   previousToken UsedToken?
-//   createdAt     DateTime  @default(now())
-//   updatedAt     DateTime  @updatedAt
     private id?: string
     private email: string
     private username: string
     private password: string
+    private role: Role
     private token?: Token
     private previousToken?: UsedToken
     private createdAt?: Date 
     private updatedAt?: Date
 
-    constructor(email: string, username: string, password: string) {
+    constructor(email: string, username: string, password: string, role: Role = Role.USER) {
         this.email = email
         this.username = username
         this.password = password
+        this.role = role
     }
 
     getId(): string | undefined{
@@ -37,6 +32,9 @@ class User {
     getPassword(): string{
         return this.password
     }
+    getRole(): Role{
+        return this.role
+    }
     getToken(): Token | undefined {
         return this.token
     }
@@ -49,7 +47,7 @@ class User {
     getUpdatedAt(): Date | undefined{
         return this.updatedAt
     }
-
+    
     setId(id: string) {
         this.id = id
     }
@@ -61,6 +59,9 @@ class User {
     }
     setPassword(password: string) {
         this.password = password
+    }
+    setRole(role: Role) {
+        this.role = role
     }
     setToken(token: Token) {
         this.token = token
