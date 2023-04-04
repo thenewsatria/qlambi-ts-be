@@ -1,11 +1,12 @@
 import {Request, Response, NextFunction} from 'express'
-import TokenService from '../../../domain/services/TokenService'
+import User from '../../../domain/entities/User'
 import ErrorTranslator from '../../../interfaces/errors/ErrorTranslator'
 import AuthMiddleware from '../../../interfaces/middlewares/AuthMiddleware'
 import TokenVSchema from '../../../interfaces/validators/schemas/TokenVSchema'
 import UnauthorizedError from '../../errors/apis/UnauthorizedError'
 import BaseError from '../../errors/BaseError'
 import GetUserByAccesTokenUseCase from '../../usecases/middleware/GetUserByAccesTokenUseCase'
+
 class AuthMiddlewareExpress implements AuthMiddleware {
     private readonly tokenSchemas: TokenVSchema
     private readonly errorTranslator: ErrorTranslator
@@ -14,7 +15,6 @@ class AuthMiddlewareExpress implements AuthMiddleware {
         this.tokenSchemas = tokenSchemas
         this.errorTranslator = errorTranslator
     }
-
     protect(useCase: GetUserByAccesTokenUseCase): (req: Request, res: Response, next: NextFunction) => void {
         return async(req: Request, res: Response, next: NextFunction) => {
             try {
@@ -35,6 +35,20 @@ class AuthMiddlewareExpress implements AuthMiddleware {
                 }else{
                     next(new BaseError("Unknown Error Occured", false, error))
                 }
+            }
+        }
+    }
+
+
+    checkAllowedRoles(allowedRoles: string[]): (req: Request, res: Response, next: NextFunction) => void {
+        return (req: Request, res: Response, next: NextFunction) => {
+            const loggedUser: User = res.locals.currentLoggedUser
+            if(allowedRoles.includes(loggedUser.getRole())){
+                next()
+            }else{
+                return next(
+                    new UnauthorizedError("current user role isn't allowed to access this resource", true)
+                )
             }
         }
     }
