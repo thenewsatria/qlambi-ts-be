@@ -4,7 +4,7 @@ import TokenService from "../../../domain/services/TokenService";
 import UserService from "../../../domain/services/UserService";
 import LoginRequestDTO from "../../../interfaces/dtos/auth/LoginRequestDTO";
 import LoginResponseDTO from "../../../interfaces/dtos/auth/LoginResponseDTO";
-import EmailDTO from "../../../interfaces/dtos/user/singular/EmailDTO";
+import UserTokenDTO from "../../../interfaces/dtos/user/UserTokenDTO";
 import AppOperationType from "../../../interfaces/enums/AppOperationType";
 import ResourceType from "../../../interfaces/enums/ResourceType";
 import Hasher from "../../../interfaces/utils/encryption/Hasher";
@@ -71,14 +71,14 @@ class LoginUseCase {
             )
         }
         // Generate access token dan refresh token baru
-        const accessToken = await this.tokenService.generateToken<EmailDTO, SignOptions>(
-            {email: loggedUser.getEmail()},
+        const accessToken = await this.tokenService.generateToken<UserTokenDTO, SignOptions>(
+            {email: loggedUser.getEmail(), role: loggedUser.getRole()},
             process.env.ACC_TOKEN_SECRET!,
             {expiresIn: process.env.ACC_TOKEN_EXPIRE}
         )
 
-        const refreshToken = await this.tokenService.generateToken<EmailDTO, SignOptions>(
-            {email: loggedUser.getEmail()},
+        const refreshToken = await this.tokenService.generateToken<UserTokenDTO, SignOptions>(
+            {email: loggedUser.getEmail(), role: loggedUser.getRole()},
             process.env.REF_TOKEN_SECRET!,
             {expiresIn: process.env.REF_TOKEN_EXPIRE}
         )

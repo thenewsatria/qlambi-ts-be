@@ -5,6 +5,7 @@ import UserService from "../../../domain/services/UserService";
 import RegisterRequestDTO from "../../../interfaces/dtos/auth/RegisterRequestDTO";
 import RegisterResponseDTO from "../../../interfaces/dtos/auth/RegisterResponseDTO";
 import EmailDTO from "../../../interfaces/dtos/user/singular/EmailDTO";
+import UserTokenDTO from "../../../interfaces/dtos/user/UserTokenDTO";
 import AppOperationType from "../../../interfaces/enums/AppOperationType";
 import ResourceType from "../../../interfaces/enums/ResourceType";
 import Hasher from "../../../interfaces/utils/encryption/Hasher";
@@ -45,13 +46,13 @@ class RegisterUseCase {
         const hashedPassword = await this.hasher.hash(data.password, 10)
 
         // generate accesstoken dan refreshToken
-        const accessToken = await this.tokenService.generateToken<EmailDTO, SignOptions>(
-            {email: data.email},
+        const accessToken = await this.tokenService.generateToken<UserTokenDTO, SignOptions>(
+            {email: data.email, role: Role.USER},
             process.env.ACC_TOKEN_SECRET!,
             {expiresIn: process.env.ACC_TOKEN_EXPIRE})
 
-        const refreshToken = await this.tokenService.generateToken<EmailDTO, SignOptions>(
-            {email: data.email},
+        const refreshToken = await this.tokenService.generateToken<UserTokenDTO, SignOptions>(
+            {email: data.email, role: Role.USER},
             process.env.REF_TOKEN_SECRET!,
             {expiresIn: process.env.REF_TOKEN_EXPIRE}
         )

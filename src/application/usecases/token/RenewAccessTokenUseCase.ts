@@ -5,6 +5,7 @@ import UserService from "../../../domain/services/UserService";
 import RenewAccessTokenRequestDTO from "../../../interfaces/dtos/token/RenewAccessTokenRequestDTO";
 import RenewAccessTokenResponse from "../../../interfaces/dtos/token/RenewAccessTokenResponseDTO";
 import EmailDTO from "../../../interfaces/dtos/user/singular/EmailDTO";
+import UserTokenDTO from "../../../interfaces/dtos/user/UserTokenDTO";
 import AppOperationType from "../../../interfaces/enums/AppOperationType";
 import ResourceType from "../../../interfaces/enums/ResourceType";
 import ResourceExpiredError from "../../errors/app/ResourceExpiredError";
@@ -123,14 +124,14 @@ class RenewAccessTokenUseCase {
             )
         }
 
-        const accessToken = await this.tokenService.generateToken<EmailDTO, SignOptions>(
-            {email: currentUser.getEmail()},
+        const accessToken = await this.tokenService.generateToken<UserTokenDTO, SignOptions>(
+            {email: currentUser.getEmail(), role: currentUser.getRole()},
             process.env.ACC_TOKEN_SECRET!,
             {expiresIn: process.env.ACC_TOKEN_EXPIRE}
         )
 
-        const refreshToken = await this.tokenService.generateToken<EmailDTO, SignOptions>(
-            {email: currentUser.getEmail()},
+        const refreshToken = await this.tokenService.generateToken<UserTokenDTO, SignOptions>(
+            {email: currentUser.getEmail(), role: currentUser.getRole()},
             process.env.REF_TOKEN_SECRET!,
             {expiresIn: process.env.REF_TOKEN_EXPIRE}
         )
