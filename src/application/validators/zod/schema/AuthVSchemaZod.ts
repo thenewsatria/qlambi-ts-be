@@ -37,8 +37,8 @@ class AuthVSchemasZod implements AuthVSchema {
                 .min(5, {
                     message: "username must be at least 5 character"
                 })
-                .max(25, {
-                    message: "username must be less than 25 character"
+                .max(30, {
+                    message: "username must be less than 30 character"
                 })
                 .regex(/^[a-z0-9_.]+$/, {
                     message: "Username can only contain lowercase characters, period, and underscores"

@@ -1,4 +1,5 @@
 import Role from "../enums/Role"
+import Product from "./Product"
 import Token from "./Token"
 import UsedToken from "./UsedToken"
 
@@ -10,6 +11,7 @@ class User {
     private role: Role
     private token?: Token
     private previousToken?: UsedToken
+    private products?: Product[]
     private createdAt?: Date 
     private updatedAt?: Date
 
@@ -41,6 +43,9 @@ class User {
     getPreviousToken(): UsedToken | undefined {
         return this.previousToken
     }
+    getProducts(): Product[] | undefined {
+        return this.products
+    }
     getCreatedAt(): Date | undefined{
         return this.createdAt
     }
@@ -68,6 +73,9 @@ class User {
     }
     setPreviousToken(previousToken: UsedToken) {
         this.previousToken = previousToken
+    }
+    setProducts(products: Product[]) {
+        this.products = products
     }
     setCreatedAt(date: Date) {
         this.createdAt = date

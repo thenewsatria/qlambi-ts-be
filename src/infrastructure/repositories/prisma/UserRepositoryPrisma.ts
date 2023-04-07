@@ -23,10 +23,11 @@ class UserRepositoryPrisma implements UserRepository {
     async createUser(user: User): Promise<User> {
         try{
             const newUser = await this._client.user.create({
-                data: {
+            data: {
                     email: user.getEmail(),
                     username: user.getUsername(),
                     password: user.getPassword(),
+                    role: user.getRole()
                 }
             })
             user.setId(newUser.id+"")

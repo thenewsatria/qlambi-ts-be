@@ -1,15 +1,17 @@
 import AuthController from "../../../interfaces/controllers/AuthController";
+import ProductController from "../../../interfaces/controllers/ProductController";
 import TokenController from "../../../interfaces/controllers/TokenController";
 import ErrorTranslator from "../../../interfaces/errors/ErrorTranslator";
 import ControllerFactory from "../../../interfaces/factories/ControllerFactory";
 import JsendPresenter from "../../../interfaces/presenters/JsendPresenter";
 import AuthVSchema from "../../../interfaces/validators/schemas/AuthVSchema";
+import ProductVSchema from "../../../interfaces/validators/schemas/ProductVSchema";
 import TokenVSchema from "../../../interfaces/validators/schemas/TokenVSchema";
 import AuthControllerExpress from "../express/AuthControllerExpress";
+import ProductControllerExpress from "../express/ProductControllerExpress";
 import TokenControllerExpress from "../express/TokenControllerExpress";
 
 class ControllerFactoryExpress implements ControllerFactory {
-
     // Implementing Singleton
     private static instance: ControllerFactoryExpress
 
@@ -29,6 +31,9 @@ class ControllerFactoryExpress implements ControllerFactory {
         return new TokenControllerExpress(tokenSchemas, presenter, errorTranslator)
     }
 
+    createProductController(productSchemas: ProductVSchema, presenter: JsendPresenter, errorTranslator: ErrorTranslator): ProductController {
+        return new ProductControllerExpress(productSchemas, presenter, errorTranslator)
+    }
 }
 
 export default ControllerFactoryExpress

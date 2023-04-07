@@ -18,6 +18,7 @@ model User {
   role          String    @default("USER")
   token         Token?
   previousToken UsedToken?
+  products      Product[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
@@ -42,4 +43,19 @@ model UsedToken {
   usedRefreshToken  String   
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
+}
+
+model Product {
+  id                Int       @id @default(autoincrement())
+  productName       String
+  productClass      String
+  productType       String
+  material          String
+  description       String
+  creator           User      @relation(fields: [userEmail], references: [email])
+  userEmail         String
+  isActive          Boolean   @default(true)
+  deactivatedAt     DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt 
 }
