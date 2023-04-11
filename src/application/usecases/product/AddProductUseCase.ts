@@ -1,6 +1,6 @@
 import ProductService from "../../../domain/services/ProductService";
 import ProductCreationRequestDTO from "../../../interfaces/dtos/product/ProductCreationRequestDTO";
-import ProductCreationResponseDTO from "../../../interfaces/dtos/product/ProductCreationResponseDTO";
+import ProductGeneralResponseDTO from "../../../interfaces/dtos/product/ProductGeneralResponse";
 
 class AddProductUseCase {
     private readonly productService: ProductService
@@ -9,7 +9,7 @@ class AddProductUseCase {
         this.productService = productService
     }
 
-    async execute(data: ProductCreationRequestDTO, requestSchema: any): Promise<ProductCreationResponseDTO> {
+    async execute(data: ProductCreationRequestDTO, requestSchema: any): Promise<ProductGeneralResponseDTO> {
         await this.productService.validateData<ProductCreationRequestDTO>(requestSchema, data)
         const product = await this.productService.insertProduct(data)
         const creator = product.getCreator()

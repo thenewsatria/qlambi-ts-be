@@ -27,7 +27,7 @@ model Token {
   id            Int       @id @default(autoincrement())
   user          User      @relation(fields: [userEmail], references: [email])
   userEmail     String    @unique
-  refreshToken  String
+  refreshToken  String    @db.VarChar(255) //prisma default is 191, while token length vary, so modified using db.Varchar with specified length
   IP            String
   userAgent     String
   isBlocked     Boolean
@@ -40,7 +40,7 @@ model UsedToken {
   id                Int       @id @default(autoincrement())
   user              User      @relation(fields: [userEmail], references: [email])
   userEmail         String    @unique
-  usedRefreshToken  String   
+  usedRefreshToken  String    @db.VarChar(255) //prisma default is 191, while token length vary, so modified using db.Varchar with specified length
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 }

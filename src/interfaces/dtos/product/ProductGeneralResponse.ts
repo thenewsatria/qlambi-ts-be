@@ -1,6 +1,6 @@
 import UserDetailDTO from "../user/UserDetailDTO";
 
-interface ProductCreationResponseDTO {
+interface ProductGeneralResponseDTO {
     id?: string;
     creator: UserDetailDTO | string;
     productName: string;
@@ -14,4 +14,5 @@ interface ProductCreationResponseDTO {
     updatedAt?: Date;
 }
 
-export default ProductCreationResponseDTO
+export default ProductGeneralResponseDTO
+

@@ -9,6 +9,7 @@ import MiddlewareFactoryExpress from '../../middlewares/factories/MiddlewareFact
 import ExpressJsendPresenter from '../../presenters/express/ExpressJsendPresenter'
 import GetUserByAccesTokenUseCase from '../../usecases/middleware/GetUserByAccesTokenUseCase'
 import AddProductUseCase from '../../usecases/product/AddProductUseCase'
+import UpdateProductUseCase from '../../usecases/product/UpdateProductUseCase'
 import JsonWebToken from '../../utils/token/jsonwebtoken/JsonWebToken'
 import VSchemaFactoryZod from '../../validators/factories/VSchemaFactoryZod'
 import ValidatorZod from '../../validators/zod/ValidatorZod'
@@ -41,11 +42,13 @@ const productController = controllerFactory.createProductController(productSchem
 
 const getUserByTokenUC = new GetUserByAccesTokenUseCase(tokenService, userService)
 const addProductUC = new AddProductUseCase(productService)
+const updateProductUC = new UpdateProductUseCase(productService)
 
 const authMW = middlewareFactory.createAuthMiddleware(tokenSchemas, errorTranslator)
 
 productRoutes.use(authMW.protect(getUserByTokenUC))
 productRoutes.use(authMW.checkAllowedRoles(['ADMIN']))
 productRoutes.post('/', productController.addProduct(addProductUC))
+productRoutes.put('/:productID', productController.updateProduct(updateProductUC))
 
 export default productRoutes

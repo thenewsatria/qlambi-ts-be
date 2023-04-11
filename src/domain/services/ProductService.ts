@@ -1,4 +1,6 @@
 import ProductCreationRequestDTO from "../../interfaces/dtos/product/ProductCreationRequestDTO";
+import ProductDTO from "../../interfaces/dtos/product/singular/ProductDTO";
+import ProductIdDTO from "../../interfaces/dtos/product/singular/ProductIdDTO";
 import ProductRepository from "../../interfaces/repositories/ProductRepository";
 import Validator from "../../interfaces/validators/Validator";
 import Product from "../entities/Product";
@@ -16,11 +18,21 @@ class ProductService {
         return this.validator.validate<DataT>(schema, data)
     }
 
-    async insertProduct(product: ProductCreationRequestDTO): Promise<Product> {
-        const newProduct = new Product(product.userEmail, product.productName,
-            product.productClass, product.productType, product.material, product.description)
+    async insertProduct(data: ProductCreationRequestDTO): Promise<Product> {
+        const newProduct = new Product(data.userEmail, data.productName,
+            data.productClass, data.productType, data.material, data.description)
         const insertedProduct = await this.repository.createProduct(newProduct)
         return Promise.resolve(insertedProduct)
+    }
+    
+    async updateProduct(data: ProductDTO): Promise<Product> {
+        const updatedProduct = await this.repository.updateProduct(data.product)
+        return Promise.resolve(updatedProduct)
+    }
+
+    async fetchById(data: ProductIdDTO): Promise<Product|null> {
+        const product = await this.repository.readById(data.id)
+        return Promise.resolve(product)
     }
 }
 

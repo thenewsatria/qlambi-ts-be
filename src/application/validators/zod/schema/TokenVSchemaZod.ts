@@ -1,5 +1,7 @@
-import z, { ZodEffects, ZodPipeline, ZodString } from "zod";
+import z, { ZodEffects, ZodPipeline, ZodSchema, ZodString } from "zod";
 import TokenVSchema from "../../../../interfaces/validators/schemas/TokenVSchema";
+import RenewAccessTokenRequestDTO from "../../../../interfaces/dtos/token/RenewAccessTokenRequestDTO";
+import StringTokenDTO from "../../../../interfaces/dtos/token/singular/StringTokenDTO";
 
 class TokenVSchemaZod implements TokenVSchema {
     private static instance: TokenVSchemaZod
@@ -24,7 +26,7 @@ class TokenVSchemaZod implements TokenVSchema {
             )
     }
 
-    getAccessTokenRenewalRequestSchema() {
+    getAccessTokenRenewalRequestSchema(): ZodSchema<RenewAccessTokenRequestDTO>{
         return z.object({
             refreshToken: this.setNoEmptyString(
                 "Refresh Token",
@@ -37,7 +39,7 @@ class TokenVSchemaZod implements TokenVSchema {
         .required()
     }
 
-    getStringTokenSchema() {
+    getStringTokenSchema(): ZodSchema<StringTokenDTO> {
         return z.object({
             token: this.setNoEmptyString(
                 "Token",

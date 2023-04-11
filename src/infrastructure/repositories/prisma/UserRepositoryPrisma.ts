@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import BaseError from "../../../application/errors/BaseError";
 import DatabaseError from "../../../application/errors/databases/DatabaseError";
 import User from "../../../domain/entities/User";
+import Role from "../../../domain/enums/Role";
 import DatabaseOperation from "../../../interfaces/enums/DatabaseOperationType";
 import DatabaseResourceType from "../../../interfaces/enums/DatabaseResourceType";
 import UserRepository from "../../../interfaces/repositories/UserRepository";
@@ -63,6 +64,7 @@ class UserRepositoryPrisma implements UserRepository {
             if(result) {
                 user = new User(result.email, result.username, result.password)
                 user.setId(result.id+"")
+                user.setRole(result.role === "ADMIN" ? Role.ADMIN : Role.USER)
                 user.setCreatedAt(result.createdAt)
                 user.setUpdatedAt(result.updatedAt)   
             }
@@ -96,6 +98,7 @@ class UserRepositoryPrisma implements UserRepository {
             if(result) {
                 user = new User(result.email, result.username, result.password)
                 user.setId(result.id+"")
+                user.setRole(result.role === "ADMIN" ? Role.ADMIN : Role.USER)
                 user.setCreatedAt(result.createdAt)
                 user.setUpdatedAt(result.updatedAt)   
             }
