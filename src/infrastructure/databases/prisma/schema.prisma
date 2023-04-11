@@ -52,7 +52,7 @@ model Product {
   productType       String
   material          String
   description       String
-  creator           User      @relation(fields: [userEmail], references: [email])
+  creator           User     @relation(fields: [userEmail], references: [email])
   userEmail         String
   isActive          Boolean   @default(true)
   deactivatedAt     DateTime?

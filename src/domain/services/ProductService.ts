@@ -31,7 +31,12 @@ class ProductService {
     }
 
     async fetchById(data: ProductIdDTO): Promise<Product|null> {
-        const product = await this.repository.readById(data.id)
+        const product = await this.repository.readById(data.id, false)
+        return Promise.resolve(product)
+    }
+
+    async fetchDetailById(data: ProductIdDTO): Promise<Product|null> {
+        const product = await this.repository.readById(data.id, true)
         return Promise.resolve(product)
     }
 }

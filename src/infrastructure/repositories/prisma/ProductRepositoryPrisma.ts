@@ -1,4 +1,5 @@
 import Product from "../../../domain/entities/Product"
+import User from "../../../domain/entities/User"
 import ProductRepository from "../../../interfaces/repositories/ProductRepository"
 import prismaClient from "../../databases/prisma/client"
 
@@ -51,12 +52,15 @@ class ProductRepositoryPrisma implements ProductRepository {
         return Promise.resolve(product)
     }
 
-    async readById(productId: string): Promise<Product|null> {
+    async readById(productId: string, detailed: boolean = false): Promise<Product|null> {
         let product: Product | null = null
 
         const productResult = await this._client.product.findUnique({
             where: {
                 id: +productId
+            },
+            include: {
+                creator: detailed
             }
         })
 
@@ -66,6 +70,9 @@ class ProductRepositoryPrisma implements ProductRepository {
             product.setId(productResult.id+"")
             product.setIsActive(productResult.isActive)
             productResult.deactivatedAt ? product.setDeactivatedAt(productResult.deactivatedAt) : null
+            productResult.creator ? 
+                product.setCreator(new User(productResult.creator.email, productResult.creator.username, "")) 
+                : null
             product.setCreatedAt(productResult.createdAt)
             product.setUpdatedAt(productResult.updatedAt)
         }

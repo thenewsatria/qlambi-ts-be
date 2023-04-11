@@ -4,7 +4,7 @@ import ProductUpdateRequestDTO from "../../../../interfaces/dtos/product/Product
 import ProductVSchema from "../../../../interfaces/validators/schemas/ProductVSchema";
 
 class ProductVSchemaZod implements ProductVSchema {
-    
+       
     private static instance: ProductVSchemaZod
     
     public static getInstance(): ProductVSchemaZod {
@@ -174,6 +174,18 @@ class ProductVSchemaZod implements ProductVSchema {
         .required()
     }
 
+    getProductByIdRequestSchema() {
+        return z.object({
+            id: this.setNoEmptyString(
+                "Product ID",
+                z.string({
+                    required_error: "Product ID is required",
+                    invalid_type_error: "Product ID must be a string"
+                })
+            )
+        })
+        .required()
+    }
 }
 
 export default ProductVSchemaZod
