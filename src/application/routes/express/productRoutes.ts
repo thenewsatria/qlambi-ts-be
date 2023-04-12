@@ -11,6 +11,7 @@ import ExpressJsendPresenter from '../../presenters/express/ExpressJsendPresente
 import GetUserByAccesTokenUseCase from '../../usecases/middleware/GetUserByAccesTokenUseCase'
 import AddProductUseCase from '../../usecases/product/AddProductUseCase'
 import GetProductDetailUseCase from '../../usecases/product/GetProductDetailUseCase'
+import RemoveProductUseCase from '../../usecases/product/RemoveProductUseCase'
 import ToggleProductActiveUseCase from '../../usecases/product/ToggleProductActiveUseCase'
 import UpdateProductUseCase from '../../usecases/product/UpdateProductUseCase'
 import JsonWebToken from '../../utils/token/jsonwebtoken/JsonWebToken'
@@ -48,6 +49,7 @@ const addProductUC = new AddProductUseCase(productService)
 const updateProductUC = new UpdateProductUseCase(productService)
 const getProductDetailUC = new GetProductDetailUseCase(productService)
 const toggleProductActiveUC = new ToggleProductActiveUseCase(productService)
+const removeProductUC = new RemoveProductUseCase(productService)
 
 const authMW = middlewareFactory.createAuthMiddleware(tokenSchemas, errorTranslator)
 
@@ -58,7 +60,7 @@ productRoutes.post('/', productController.addProduct(addProductUC))
 productRoutes.route('/:productID')
     .get(productController.getProductDetail(getProductDetailUC))
     .put(productController.updateProduct(updateProductUC))
-    // .delete(productController.deleteProduct(deleteProductUC))
+    .delete(productController.removeProduct(removeProductUC))
 
 productRoutes.put('/toggle/:productID', productController.toggleProductActive(toggleProductActiveUC))
 

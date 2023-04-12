@@ -94,6 +94,32 @@ class ProductRepositoryPrisma implements ProductRepository {
 
         return Promise.resolve(product)
     }
+
+
+    async deleteById(product: Product, detailed: boolean = false): Promise<Product> {
+        const deletedProduct = await this._client.product.delete({
+            where: {
+                id: +product.getId()!
+            },
+            include: {
+                creator: detailed
+            }
+        })
+        if(deletedProduct){
+            product = new Product(deletedProduct.userEmail, deletedProduct.productName, deletedProduct.productClass,
+                deletedProduct.productType, deletedProduct.material, deletedProduct.description)
+            product.setId(deletedProduct.id+"")
+            product.setIsActive(deletedProduct.isActive)
+            deletedProduct.deactivatedAt ? product.setDeactivatedAt(deletedProduct.deactivatedAt) : null
+            deletedProduct.creator ? 
+                product.setCreator(new User(deletedProduct.creator.email, deletedProduct.creator.username, "")) 
+                : null
+            product.setCreatedAt(deletedProduct.createdAt)
+            product.setUpdatedAt(deletedProduct.updatedAt)
+        }
+
+        return Promise.resolve(product)
+    }
 }
 
 export default ProductRepositoryPrisma

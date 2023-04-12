@@ -5,7 +5,7 @@ interface ProductRepository {
     updateActiveStatus(product: Product): Promise<Product>
     updateProduct(product: Product): Promise<Product>
     readById(productId: string, detailed: boolean): Promise<Product|null>
-
+    deleteById(product: Product, detailed: boolean): Promise<Product>
 }
 
 export default ProductRepository
