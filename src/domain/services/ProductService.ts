@@ -40,8 +40,9 @@ class ProductService {
         return Promise.resolve(deletedProduct)
     }
 
-    async fetchAll(): Promise<Product[]> {
-        const products = await this.repository.readAll(true)
+    async fetchAll(query: any): Promise<Product[]> {
+        console.log(query)
+        const products = await this.repository.readAllV2(query, true)
         return Promise.resolve(products)
     }
 

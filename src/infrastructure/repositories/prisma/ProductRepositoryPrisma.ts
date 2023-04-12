@@ -67,6 +67,34 @@ class ProductRepositoryPrisma implements ProductRepository {
         return Promise.resolve(product)
     }
 
+    async readAllV2(query: any, detailed: boolean): Promise<Product[]> {
+        const products: Product[] = []
+        console.log(query)
+        const productsRes = await this._client.product.findMany({
+            where: query.filter,
+            orderBy: query.orderBy,
+            include: {
+                creator: detailed
+            }
+        })
+        for (const currProd of productsRes) {
+            const product = new Product(currProd.userEmail, currProd.productName, currProd.productClass,
+                currProd.productType, currProd.material, currProd.description)
+            product.setId(currProd.id+"")
+            product.setIsActive(currProd.isActive)
+            currProd.deactivatedAt ? product.setDeactivatedAt(currProd.deactivatedAt) : null
+            currProd.creator ? 
+                product.setCreator(new User(currProd.creator.email, currProd.creator.username, "")) 
+                : null
+            product.setCreatedAt(currProd.createdAt)
+            product.setUpdatedAt(currProd.updatedAt)
+            products.push(product)
+
+        }
+
+        return Promise.resolve(products)
+    } 
+
     async readAll(detailed: boolean): Promise<Product[]> {
         const products: Product[] = []
         const productsRes = await this._client.product.findMany({
@@ -86,8 +114,9 @@ class ProductRepositoryPrisma implements ProductRepository {
             product.setCreatedAt(currProd.createdAt)
             product.setUpdatedAt(currProd.updatedAt)
             products.push(product)
+
         }
-        
+
         return Promise.resolve(products)
     }
 

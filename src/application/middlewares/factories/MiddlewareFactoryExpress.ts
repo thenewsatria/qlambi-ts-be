@@ -1,14 +1,13 @@
-import TokenService from "../../../domain/services/TokenService";
 import ErrorTranslator from "../../../interfaces/errors/ErrorTranslator";
 import MiddlewareFactory from "../../../interfaces/factories/MiddlewareFactory";
 import AuthMiddleware from "../../../interfaces/middlewares/AuthMiddleware";
 import HandlerMiddleware from "../../../interfaces/middlewares/HandlerMiddleware";
+import QueryMiddleware from "../../../interfaces/middlewares/QueryMiddleware";
 import SetupMiddleware from "../../../interfaces/middlewares/SetupMiddleware";
-import TokenChecker from "../../../interfaces/utils/token/TokenChecker";
-import TokenDecoder from "../../../interfaces/utils/token/TokenDecoder";
 import TokenVSchema from "../../../interfaces/validators/schemas/TokenVSchema";
 import AuthMiddlewareExpress from "../express/AuthMiddlewareExpress";
 import HandlerMiddlewareExpress from "../express/HandlerMiddlewareExpress";
+import QueryMiddlewareExpress from "../express/QueryMiddlewareExpress";
 import SetupMiddlewareExpress from "../express/SetupMiddlewareExpress";
 
 class MiddlewareFactoryExpress implements MiddlewareFactory {
@@ -28,6 +27,9 @@ class MiddlewareFactoryExpress implements MiddlewareFactory {
     }
     createHandlerMiddleware(): HandlerMiddleware {
         return new HandlerMiddlewareExpress()
+    }
+    createQueryMiddleware(): QueryMiddleware {
+        return new QueryMiddlewareExpress()
     }
 }
 

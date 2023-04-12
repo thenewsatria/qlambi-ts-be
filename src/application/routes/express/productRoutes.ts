@@ -1,5 +1,4 @@
-import { NextFunction } from 'connect'
-import express, {Request, Response} from 'express'
+import express from 'express'
 import ProductService from '../../../domain/services/ProductService'
 import TokenService from '../../../domain/services/TokenService'
 import UserService from '../../../domain/services/UserService'
@@ -54,11 +53,12 @@ const removeProductUC = new RemoveProductUseCase(productService)
 const getProductListUC = new GetProductListUseCase(productService)
 
 const authMW = middlewareFactory.createAuthMiddleware(tokenSchemas, errorTranslator)
+const queryMW = middlewareFactory.createQueryMiddleware()
 
 productRoutes.use(authMW.protect(getUserByTokenUC))
 productRoutes.use(authMW.checkAllowedRoles(['ADMIN']))
 productRoutes.post('/', productController.addProduct(addProductUC))
-productRoutes.get('/', productController.getProductList(getProductListUC))
+productRoutes.get('/', queryMW.filterQuery(),  productController.getProductList(getProductListUC))
 productRoutes.route('/:productID')
     .get(productController.getProductDetail(getProductDetailUC))
     .put(productController.updateProduct(updateProductUC))

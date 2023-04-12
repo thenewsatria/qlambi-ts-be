@@ -63,8 +63,10 @@ class ProductControllerExpress implements ProductController {
     getProductList(useCase: GetProductListUseCase): (...args: any[]) => any {
         return async(req: Request, res: Response, next: NextFunction) => {
             try{
-               const result = await useCase.execute()
-               return this.presenter.successReponse<ProductGeneralListReponseDTO>(res, 200, result)
+                const filter = res.locals.productFilter
+                const orderBy = res.locals.productOrderBy
+                const result = await useCase.execute({filter: filter, orderBy: orderBy})
+                return this.presenter.successReponse<ProductGeneralListReponseDTO>(res, 200, result)
             }catch(error: unknown) {
                 if(error instanceof Error) {
                     const apiError = this.errorTranslator.translateError(error)

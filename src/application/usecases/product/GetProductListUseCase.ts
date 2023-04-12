@@ -9,13 +9,14 @@ class GetProductListUseCase {
         this.productService = productService
     }
     
-    async execute(): Promise<ProductGeneralListReponseDTO> {
+    async execute(test: any): Promise<ProductGeneralListReponseDTO> {
         const productDetails: ProductGeneralResponseDTO[] = []
-        const products = await this.productService.fetchAll()
+        console.log(test)
+        const products = await this.productService.fetchAll(test)
         
         for (const product of products) {
             const creator = product.getCreator()
-            
+
             productDetails.push({
                 id: product.getId(),
                 creator: creator ? {

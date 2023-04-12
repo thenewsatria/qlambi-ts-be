@@ -7,6 +7,7 @@ interface ProductRepository {
     readById(productId: string, detailed: boolean): Promise<Product|null>
     deleteById(product: Product, detailed: boolean): Promise<Product>
     readAll(detailed: boolean): Promise<Product[]>
+    readAllV2(query: any, detailed: boolean): Promise<Product[]>
 }
 
 export default ProductRepository
