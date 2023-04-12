@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import User from "../../../domain/entities/User";
 import ProductController from "../../../interfaces/controllers/ProductController";
+import ProductGeneralListReponseDTO from "../../../interfaces/dtos/product/ProductGeneralListRespnoseDTO";
 import ProductGeneralResponseDTO from "../../../interfaces/dtos/product/ProductGeneralResponse";
 import ErrorTranslator from "../../../interfaces/errors/ErrorTranslator";
 import ProductVSchema from "../../../interfaces/validators/schemas/ProductVSchema";
@@ -8,6 +9,7 @@ import BaseError from "../../errors/BaseError";
 import ExpressJsendPresenter from "../../presenters/express/ExpressJsendPresenter";
 import AddProductUseCase from "../../usecases/product/AddProductUseCase";
 import GetProductDetailUseCase from "../../usecases/product/GetProductDetailUseCase";
+import GetProductListUseCase from "../../usecases/product/GetProductListUseCase";
 import RemoveProductUseCase from "../../usecases/product/RemoveProductUseCase";
 import ToggleProductActiveUseCase from "../../usecases/product/ToggleProductActiveUseCase";
 import UpdateProductUseCase from "../../usecases/product/UpdateProductUseCase";
@@ -47,6 +49,22 @@ class ProductControllerExpress implements ProductController {
             try{
                const result = await useCase.execute({...req.body, id: req.params["productID"]}, this.productSchemas.getUpdateProductRequestSchema())
                return this.presenter.successReponse<ProductGeneralResponseDTO>(res, 200, result)
+            }catch(error: unknown) {
+                if(error instanceof Error) {
+                    const apiError = this.errorTranslator.translateError(error)
+                    next(apiError)
+                }else{
+                    next(new BaseError("Unknown Error Occured", false, error))
+                }
+            }
+        }
+    }
+
+    getProductList(useCase: GetProductListUseCase): (...args: any[]) => any {
+        return async(req: Request, res: Response, next: NextFunction) => {
+            try{
+               const result = await useCase.execute()
+               return this.presenter.successReponse<ProductGeneralListReponseDTO>(res, 200, result)
             }catch(error: unknown) {
                 if(error instanceof Error) {
                     const apiError = this.errorTranslator.translateError(error)

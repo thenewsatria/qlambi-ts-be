@@ -4,7 +4,7 @@ import ProductRepository from "../../../interfaces/repositories/ProductRepositor
 import prismaClient from "../../databases/prisma/client"
 
 class ProductRepositoryPrisma implements ProductRepository {
-    
+        
     private readonly _client = prismaClient
     private static instance: ProductRepositoryPrisma
     
@@ -65,6 +65,30 @@ class ProductRepositoryPrisma implements ProductRepository {
         })
         product.setDeactivatedAt(now)
         return Promise.resolve(product)
+    }
+
+    async readAll(detailed: boolean): Promise<Product[]> {
+        const products: Product[] = []
+        const productsRes = await this._client.product.findMany({
+            include: {
+                creator: detailed
+            }
+        })
+        for (const currProd of productsRes) {
+            const product = new Product(currProd.userEmail, currProd.productName, currProd.productClass,
+                currProd.productType, currProd.material, currProd.description)
+            product.setId(currProd.id+"")
+            product.setIsActive(currProd.isActive)
+            currProd.deactivatedAt ? product.setDeactivatedAt(currProd.deactivatedAt) : null
+            currProd.creator ? 
+                product.setCreator(new User(currProd.creator.email, currProd.creator.username, "")) 
+                : null
+            product.setCreatedAt(currProd.createdAt)
+            product.setUpdatedAt(currProd.updatedAt)
+            products.push(product)
+        }
+        
+        return Promise.resolve(products)
     }
 
     async readById(productId: string, detailed: boolean = false): Promise<Product|null> {

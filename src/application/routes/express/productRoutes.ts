@@ -11,6 +11,7 @@ import ExpressJsendPresenter from '../../presenters/express/ExpressJsendPresente
 import GetUserByAccesTokenUseCase from '../../usecases/middleware/GetUserByAccesTokenUseCase'
 import AddProductUseCase from '../../usecases/product/AddProductUseCase'
 import GetProductDetailUseCase from '../../usecases/product/GetProductDetailUseCase'
+import GetProductListUseCase from '../../usecases/product/GetProductListUseCase'
 import RemoveProductUseCase from '../../usecases/product/RemoveProductUseCase'
 import ToggleProductActiveUseCase from '../../usecases/product/ToggleProductActiveUseCase'
 import UpdateProductUseCase from '../../usecases/product/UpdateProductUseCase'
@@ -50,13 +51,14 @@ const updateProductUC = new UpdateProductUseCase(productService)
 const getProductDetailUC = new GetProductDetailUseCase(productService)
 const toggleProductActiveUC = new ToggleProductActiveUseCase(productService)
 const removeProductUC = new RemoveProductUseCase(productService)
+const getProductListUC = new GetProductListUseCase(productService)
 
 const authMW = middlewareFactory.createAuthMiddleware(tokenSchemas, errorTranslator)
 
 productRoutes.use(authMW.protect(getUserByTokenUC))
 productRoutes.use(authMW.checkAllowedRoles(['ADMIN']))
 productRoutes.post('/', productController.addProduct(addProductUC))
-// productRoutes.get('/', productController.)
+productRoutes.get('/', productController.getProductList(getProductListUC))
 productRoutes.route('/:productID')
     .get(productController.getProductDetail(getProductDetailUC))
     .put(productController.updateProduct(updateProductUC))
