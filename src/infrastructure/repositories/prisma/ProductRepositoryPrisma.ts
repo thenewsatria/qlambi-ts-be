@@ -44,11 +44,26 @@ class ProductRepositoryPrisma implements ProductRepository {
                 productClass: product.getProductClass(),
                 productType: product.getProductType(),
                 material: product.getMaterial(),
-                description: product.getDescription(),  
+                description: product.getDescription(),
             }
         })
 
         product.setUpdatedAt(updateRes.updatedAt)
+        return Promise.resolve(product)
+    }
+
+    async updateActiveStatus(product: Product): Promise<Product> {
+        const now = new Date()
+        const updatedProduct = await this._client.product.update({
+            where: {
+                id: +product.getId()!
+            },
+            data: {
+                isActive: product.getIsActive(),
+                deactivatedAt: now
+            }
+        })
+        product.setDeactivatedAt(now)
         return Promise.resolve(product)
     }
 

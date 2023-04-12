@@ -1,4 +1,5 @@
-import express from 'express'
+import { NextFunction } from 'connect'
+import express, {Request, Response} from 'express'
 import ProductService from '../../../domain/services/ProductService'
 import TokenService from '../../../domain/services/TokenService'
 import UserService from '../../../domain/services/UserService'
@@ -10,6 +11,7 @@ import ExpressJsendPresenter from '../../presenters/express/ExpressJsendPresente
 import GetUserByAccesTokenUseCase from '../../usecases/middleware/GetUserByAccesTokenUseCase'
 import AddProductUseCase from '../../usecases/product/AddProductUseCase'
 import GetProductDetailUseCase from '../../usecases/product/GetProductDetailUseCase'
+import ToggleProductActiveUseCase from '../../usecases/product/ToggleProductActiveUseCase'
 import UpdateProductUseCase from '../../usecases/product/UpdateProductUseCase'
 import JsonWebToken from '../../utils/token/jsonwebtoken/JsonWebToken'
 import VSchemaFactoryZod from '../../validators/factories/VSchemaFactoryZod'
@@ -45,13 +47,19 @@ const getUserByTokenUC = new GetUserByAccesTokenUseCase(tokenService, userServic
 const addProductUC = new AddProductUseCase(productService)
 const updateProductUC = new UpdateProductUseCase(productService)
 const getProductDetailUC = new GetProductDetailUseCase(productService)
+const toggleProductActiveUC = new ToggleProductActiveUseCase(productService)
 
 const authMW = middlewareFactory.createAuthMiddleware(tokenSchemas, errorTranslator)
 
 productRoutes.use(authMW.protect(getUserByTokenUC))
 productRoutes.use(authMW.checkAllowedRoles(['ADMIN']))
 productRoutes.post('/', productController.addProduct(addProductUC))
-productRoutes.put('/:productID', productController.updateProduct(updateProductUC))
-productRoutes.get('/:productID', productController.getProductDetail(getProductDetailUC))
+// productRoutes.get('/', productController.)
+productRoutes.route('/:productID')
+    .get(productController.getProductDetail(getProductDetailUC))
+    .put(productController.updateProduct(updateProductUC))
+    // .delete(productController.deleteProduct(deleteProductUC))
+
+productRoutes.put('/toggle/:productID', productController.toggleProductActive(toggleProductActiveUC))
 
 export default productRoutes

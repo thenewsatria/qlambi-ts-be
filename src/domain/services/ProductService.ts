@@ -29,6 +29,11 @@ class ProductService {
         const updatedProduct = await this.repository.updateProduct(data.product)
         return Promise.resolve(updatedProduct)
     }
+    
+    async setActiveStatus(data: ProductDTO): Promise<Product> {
+        const updatedProduct = await this.repository.updateActiveStatus(data.product)
+        return Promise.resolve(updatedProduct)
+    }
 
     async fetchById(data: ProductIdDTO): Promise<Product|null> {
         const product = await this.repository.readById(data.id, false)
