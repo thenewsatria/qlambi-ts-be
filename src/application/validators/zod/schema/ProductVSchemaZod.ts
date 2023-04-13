@@ -1,6 +1,8 @@
 import z, { ZodEffects, ZodPipeline, ZodSchema, ZodString } from "zod";
 import ProductCreationRequestDTO from "../../../../interfaces/dtos/product/ProductCreationRequestDTO";
+import ProductDeletionRequestDTO from "../../../../interfaces/dtos/product/ProductDeletionRequestDTO";
 import ProductUpdateRequestDTO from "../../../../interfaces/dtos/product/ProductUpdateRequestDTO";
+import ProductIdDTO from "../../../../interfaces/dtos/product/singular/ProductIdDTO";
 import ProductVSchema from "../../../../interfaces/validators/schemas/ProductVSchema";
 
 class ProductVSchemaZod implements ProductVSchema {
@@ -174,7 +176,7 @@ class ProductVSchemaZod implements ProductVSchema {
         .required()
     }
 
-    getProductByIdRequestSchema() {
+    getProductByIdRequestSchema():  ZodSchema<ProductIdDTO>  {
         return z.object({
             id: this.setNoEmptyString(
                 "Product ID",
@@ -187,7 +189,7 @@ class ProductVSchemaZod implements ProductVSchema {
         .required()
     }
 
-    getProductDeletionRequestSchema() {
+    getProductDeletionRequestSchema(): ZodSchema<ProductDeletionRequestDTO>{
         return z.object({
             id: this.setNoEmptyString(
                 "Product ID",

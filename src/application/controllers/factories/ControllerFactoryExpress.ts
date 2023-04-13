@@ -5,9 +5,11 @@ import ErrorTranslator from "../../../interfaces/errors/ErrorTranslator";
 import ControllerFactory from "../../../interfaces/factories/ControllerFactory";
 import JsendPresenter from "../../../interfaces/presenters/JsendPresenter";
 import AuthVSchema from "../../../interfaces/validators/schemas/AuthVSchema";
+import ColorVSchema from "../../../interfaces/validators/schemas/ColorVSchema";
 import ProductVSchema from "../../../interfaces/validators/schemas/ProductVSchema";
 import TokenVSchema from "../../../interfaces/validators/schemas/TokenVSchema";
 import AuthControllerExpress from "../express/AuthControllerExpress";
+import ColorControllerExpress from "../express/ColorControllerExpress";
 import ProductControllerExpress from "../express/ProductControllerExpress";
 import TokenControllerExpress from "../express/TokenControllerExpress";
 
@@ -33,6 +35,10 @@ class ControllerFactoryExpress implements ControllerFactory {
 
     createProductController(productSchemas: ProductVSchema, presenter: JsendPresenter, errorTranslator: ErrorTranslator): ProductController {
         return new ProductControllerExpress(productSchemas, presenter, errorTranslator)
+    }
+
+    createColorController(colorSchemas: ColorVSchema, presenter: JsendPresenter, errorTranslator: ErrorTranslator) {
+        return new ColorControllerExpress(colorSchemas, presenter, errorTranslator)
     }
 }
 
