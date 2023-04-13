@@ -113,7 +113,7 @@ class ProductControllerExpress implements ProductController {
     removeProduct(useCase: RemoveProductUseCase): (...args: any[]) => any {
         return async(req: Request, res: Response, next: NextFunction) => {
             try {
-                const result = await useCase.execute({id: req.params["productID"]}, this.productSchemas.getProductByIdRequestSchema())
+                const result = await useCase.execute({...req.body, id: req.params["productID"]}, this.productSchemas.getProductDeletionRequestSchema())
                 return this.presenter.successReponse<ProductGeneralResponseDTO>(res, 200, result)
             }catch(error: unknown) {
                 if(error instanceof Error) {

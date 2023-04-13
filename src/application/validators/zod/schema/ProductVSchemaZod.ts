@@ -186,6 +186,29 @@ class ProductVSchemaZod implements ProductVSchema {
         })
         .required()
     }
+
+    getProductDeletionRequestSchema() {
+        return z.object({
+            id: this.setNoEmptyString(
+                "Product ID",
+                z.string({
+                    required_error: "Product ID is required",
+                    invalid_type_error: "Product ID must be a string"
+                })
+            ),
+            productName: this.setNoEmptyString(
+                "Product Name",
+                z.string({
+                    required_error: "Product Name is required",
+                    invalid_type_error: "Product Name must be a string"
+                })
+                .min(1, {
+                    message: "Product Name must be at least 1 character"
+                })
+            ),
+        })
+        .required()
+    }
 }
 
 export default ProductVSchemaZod

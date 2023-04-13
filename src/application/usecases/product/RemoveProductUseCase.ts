@@ -1,8 +1,9 @@
 import ProductService from "../../../domain/services/ProductService";
+import ProductDeletionRequestDTO from "../../../interfaces/dtos/product/ProductDeletionRequestDTO";
 import ProductGeneralResponseDTO from "../../../interfaces/dtos/product/ProductGeneralResponse";
-import ProductIdDTO from "../../../interfaces/dtos/product/singular/ProductIdDTO";
 import AppOperationType from "../../../interfaces/enums/AppOperationType";
 import ResourceType from "../../../interfaces/enums/ResourceType";
+import ResourceConflictError from "../../errors/app/ResourceConflictError";
 import ResourceNotFoundError from "../../errors/app/ResourceNotFoundError";
 
 class RemoveProductUseCase {
@@ -11,14 +12,22 @@ class RemoveProductUseCase {
     constructor(productService: ProductService) {
         this.productService = productService
     }
-    async execute(data: ProductIdDTO, requestSchema: any): Promise<ProductGeneralResponseDTO> {
+    async execute(data: ProductDeletionRequestDTO, requestSchema: any): Promise<ProductGeneralResponseDTO> {
         await this.productService.validateData(requestSchema, data)
         const product = await this.productService.fetchById(data)
         if(!product) {
             return Promise.reject(
-                new ResourceNotFoundError("Product with specified id doesn't exist", true, AppOperationType.FETCHING, ResourceType.PRODUCT)
+                new ResourceNotFoundError("Product with specified id doesn't exist", true, 
+                    AppOperationType.FETCHING, ResourceType.PRODUCT)
                 )
             }
+        // delete confirmation and verification like github when delete repo
+        if (data.productName !== product.getProductName()) {
+            return Promise.reject(
+                new ResourceConflictError("Product name is incorrect", true,
+                    AppOperationType.FETCHING, ResourceType.PRODUCT, ["productName"])
+            )
+        }
         const deletedProduct = await this.productService.removeById({product: product})
         const creator = deletedProduct.getCreator()
         return Promise.resolve({
