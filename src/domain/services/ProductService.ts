@@ -1,4 +1,5 @@
 import ProductCreationRequestDTO from "../../interfaces/dtos/product/ProductCreationRequestDTO";
+import ProductGeneralListRequestDTO from "../../interfaces/dtos/product/ProductGeneralListRequestDTO";
 import ProductDTO from "../../interfaces/dtos/product/singular/ProductDTO";
 import ProductIdDTO from "../../interfaces/dtos/product/singular/ProductIdDTO";
 import ProductRepository from "../../interfaces/repositories/ProductRepository";
@@ -40,8 +41,7 @@ class ProductService {
         return Promise.resolve(deletedProduct)
     }
 
-    async fetchAll(query: any): Promise<Product[]> {
-        console.log(query)
+    async fetchAll(query: ProductGeneralListRequestDTO): Promise<Product[]> {
         const products = await this.repository.readAllV2(query, true)
         return Promise.resolve(products)
     }

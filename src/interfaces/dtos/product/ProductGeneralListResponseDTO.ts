@@ -1,8 +1,8 @@
 import ProductGeneralResponseDTO from "./ProductGeneralResponse";
 
-interface ProductGeneralListReponseDTO {
+interface ProductGeneralListResponseDTO {
     count: number;
     products: ProductGeneralResponseDTO[];
 }
 
-export default ProductGeneralListReponseDTO
+export default ProductGeneralListResponseDTO

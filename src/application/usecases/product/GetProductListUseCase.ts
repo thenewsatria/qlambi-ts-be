@@ -1,5 +1,6 @@
 import ProductService from "../../../domain/services/ProductService"
-import ProductGeneralListReponseDTO from "../../../interfaces/dtos/product/ProductGeneralListRespnoseDTO"
+import ProductGeneralListRequestDTO from "../../../interfaces/dtos/product/ProductGeneralListRequestDTO"
+import ProductGeneralListReponseDTO from "../../../interfaces/dtos/product/ProductGeneralListResponseDTO"
 import ProductGeneralResponseDTO from "../../../interfaces/dtos/product/ProductGeneralResponse"
 
 class GetProductListUseCase {
@@ -9,10 +10,9 @@ class GetProductListUseCase {
         this.productService = productService
     }
     
-    async execute(test: any): Promise<ProductGeneralListReponseDTO> {
+    async execute(query: ProductGeneralListRequestDTO): Promise<ProductGeneralListReponseDTO> {
         const productDetails: ProductGeneralResponseDTO[] = []
-        console.log(test)
-        const products = await this.productService.fetchAll(test)
+        const products = await this.productService.fetchAll(query)
         
         for (const product of products) {
             const creator = product.getCreator()

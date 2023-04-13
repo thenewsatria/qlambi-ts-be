@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import User from "../../../domain/entities/User";
 import ProductController from "../../../interfaces/controllers/ProductController";
-import ProductGeneralListReponseDTO from "../../../interfaces/dtos/product/ProductGeneralListRespnoseDTO";
+import ProductGeneralListReponseDTO from "../../../interfaces/dtos/product/ProductGeneralListResponseDTO";
 import ProductGeneralResponseDTO from "../../../interfaces/dtos/product/ProductGeneralResponse";
 import ErrorTranslator from "../../../interfaces/errors/ErrorTranslator";
 import ProductVSchema from "../../../interfaces/validators/schemas/ProductVSchema";
@@ -64,8 +64,8 @@ class ProductControllerExpress implements ProductController {
         return async(req: Request, res: Response, next: NextFunction) => {
             try{
                 const filter = res.locals.productFilter
-                const orderBy = res.locals.productOrderBy
-                const result = await useCase.execute({filter: filter, orderBy: orderBy})
+                const order = res.locals.productOrder
+                const result = await useCase.execute({filter: filter, sortOrder: order})
                 return this.presenter.successReponse<ProductGeneralListReponseDTO>(res, 200, result)
             }catch(error: unknown) {
                 if(error instanceof Error) {

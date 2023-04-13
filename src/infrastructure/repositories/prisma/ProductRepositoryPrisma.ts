@@ -1,5 +1,6 @@
 import Product from "../../../domain/entities/Product"
 import User from "../../../domain/entities/User"
+import ProductGeneralListRequestDTO from "../../../interfaces/dtos/product/ProductGeneralListRequestDTO"
 import ProductRepository from "../../../interfaces/repositories/ProductRepository"
 import prismaClient from "../../databases/prisma/client"
 
@@ -67,12 +68,11 @@ class ProductRepositoryPrisma implements ProductRepository {
         return Promise.resolve(product)
     }
 
-    async readAllV2(query: any, detailed: boolean): Promise<Product[]> {
+    async readAllV2(query: ProductGeneralListRequestDTO, detailed: boolean): Promise<Product[]> {
         const products: Product[] = []
-        console.log(query)
         const productsRes = await this._client.product.findMany({
-            where: query.filter,
-            orderBy: query.orderBy,
+            where: query.filter as any,
+            orderBy: query.sortOrder as any,
             include: {
                 creator: detailed
             }

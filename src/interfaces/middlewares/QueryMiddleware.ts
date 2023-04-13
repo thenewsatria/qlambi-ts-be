@@ -1,5 +1,5 @@
 interface QueryMiddleware {
-    filterQuery(): (...args: any[])  => any
+    filterProductQuery(): (...args: any[])  => any
 }
 
 export default QueryMiddleware
