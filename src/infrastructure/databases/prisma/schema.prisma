@@ -19,6 +19,7 @@ model User {
   token         Token?
   previousToken UsedToken?
   products      Product[]
+  colors        Color[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
@@ -58,4 +59,17 @@ model Product {
   deactivatedAt     DateTime?
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt 
+}
+
+model Color {
+  id              Int       @id @default(autoincrement())
+  colorName       String
+  hexValue        String
+  description     String
+  creator         User     @relation(fields: [userEmail], references: [email])
+  userEmail       String
+  isActive        Boolean  @default(true)
+  deactivatedAt   DateTime?
+  createdAt       DateTime
+  updatedAt       DateTime
 }
