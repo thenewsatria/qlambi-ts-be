@@ -20,83 +20,83 @@ class Color {
         this.isActive = true
     }
 
-    setId(id: string) {
+    public setId(id: string) {
         this.id = id
     }
 
-    setColorName(colorName: string) {
+    public setColorName(colorName: string) {
         this.colorName = colorName
     }
 
-    setHexValue(hexValue: string) {
+    public setHexValue(hexValue: string) {
         this.hexValue = hexValue
     }
 
-    setDescription(description: string) {
+    public setDescription(description: string) {
         this.description = description
     }
     
-    setCreator(creator: User) {
+    public setCreator(creator: User) {
         this.creator = creator
     }
 
-    setUserEmail(userEmail: string) {
+    public setUserEmail(userEmail: string) {
         this.userEmail = userEmail
     }
 
-    setIsActive(isActive: boolean) {
+    public setIsActive(isActive: boolean) {
         this.isActive = isActive
     }
     
-    setCreatedAt(createdAt: Date) {
+    public setCreatedAt(createdAt: Date) {
         this.createdAt = createdAt
     }
 
-    setUpdatedAt(updatedAt: Date) {
+    public setUpdatedAt(updatedAt: Date) {
         this.updatedAt = updatedAt
     }
 
-    setDeactivatedAt(deactivatedAt: Date) {
+    public setDeactivatedAt(deactivatedAt: Date) {
         this.deactivatedAt = deactivatedAt
     }
 
-    getId(): string | undefined {
+    public getId(): string | undefined {
         return this.id
     }
     
-    getColorName(): string {
+    public getColorName(): string {
         return this.colorName
     }
     
-    getHexValue(): string {
+    public getHexValue(): string {
         return this.hexValue
     }
     
-    getDescription(): string {
+    public getDescription(): string {
         return this.description
     }
     
-    getCreator(): User | undefined {
+    public getCreator(): User | undefined {
         return this.creator
     }
     
-    getUserEmail(): string {
+    public getUserEmail(): string {
         return this.userEmail
     }
     
-    getIsActive(): boolean {
+    public getIsActive(): boolean {
         return this.isActive
     }
 
-    getCreatedAt(): Date | undefined {
+    public getCreatedAt(): Date | undefined {
         return this.createdAt
     }
 
-    getUpdatedAt(): Date | undefined {
+    public getUpdatedAt(): Date | undefined {
         return this.updatedAt
     }
 
-    getDeactivatedAt(): Date | undefined {
+    public getDeactivatedAt(): Date | undefined {
         return this.deactivatedAt
     }
 }
