@@ -7,6 +7,7 @@ import ColorVSchema from "../../../interfaces/validators/schemas/ColorVSchema";
 import BaseError from "../../errors/BaseError";
 import ExpressJsendPresenter from "../../presenters/express/ExpressJsendPresenter";
 import AddColorUseCase from "../../usecases/color/AddColorUseCase";
+import UpdateColorUseCase from "../../usecases/color/UpdateColorUseCase";
 
 class ColorControllerExpress implements ColorController{
     private colorSchemas: ColorVSchema
@@ -35,7 +36,23 @@ class ColorControllerExpress implements ColorController{
                 }
             }
         }
-    }   
+    }
+    
+    updateColor(useCase: UpdateColorUseCase): (...args: any[]) => any {
+        return async(req: Request, res: Response, next: NextFunction) => {
+            try {
+                const result = await useCase.execute({...req.body, id: req.params["colorID"]}, this.colorSchemas.getUpdateColorRequestSchema())
+                return this.presenter.successReponse<ColorGeneralResponse>(res, 200, result)
+            }catch(error: unknown) {
+                if(error instanceof Error) {
+                    const apiError = this.errorTranslator.translateError(error)
+                    next(apiError)
+                }else{
+                    next(new BaseError("Unknown Error Occured", false, error))
+                }
+            }
+        }
+    }
 }
 
 export default ColorControllerExpress

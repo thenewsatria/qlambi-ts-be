@@ -1,4 +1,6 @@
 import ColorCreationRequestDTO from "../../interfaces/dtos/color/ColorCreationRequestDTO"
+import ColorDTO from "../../interfaces/dtos/color/singular/ColorDTO"
+import ColorIdDTO from "../../interfaces/dtos/color/singular/ColorIdDTO"
 import ColorRepository from "../../interfaces/repositories/ColorRepository"
 import Validator from "../../interfaces/validators/Validator"
 import Color from "../entities/Color"
@@ -21,6 +23,16 @@ class ColorService {
         const newProduct = new Color(data.userEmail, data.colorName, data.hexValue, data.description)
         const insertedProduct = await this.repository.createColor(newProduct)
         return Promise.resolve(insertedProduct)
+    }
+    
+    async fetchById(data: ColorIdDTO): Promise<Color|null> {
+        const color = this.repository.readById(data.id, false)
+        return Promise.resolve(color)
+    }
+
+    async updateColor(data: ColorDTO): Promise<Color> {
+        const updatedColor = await this.repository.updateColor(data.color)
+        return Promise.resolve(updatedColor)
     }
 }
 
