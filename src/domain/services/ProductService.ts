@@ -36,13 +36,13 @@ class ProductService {
         return Promise.resolve(updatedProduct)
     }
 
-    async removeById(data: ProductDTO): Promise<Product> {
-        const deletedProduct = await this.repository.deleteById(data.product, true)
+    async removeProduct(data: ProductDTO): Promise<Product> {
+        const deletedProduct = await this.repository.deleteProduct(data.product, true)
         return Promise.resolve(deletedProduct)
     }
 
     async fetchAll(query: ProductGeneralListRequestDTO): Promise<Product[]> {
-        const products = await this.repository.readAllV2(query, true)
+        const products = await this.repository.readAllwSearch(query, true)
         return Promise.resolve(products)
     }
 

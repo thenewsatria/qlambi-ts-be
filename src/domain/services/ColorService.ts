@@ -15,7 +15,7 @@ class ColorService {
         this.validator = validator
     }
 
-    
+
     async validateData<DataT>(schema: any, data: DataT): Promise<DataT> {
         return this.validator.validate<DataT>(schema, data)
     }
@@ -39,6 +39,11 @@ class ColorService {
     async setActiveStatus(data: ColorDTO): Promise<Color> {
         const updatedColor = await this.repository.updateActiveStatus(data.color)
         return Promise.resolve(updatedColor)
+    }
+    
+    async removeColor(data: ColorDTO): Promise<Color> {
+        const deletedProduct = await this.repository.deleteColor(data.color, true)
+        return Promise.resolve(deletedProduct)
     }
 }
 

@@ -12,9 +12,10 @@ class RemoveProductUseCase {
     constructor(productService: ProductService) {
         this.productService = productService
     }
+
     async execute(data: ProductDeletionRequestDTO, requestSchema: any): Promise<ProductGeneralResponseDTO> {
         await this.productService.validateData(requestSchema, data)
-        const product = await this.productService.fetchById(data)
+        const product = await this.productService.fetchById({id: data.id})
         if(!product) {
             return Promise.reject(
                 new ResourceNotFoundError("Product with specified id doesn't exist", true, 
@@ -28,7 +29,7 @@ class RemoveProductUseCase {
                     AppOperationType.FETCHING, ResourceType.PRODUCT, ["productName"])
             )
         }
-        const deletedProduct = await this.productService.removeById({product: product})
+        const deletedProduct = await this.productService.removeProduct({product: product})
         const creator = deletedProduct.getCreator()
         return Promise.resolve({
             id: deletedProduct.getId(),

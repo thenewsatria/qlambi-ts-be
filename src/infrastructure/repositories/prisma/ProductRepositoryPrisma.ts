@@ -69,7 +69,7 @@ class ProductRepositoryPrisma implements ProductRepository {
         return Promise.resolve(product)
     }
 
-    async readAllV2(query: ProductGeneralListRequestDTO, detailed: boolean): Promise<Product[]> {
+    async readAllwSearch(query: ProductGeneralListRequestDTO, detailed: boolean): Promise<Product[]> {
         const products: Product[] = []
         const productsRes = await this._client.product.findMany({
             where: query.filter as any,
@@ -150,7 +150,7 @@ class ProductRepositoryPrisma implements ProductRepository {
     }
 
 
-    async deleteById(product: Product, detailed: boolean = false): Promise<Product> {
+    async deleteProduct(product: Product, detailed: boolean = false): Promise<Product> {
         const deletedProduct = await this._client.product.delete({
             where: {
                 id: +product.getId()!

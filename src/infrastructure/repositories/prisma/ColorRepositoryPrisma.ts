@@ -4,6 +4,7 @@ import ColorRepository from "../../../interfaces/repositories/ColorRepository";
 import prismaClient from "../../databases/prisma/client";
 
 class ColorRepositoryPrisma implements ColorRepository {
+    
     private readonly _client = prismaClient
     private static instance: ColorRepositoryPrisma
     
@@ -88,6 +89,31 @@ class ColorRepositoryPrisma implements ColorRepository {
         color.setDeactivatedAt(updatedColor.deactivatedAt!)
         color.setUpdatedAt(updatedColor.updatedAt)
         return Promise.resolve(color) 
+    }
+
+    async deleteColor(color: Color, detailed: boolean): Promise<Color> {
+        const deletedColor = await this._client.color.delete({
+            where: {
+                id: +color.getId()!
+            },
+            include: {
+                creator: detailed
+            }
+        })
+        if(deletedColor){
+            color = new Color(deletedColor.userEmail, deletedColor.colorName, deletedColor.hexValue, deletedColor.description)
+            color.setId(deletedColor.id+"")
+            color.setIsActive(deletedColor.isActive)
+            deletedColor.deactivatedAt ? color.setDeactivatedAt(deletedColor.deactivatedAt) : null
+            deletedColor.creator ? 
+                color.setCreator(new User(deletedColor.creator.email, deletedColor.creator.username, "")) 
+                : 
+                null
+            color.setCreatedAt(deletedColor.createdAt)
+            color.setUpdatedAt(deletedColor.updatedAt)
+        }
+
+        return Promise.resolve(color)
     }
 }
 

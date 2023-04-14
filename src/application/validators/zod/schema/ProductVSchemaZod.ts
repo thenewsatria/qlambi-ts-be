@@ -171,9 +171,6 @@ class ProductVSchemaZod implements ProductVSchema {
                     required_error: "Product Name is required",
                     invalid_type_error: "Product Name must be a string"
                 })
-                .min(1, {
-                    message: "Product Name must be at least 1 character"
-                })
             ),
         })
     }

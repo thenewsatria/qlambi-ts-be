@@ -2,6 +2,7 @@ interface ColorVSchema {
     getAddColorRequestSchema(): any
     getUpdateColorRequestSchema(): any
     getColorByIdRequestSchema(): any
+    getColorDeletionRequestSchema(): any
 }
 
 

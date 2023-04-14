@@ -7,6 +7,7 @@ import ColorVSchema from "../../../interfaces/validators/schemas/ColorVSchema";
 import BaseError from "../../errors/BaseError";
 import ExpressJsendPresenter from "../../presenters/express/ExpressJsendPresenter";
 import AddColorUseCase from "../../usecases/color/AddColorUseCase";
+import RemoveColorUseCase from "../../usecases/color/RemoveColorUseCase";
 import ToggleColorActiveUseCase from "../../usecases/color/ToggleColorActiveUseCase";
 import UpdateColorUseCase from "../../usecases/color/UpdateColorUseCase";
 
@@ -59,6 +60,22 @@ class ColorControllerExpress implements ColorController{
         return async(req: Request, res: Response, next: NextFunction) => {
             try {
                 const result = await useCase.execute({id: req.params["colorID"]}, this.colorSchemas.getColorByIdRequestSchema())
+                return this.presenter.successReponse<ColorGeneralResponse>(res, 200, result)
+            }catch(error: unknown) {
+                if(error instanceof Error) {
+                    const apiError = this.errorTranslator.translateError(error)
+                    next(apiError)
+                }else{
+                    next(new BaseError("Unknown Error Occured", false, error))
+                }
+            }
+        }
+    }
+
+    deleteColor(useCase: RemoveColorUseCase): (...args: any[]) => any {
+        return async(req: Request, res: Response, next: NextFunction) => {
+            try {
+                const result = await useCase.execute({...req.body, id: req.params["colorID"]}, this.colorSchemas.getColorDeletionRequestSchema())
                 return this.presenter.successReponse<ColorGeneralResponse>(res, 200, result)
             }catch(error: unknown) {
                 if(error instanceof Error) {
