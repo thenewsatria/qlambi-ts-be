@@ -73,6 +73,22 @@ class ColorRepositoryPrisma implements ColorRepository {
 
         return Promise.resolve(color)
     }
+
+    async updateActiveStatus(color: Color): Promise<Color> {
+        const now = new Date()
+        const updatedColor = await this._client.color.update({
+            where: {
+                id: +color.getId()!
+            },
+            data: {
+                isActive: color.getIsActive(),
+                deactivatedAt: now
+            }
+        })
+        color.setDeactivatedAt(updatedColor.deactivatedAt!)
+        color.setUpdatedAt(updatedColor.updatedAt)
+        return Promise.resolve(color) 
+    }
 }
 
 export default ColorRepositoryPrisma

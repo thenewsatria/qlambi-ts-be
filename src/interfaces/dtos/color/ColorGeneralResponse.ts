@@ -9,7 +9,7 @@ interface ColorGeneralResponse {
     isActive: boolean;
     deactivatedAt?: Date;
     createdAt?: Date;
-    updatedAt?: Date; 
+    updatedAt?: Date;
 }
 
 export default ColorGeneralResponse

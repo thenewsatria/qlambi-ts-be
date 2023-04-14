@@ -64,7 +64,8 @@ class ProductRepositoryPrisma implements ProductRepository {
                 deactivatedAt: now
             }
         })
-        product.setDeactivatedAt(now)
+        product.setDeactivatedAt(updatedProduct.deactivatedAt!)
+        product.setUpdatedAt(updatedProduct.updatedAt)
         return Promise.resolve(product)
     }
 

@@ -1,6 +1,7 @@
 import z, { ZodEffects, ZodPipeline, ZodSchema, ZodString } from "zod";
 import ColorCreationRequestDTO from "../../../../interfaces/dtos/color/ColorCreationRequestDTO";
 import ColorUpdateRequestDTO from "../../../../interfaces/dtos/color/ColorUpdateRequestDTO";
+import ColorIdDTO from "../../../../interfaces/dtos/color/singular/ColorIdDTO";
 import ColorVSchema from "../../../../interfaces/validators/schemas/ColorVSchema";
 
 class ColorVSchemaZod implements ColorVSchema {
@@ -89,6 +90,18 @@ class ColorVSchemaZod implements ColorVSchema {
                 required_error: "Description is required",
                 invalid_type_error: "Description must be a string"
             })
+        })
+    }
+
+    getColorByIdRequestSchema():  ZodSchema<ColorIdDTO>  {
+        return z.object({
+            id: this.setNoEmptyString(
+                "Color ID",
+                z.string({
+                    required_error: "Color ID is required",
+                    invalid_type_error: "Color ID must be a string"
+                })
+            )
         })
     }
 }
