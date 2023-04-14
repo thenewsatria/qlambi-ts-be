@@ -36,7 +36,6 @@ class TokenVSchemaZod implements TokenVSchema {
                 })
             )
         })
-        .required()
     }
 
     getStringTokenSchema(): ZodSchema<StringTokenDTO> {
@@ -49,7 +48,6 @@ class TokenVSchemaZod implements TokenVSchema {
                 })
             )
         })
-        .required()
     }
 }
 

@@ -4,6 +4,7 @@ import authRoutes from './authRoutes'
 import MiddlewareFactoryExpress from '../../middlewares/factories/MiddlewareFactoryExpress'
 import tokenRoutes from './tokenRoutes'
 import productRoutes from './productRoutes'
+import colorRoutes from './colorRoutes'
 const APIRouter = express.Router()
 const V1Router = express.Router()
 
@@ -26,5 +27,7 @@ export function routeApp(app: Express) {
     V1Router.use('/auth', authRoutes)
     V1Router.use('/token', tokenRoutes)
     V1Router.use('/products', productRoutes)
+    V1Router.use('/colors', colorRoutes)
+    
     app.use(handlerMW.handleErrors(ExpressJsendPresenter.getInstance()))
 }

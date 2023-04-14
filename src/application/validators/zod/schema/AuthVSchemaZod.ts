@@ -74,12 +74,6 @@ class AuthVSchemasZod implements AuthVSchema {
             IP: z.string().ip(),
             userAgent: z.string()
         })
-        .required({
-            username: true,
-            email: true,
-            password: true,
-            confirmPassword: true
-        })
         .refine(({password, confirmPassword}) => password === confirmPassword, {
             message: "Confirm password don't match",
             path: ["confirmPassword"]
@@ -104,10 +98,6 @@ class AuthVSchemasZod implements AuthVSchema {
             ),
             IP: z.string().ip(),
             userAgent: z.string()
-        })
-        .required({
-            credential: true,
-            password: true
         })
     }
 

@@ -1,8 +1,8 @@
 interface ColorCreationRequestDTO {
     colorName: string;
     hexValue: string;
-    description: string
-    userEmail: string;
+    description: string;
+    userEmadil: string;
 }
 
 export default ColorCreationRequestDTO

@@ -34,7 +34,7 @@ const productRepository = repositoryFactory.createProductRepository()
 const tokenRepository = repositoryFactory.createTokenRepository()
 const userRepository = repositoryFactory.createUserRepository()
 
-const productSchemas = valSchemaFactory.createProductVschema()
+const productSchemas = valSchemaFactory.createProductVSchema()
 const tokenSchemas = valSchemaFactory.createTokenVSchema()
 
 

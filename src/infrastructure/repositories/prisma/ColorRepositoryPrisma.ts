@@ -24,8 +24,8 @@ class ColorRepositoryPrisma implements ColorRepository {
         })
         color.setId(newColor.id+"")
         color.setCreatedAt(newColor.createdAt)
-        color.setUpdatedAt(newColor.updatedAt) 
-        throw new Error("Method not implemented.");
+        color.setUpdatedAt(newColor.updatedAt)
+        return Promise.resolve(color)
     }
 }
 

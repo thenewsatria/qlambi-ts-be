@@ -47,9 +47,6 @@ class ProductVSchemaZod implements ProductVSchema {
                     required_error: "Product Name is required",
                     invalid_type_error: "Product Name must be a string"
                 })
-                .min(1, {
-                    message: "Product Name must be at least 1 character"
-                })
                 .max(64, {
                     message: "Product Name must be less than 64 character"
                 })
@@ -59,9 +56,6 @@ class ProductVSchemaZod implements ProductVSchema {
                 z.string({
                     required_error: "Product Class is required",
                     invalid_type_error: "Product Class must be a string"
-                })
-                .min(1, {
-                    message: "Product Class must be at least 1 character",
                 })
                 .max(64, {
                     message: "Product class must be less than 64 character"
@@ -73,9 +67,6 @@ class ProductVSchemaZod implements ProductVSchema {
                     required_error: "Product Class is required",
                     invalid_type_error: "Product Class must be a string"
                 })
-                .min(1, {
-                    message: "Product Type must be at least 1 character"
-                })
                 .max(64, {
                     message: "Product Type must be less than 64 character"
                 })
@@ -86,9 +77,6 @@ class ProductVSchemaZod implements ProductVSchema {
                     required_error: "Material is required",
                     invalid_type_error: "Material must be a string"
                 })
-                .min(1, {
-                    message: "Material must be at least 1 character"
-                })
                 .max(64, {
                     message: "Material must be less than 64 character"
                 })
@@ -97,13 +85,6 @@ class ProductVSchemaZod implements ProductVSchema {
                 required_error: "Description is required",
                 invalid_type_error: "Description must be a string"
             })
-        })
-        .required({
-            userEmail: true,
-            productType: true,
-            productName: true,
-            productClass: true,
-            material: true
         })
     }
 
@@ -122,9 +103,6 @@ class ProductVSchemaZod implements ProductVSchema {
                     required_error: "Product Name is required",
                     invalid_type_error: "Product Name must be a string"
                 })
-                .min(1, {
-                    message: "Product Name must be at least 1 character"
-                })
                 .max(64, {
                     message: "Product Name must be less than 64 character"
                 })
@@ -134,9 +112,6 @@ class ProductVSchemaZod implements ProductVSchema {
                 z.string({
                     required_error: "Product Class is required",
                     invalid_type_error: "Product Class must be a string"
-                })
-                .min(1, {
-                    message: "Product Class must be at least 1 character",
                 })
                 .max(64, {
                     message: "Product class must be less than 64 character"
@@ -148,9 +123,6 @@ class ProductVSchemaZod implements ProductVSchema {
                     required_error: "Product Class is required",
                     invalid_type_error: "Product Class must be a string"
                 })
-                .min(1, {
-                    message: "Product Type must be at least 1 character"
-                })
                 .max(64, {
                     message: "Product Type must be less than 64 character"
                 })
@@ -161,9 +133,6 @@ class ProductVSchemaZod implements ProductVSchema {
                     required_error: "Material is required",
                     invalid_type_error: "Material must be a string"
                 })
-                .min(1, {
-                    message: "Material must be at least 1 character"
-                })
                 .max(64, {
                     message: "Material must be less than 64 character"
                 })
@@ -173,7 +142,6 @@ class ProductVSchemaZod implements ProductVSchema {
                 invalid_type_error: "Description must be a string"
             })
         })
-        .required()
     }
 
     getProductByIdRequestSchema():  ZodSchema<ProductIdDTO>  {
@@ -186,7 +154,6 @@ class ProductVSchemaZod implements ProductVSchema {
                 })
             )
         })
-        .required()
     }
 
     getProductDeletionRequestSchema(): ZodSchema<ProductDeletionRequestDTO>{
@@ -209,7 +176,6 @@ class ProductVSchemaZod implements ProductVSchema {
                 })
             ),
         })
-        .required()
     }
 }
 
