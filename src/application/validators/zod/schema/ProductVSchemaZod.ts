@@ -5,8 +5,7 @@ import ProductUpdateRequestDTO from "../../../../interfaces/dtos/product/Product
 import ProductIdDTO from "../../../../interfaces/dtos/product/singular/ProductIdDTO";
 import ProductVSchema from "../../../../interfaces/validators/schemas/ProductVSchema";
 
-class ProductVSchemaZod implements ProductVSchema {
-       
+class ProductVSchemaZod implements ProductVSchema {     
     private static instance: ProductVSchemaZod
     
     public static getInstance(): ProductVSchemaZod {
@@ -171,6 +170,35 @@ class ProductVSchemaZod implements ProductVSchema {
                     required_error: "Product Name is required",
                     invalid_type_error: "Product Name must be a string"
                 })
+            ),
+        })
+    }
+
+    getAddColorToProductRequestSchema() {
+        return z.object({
+            productId: this.setNoEmptyString(
+                "Product ID",
+                z.string({
+                    required_error: "Product ID is required",
+                    invalid_type_error: "Product ID must be a string"
+                })
+            ),
+            colorId: this.setNoEmptyString(
+                "Color ID",
+                z.string({
+                    required_error: "Color ID is required",
+                    invalid_type_error: "Color ID must be a string"
+                })
+            ),
+            userEmail: this.setNoEmptyString(
+                "User Email",
+                z.string({
+                    required_error: "User Email is required",
+                    invalid_type_error: "User Email must be a string"
+                })
+                .email({
+                    message: "Invalid email"
+                }),
             ),
         })
     }

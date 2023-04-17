@@ -1,3 +1,4 @@
+import Color from "../../../domain/entities/Color"
 import Product from "../../../domain/entities/Product"
 import User from "../../../domain/entities/User"
 import ProductGeneralListRequestDTO from "../../../interfaces/dtos/product/ProductGeneralListRequestDTO"
@@ -5,7 +6,7 @@ import ProductRepository from "../../../interfaces/repositories/ProductRepositor
 import prismaClient from "../../databases/prisma/client"
 
 class ProductRepositoryPrisma implements ProductRepository {
-        
+           
     private readonly _client = prismaClient
     private static instance: ProductRepositoryPrisma
     
@@ -151,7 +152,7 @@ class ProductRepositoryPrisma implements ProductRepository {
 
 
     async deleteProduct(product: Product, detailed: boolean = false): Promise<Product> {
-        const deletedProduct = await this._client.product.delete({
+        const colorRelation = await this._client.product.delete({
             where: {
                 id: +product.getId()!
             },
@@ -159,19 +160,51 @@ class ProductRepositoryPrisma implements ProductRepository {
                 creator: detailed
             }
         })
-        if(deletedProduct){
-            product = new Product(deletedProduct.userEmail, deletedProduct.productName, deletedProduct.productClass,
-                deletedProduct.productType, deletedProduct.material, deletedProduct.description)
-            product.setId(deletedProduct.id+"")
-            product.setIsActive(deletedProduct.isActive)
-            deletedProduct.deactivatedAt ? product.setDeactivatedAt(deletedProduct.deactivatedAt) : null
-            deletedProduct.creator ? 
-                product.setCreator(new User(deletedProduct.creator.email, deletedProduct.creator.username, "")) 
+        if(colorRelation){
+            product = new Product(colorRelation.userEmail, colorRelation.productName, colorRelation.productClass,
+                colorRelation.productType, colorRelation.material, colorRelation.description)
+            product.setId(colorRelation.id+"")
+            product.setIsActive(colorRelation.isActive)
+            colorRelation.deactivatedAt ? product.setDeactivatedAt(colorRelation.deactivatedAt) : null
+            colorRelation.creator ? 
+                product.setCreator(new User(colorRelation.creator.email, colorRelation.creator.username, "")) 
                 : null
-            product.setCreatedAt(deletedProduct.createdAt)
-            product.setUpdatedAt(deletedProduct.updatedAt)
+            product.setCreatedAt(colorRelation.createdAt)
+            product.setUpdatedAt(colorRelation.updatedAt)
         }
 
+        return Promise.resolve(product)
+    }
+
+
+    async hasColor(product: Product, color: Color): Promise<Boolean> {        
+        const colorRelation = await this._client.colorsOnProducts.findFirst({
+            where: {
+                productId: +product.getId()!,
+                colorId: +color.getId()!
+            }
+        })
+
+        return Promise.resolve(colorRelation !== null)
+    }
+
+    async addColor(product: Product, color: Color, assigner: string): Promise<Product> {
+        let colors: Color[] = []
+        await this._client.colorsOnProducts.create({
+            data: {
+                productId: +product.getId()!,
+                colorId: +color.getId()!,
+                userEmail: assigner
+            }
+        })
+        
+        const curretColors = product.getAvailableColors()
+        if(curretColors){
+            colors = curretColors
+        }
+        colors.push(color)
+
+        product.setAvailableColors(colors)
         return Promise.resolve(product)
     }
 }

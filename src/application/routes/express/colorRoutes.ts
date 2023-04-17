@@ -30,7 +30,6 @@ const controllerFactory = ControllerFactoryExpress.getInstance()
 const middlewareFactory = MiddlewareFactoryExpress.getInstance()
 const valSchemaFactory = VSchemaFactoryZod.getInstance()
 
-
 const colorRepository = repositoryFactory.createColorRepository()
 const tokenRepository = repositoryFactory.createTokenRepository()
 const userRepository = repositoryFactory.createUserRepository()

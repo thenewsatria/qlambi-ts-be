@@ -10,7 +10,6 @@ interface RepositoryFactory {
     createUsedTokenRepository(): UsedTokenRepository
     createProductRepository(): ProductRepository
     createColorRepository(): ColorRepository
-    
 }
 
 export default RepositoryFactory

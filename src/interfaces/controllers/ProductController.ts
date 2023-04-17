@@ -12,7 +12,7 @@ interface ProductController {
     toggleProductActive(useCase: ToggleProductActiveUseCase): (...args: any[]) => any
     removeProduct(useCase: RemoveProductUseCase): (...args: any[]) => any
     getProductList(useCase: GetProductListUseCase): (...args: any[]) => any
-
+    addColorToProduct(useCase AddColorToProductUseCase): (...args: any[]) => any
 }
 
 export default ProductController

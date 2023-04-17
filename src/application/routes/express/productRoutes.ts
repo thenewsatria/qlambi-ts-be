@@ -1,4 +1,5 @@
 import express from 'express'
+import ColorService from '../../../domain/services/ColorService'
 import ProductService from '../../../domain/services/ProductService'
 import TokenService from '../../../domain/services/TokenService'
 import UserService from '../../../domain/services/UserService'
@@ -8,6 +9,7 @@ import AllErrorToAPIErrorTranslator from '../../errors/AllErrorToAPIErrorTransla
 import MiddlewareFactoryExpress from '../../middlewares/factories/MiddlewareFactoryExpress'
 import ExpressJsendPresenter from '../../presenters/express/ExpressJsendPresenter'
 import GetUserByAccesTokenUseCase from '../../usecases/middleware/GetUserByAccesTokenUseCase'
+import AddColorToProductUseCase from '../../usecases/product/AddColorToProductUseCase'
 import AddProductUseCase from '../../usecases/product/AddProductUseCase'
 import GetProductDetailUseCase from '../../usecases/product/GetProductDetailUseCase'
 import GetProductListUseCase from '../../usecases/product/GetProductListUseCase'
@@ -33,6 +35,7 @@ const valSchemaFactory = VSchemaFactoryZod.getInstance()
 const productRepository = repositoryFactory.createProductRepository()
 const tokenRepository = repositoryFactory.createTokenRepository()
 const userRepository = repositoryFactory.createUserRepository()
+const colorRepository = repositoryFactory.createColorRepository()
 
 const productSchemas = valSchemaFactory.createProductVSchema()
 const tokenSchemas = valSchemaFactory.createTokenVSchema()
@@ -41,6 +44,7 @@ const tokenSchemas = valSchemaFactory.createTokenVSchema()
 const productService = new ProductService(productRepository, validator)
 const tokenService = new TokenService(tokenRepository, tokenTools, validator)
 const userService = new UserService(userRepository, validator)
+const colorService = new ColorService(colorRepository, validator)
 
 const productController = controllerFactory.createProductController(productSchemas, presenter, errorTranslator)
 
@@ -51,6 +55,7 @@ const getProductDetailUC = new GetProductDetailUseCase(productService)
 const toggleProductActiveUC = new ToggleProductActiveUseCase(productService)
 const removeProductUC = new RemoveProductUseCase(productService)
 const getProductListUC = new GetProductListUseCase(productService)
+const addColorToProductUC = new AddColorToProductUseCase(productService, colorService)
 
 const authMW = middlewareFactory.createAuthMiddleware(tokenSchemas, errorTranslator)
 const queryMW = middlewareFactory.createQueryMiddleware()
@@ -64,6 +69,9 @@ productRoutes.route('/:productID')
     .put(productController.updateProduct(updateProductUC))
     .delete(productController.removeProduct(removeProductUC))
 
-productRoutes.put('/toggle/:productID', productController.toggleProductActive(toggleProductActiveUC))
+productRoutes.post('/:productID/add/:colorID', 
+    productController.addColorToProduct(addColorToProductUC))
+productRoutes.put('/toggle/:productID',
+    productController.toggleProductActive(toggleProductActiveUC))
 
 export default productRoutes

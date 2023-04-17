@@ -1,5 +1,7 @@
+import ProductAddColorDTO from "../../interfaces/dtos/product/ProductAddColorDTO";
 import ProductCreationRequestDTO from "../../interfaces/dtos/product/ProductCreationRequestDTO";
 import ProductGeneralListRequestDTO from "../../interfaces/dtos/product/ProductGeneralListRequestDTO";
+import ProductHasColorDTO from "../../interfaces/dtos/product/ProductHasColorRequestDTO";
 import ProductDTO from "../../interfaces/dtos/product/singular/ProductDTO";
 import ProductIdDTO from "../../interfaces/dtos/product/singular/ProductIdDTO";
 import ProductRepository from "../../interfaces/repositories/ProductRepository";
@@ -53,6 +55,16 @@ class ProductService {
 
     async fetchDetailById(data: ProductIdDTO): Promise<Product|null> {
         const product = await this.repository.readById(data.id, true)
+        return Promise.resolve(product)
+    }
+
+    async hasColor(data: ProductHasColorDTO): Promise<Boolean> {
+        const condition = await this.repository.hasColor(data.product, data.color)
+        return Promise.resolve(condition)
+    }
+
+    async addColor(data: ProductAddColorDTO): Promise<Product> {
+        const product = await this.repository.addColor(data.product, data.color, data.asssigner)
         return Promise.resolve(product)
     }
 }

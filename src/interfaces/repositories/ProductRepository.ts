@@ -1,3 +1,4 @@
+import Color from "../../domain/entities/Color"
 import Product from "../../domain/entities/Product"
 
 interface ProductRepository {
@@ -8,6 +9,8 @@ interface ProductRepository {
     deleteProduct(product: Product, detailed: boolean): Promise<Product>
     readAll(detailed: boolean): Promise<Product[]>
     readAllwSearch(query: any, detailed: boolean): Promise<Product[]>
+    hasColor(product: Product, color: Color): Promise<Boolean>
+    addColor(product: Product, color: Color, assigner: string): Promise<Product>
 }
 
 export default ProductRepository

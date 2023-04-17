@@ -20,8 +20,8 @@ class RemoveProductUseCase {
             return Promise.reject(
                 new ResourceNotFoundError("Product with specified id doesn't exist", true, 
                     AppOperationType.FETCHING, ResourceType.PRODUCT)
-                )
-            }
+            )
+        }
         // delete confirmation and verification like github when delete repo
         if (data.productName !== product.getProductName()) {
             return Promise.reject(

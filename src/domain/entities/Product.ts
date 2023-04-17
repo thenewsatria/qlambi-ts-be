@@ -1,3 +1,4 @@
+import Color from "./Color"
 import User from "./User"
 
 class Product {
@@ -7,6 +8,7 @@ class Product {
     private productType: string
     private material: string
     private description: string
+    private availableColors?: Color[]
     private creator?: User
     private userEmail: string
     private isActive: boolean
@@ -42,6 +44,10 @@ class Product {
     
     public getMaterial(): string {
         return this.material
+    }
+
+    public getAvailableColors(): Color[] | undefined {
+        return this.availableColors
     }
 
     public getDescription(): string {
@@ -96,6 +102,10 @@ class Product {
 
     public setDescription(description: string) {
         this.description = description
+    }
+
+    public setAvailableColors(availableColors: Color[]) {
+        this.availableColors = availableColors
     }
 
     public setCreator(creator: User) {
