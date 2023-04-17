@@ -1,6 +1,6 @@
 import ColorService from "../../../domain/services/ColorService"
 import ColorDeletionRequestDTO from "../../../interfaces/dtos/color/ColorDeletionRequestDTO"
-import ColorGeneralResponse from "../../../interfaces/dtos/color/ColorGeneralResponse"
+import ColorGeneralResponse from "../../../interfaces/dtos/color/ColorGeneralResponseDTO"
 import AppOperationType from "../../../interfaces/enums/AppOperationType"
 import ResourceType from "../../../interfaces/enums/ResourceType"
 import ResourceConflictError from "../../errors/app/ResourceConflictError"

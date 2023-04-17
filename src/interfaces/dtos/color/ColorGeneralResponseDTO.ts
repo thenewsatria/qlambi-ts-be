@@ -1,6 +1,6 @@
 import UserDetailDTO from "../user/UserDetailDTO";
 
-interface ColorGeneralResponse {
+interface ColorGeneralResponseDTO {
     id?: string;
     creator: UserDetailDTO | string;
     colorName: string;
@@ -12,4 +12,4 @@ interface ColorGeneralResponse {
     updatedAt?: Date;
 }
 
-export default ColorGeneralResponse
+export default ColorGeneralResponseDTO

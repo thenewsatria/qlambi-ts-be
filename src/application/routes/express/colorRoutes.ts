@@ -8,6 +8,7 @@ import AllErrorToAPIErrorTranslator from '../../errors/AllErrorToAPIErrorTransla
 import MiddlewareFactoryExpress from '../../middlewares/factories/MiddlewareFactoryExpress'
 import ExpressJsendPresenter from '../../presenters/express/ExpressJsendPresenter'
 import AddColorUseCase from '../../usecases/color/AddColorUseCase'
+import GetColorListUseCase from '../../usecases/color/GetColorListUseCase'
 import RemoveColorUseCase from '../../usecases/color/RemoveColorUseCase'
 import ToggleColorActiveUseCase from '../../usecases/color/ToggleColorActiveUseCase'
 import UpdateColorUseCase from '../../usecases/color/UpdateColorUseCase'
@@ -42,16 +43,19 @@ const tokenService = new TokenService(tokenRepository, tokenTools, validator)
 const userService = new UserService(userRepository, validator)
 
 const authMW = middlewareFactory.createAuthMiddleware(tokenSchemas, errorTranslator)
+const queryMW = middlewareFactory.createQueryMiddleware()
 
 const getUserByTokenUC = new GetUserByAccesTokenUseCase(tokenService, userService)
 const addColorUC = new AddColorUseCase(colorService)
 const updateColorUC = new UpdateColorUseCase(colorService)
 const toggleColorUC = new ToggleColorActiveUseCase(colorService)
 const removeColorUC = new RemoveColorUseCase(colorService)
+const getColorListUC = new GetColorListUseCase(colorService)
 
 colorRoutes.use(authMW.protect(getUserByTokenUC))
 colorRoutes.use(authMW.checkAllowedRoles(['ADMIN']))
 colorRoutes.post('/', colorController.addColor(addColorUC))
+colorRoutes.get('/', queryMW.filterColorQuery(), colorController.getColorList(getColorListUC))
 colorRoutes.route('/:colorID')
     .put(colorController.updateColor(updateColorUC))
     .delete(colorController.deleteColor(removeColorUC))

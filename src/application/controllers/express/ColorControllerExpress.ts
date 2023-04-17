@@ -1,12 +1,14 @@
 import {Request, Response, NextFunction} from "express"
 import User from "../../../domain/entities/User";
 import ColorController from "../../../interfaces/controllers/ColorController";
-import ColorGeneralResponse from "../../../interfaces/dtos/color/ColorGeneralResponse";
+import ColorGeneralListResponseDTO from "../../../interfaces/dtos/color/ColorGeneralListResponseDTO";
+import ColorGeneralResponse from "../../../interfaces/dtos/color/ColorGeneralResponseDTO";
 import ErrorTranslator from "../../../interfaces/errors/ErrorTranslator";
 import ColorVSchema from "../../../interfaces/validators/schemas/ColorVSchema";
 import BaseError from "../../errors/BaseError";
 import ExpressJsendPresenter from "../../presenters/express/ExpressJsendPresenter";
 import AddColorUseCase from "../../usecases/color/AddColorUseCase";
+import GetColorListUseCase from "../../usecases/color/GetColorListUseCase";
 import RemoveColorUseCase from "../../usecases/color/RemoveColorUseCase";
 import ToggleColorActiveUseCase from "../../usecases/color/ToggleColorActiveUseCase";
 import UpdateColorUseCase from "../../usecases/color/UpdateColorUseCase";
@@ -20,6 +22,24 @@ class ColorControllerExpress implements ColorController{
         this.colorSchemas = colorSchemas
         this.presenter = presenter
         this.errorTranslator = errorTranslator
+    }
+
+    getColorList(useCase: GetColorListUseCase): (...args: any[]) => any {
+        return async (req: Request, res: Response, next: NextFunction) => {
+            try{
+                const filter = res.locals.colorFilter
+                const order = res.locals.colorSortOrder
+                const result = await useCase.execute({filter: filter, sortOrder: order})
+                return this.presenter.successReponse<ColorGeneralListResponseDTO>(res, 200, result)
+            }catch(error: unknown) {
+                if(error instanceof Error) {
+                    const apiError = this.errorTranslator.translateError(error)
+                    next(apiError)
+                }else{
+                    next(new BaseError("Unknown Error Occured", false, error))
+                }
+            }
+        }
     }
     
     addColor(useCase: AddColorUseCase): (...args: any[]) => any {

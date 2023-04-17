@@ -1,6 +1,6 @@
 import ColorService from "../../../domain/services/ColorService"
 import ColorCreationRequestDTO from "../../../interfaces/dtos/color/ColorCreationRequestDTO"
-import ColorGeneralResponse from "../../../interfaces/dtos/color/ColorGeneralResponse"
+import ColorGeneralResponse from "../../../interfaces/dtos/color/ColorGeneralResponseDTO"
 
 class AddColorUseCase {
 

@@ -1,5 +1,5 @@
 import ColorService from "../../../domain/services/ColorService";
-import ColorGeneralResponse from "../../../interfaces/dtos/color/ColorGeneralResponse";
+import ColorGeneralResponse from "../../../interfaces/dtos/color/ColorGeneralResponseDTO";
 import ColorUpdateRequestDTO from "../../../interfaces/dtos/color/ColorUpdateRequestDTO";
 import AppOperationType from "../../../interfaces/enums/AppOperationType";
 import ResourceType from "../../../interfaces/enums/ResourceType";
@@ -25,7 +25,7 @@ class UpdateColorUseCase {
         color.setColorName(data.colorName)
         color.setHexValue(data.hexValue)
         color.setDescription(data.description)
-        
+
         const updatedColor = await this.colorService.updateColor({color: color})
         const colorCreator = updatedColor.getCreator()
         return Promise.resolve({

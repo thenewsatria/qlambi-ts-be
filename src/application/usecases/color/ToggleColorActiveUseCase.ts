@@ -1,5 +1,5 @@
 import ColorService from "../../../domain/services/ColorService";
-import ColorGeneralResponse from "../../../interfaces/dtos/color/ColorGeneralResponse";
+import ColorGeneralResponse from "../../../interfaces/dtos/color/ColorGeneralResponseDTO";
 import ColorIdDTO from "../../../interfaces/dtos/color/singular/ColorIdDTO";
 import AppOperationType from "../../../interfaces/enums/AppOperationType";
 import ResourceType from "../../../interfaces/enums/ResourceType";

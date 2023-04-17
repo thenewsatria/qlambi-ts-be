@@ -6,6 +6,7 @@ interface ColorRepository {
     updateColor(color: Color): Promise<Color>
     updateActiveStatus(color: Color): Promise<Color>
     deleteColor(color: Color, detailed: boolean): Promise<Color>
+    readAllwSearch(query: any, detailed: boolean): Promise<Color[]>
 }
 
 export default ColorRepository

@@ -1,4 +1,5 @@
 import ColorCreationRequestDTO from "../../interfaces/dtos/color/ColorCreationRequestDTO"
+import ColorGeneralListRequestDTO from "../../interfaces/dtos/color/ColorGeneralListRequestDTO"
 import ColorDTO from "../../interfaces/dtos/color/singular/ColorDTO"
 import ColorIdDTO from "../../interfaces/dtos/color/singular/ColorIdDTO"
 import ColorRepository from "../../interfaces/repositories/ColorRepository"
@@ -34,6 +35,11 @@ class ColorService {
     async updateColor(data: ColorDTO): Promise<Color> {
         const updatedColor = await this.repository.updateColor(data.color)
         return Promise.resolve(updatedColor)
+    }
+
+    async fetchAll(query: ColorGeneralListRequestDTO): Promise<Color[]> {
+        const colors = await this.repository.readAllwSearch(query, true)
+        return Promise.resolve(colors)
     }
 
     async setActiveStatus(data: ColorDTO): Promise<Color> {

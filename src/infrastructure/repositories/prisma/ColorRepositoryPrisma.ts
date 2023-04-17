@@ -4,7 +4,7 @@ import ColorRepository from "../../../interfaces/repositories/ColorRepository";
 import prismaClient from "../../databases/prisma/client";
 
 class ColorRepositoryPrisma implements ColorRepository {
-    
+       
     private readonly _client = prismaClient
     private static instance: ColorRepositoryPrisma
     
@@ -44,6 +44,31 @@ class ColorRepositoryPrisma implements ColorRepository {
         
         color.setUpdatedAt(updatedColor.updatedAt)
         return Promise.resolve(color)
+    }
+
+    async readAllwSearch(query: any, detailed: boolean): Promise<Color[]> {
+        const colors: Color[] = []
+        const colorRes = await this._client.color.findMany({
+            where: query.filter as any,
+            orderBy: query.sortOrder as any,
+            include: {
+                creator: detailed
+            }
+        })
+        for (const currColor of colorRes) {
+            const color = new Color(currColor.userEmail, currColor.colorName, currColor.hexValue, currColor.description)
+            color.setId(currColor.id+"")
+            color.setIsActive(currColor.isActive)
+            currColor.deactivatedAt ? color.setDeactivatedAt(currColor.deactivatedAt) : null
+            currColor.creator ? 
+            color.setCreator(new User(currColor.creator.email, currColor.creator.username, "")) 
+                : null
+                color.setCreatedAt(currColor.createdAt)
+                color.setUpdatedAt(currColor.updatedAt)
+            colors.push(color)
+        }
+
+        return Promise.resolve(colors)
     }
 
     async readById(colorId: string, detailed: boolean): Promise<Color | null> {

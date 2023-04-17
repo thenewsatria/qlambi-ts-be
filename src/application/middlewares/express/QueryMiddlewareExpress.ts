@@ -1,7 +1,9 @@
 import e, { Request, Response, NextFunction } from "express";
+import ColorFilter from "../../../interfaces/dtos/queries/prisma/color/ColorFilter";
+import ColorSortOrder from "../../../interfaces/dtos/queries/prisma/color/ColorSortOrder";
 import Operator from "../../../interfaces/dtos/queries/prisma/Operator";
 import ProductFilter from "../../../interfaces/dtos/queries/prisma/product/ProductFilter";
-import ProductOrder from "../../../interfaces/dtos/queries/prisma/product/ProductSortOrder";
+import ProductSortOrder from "../../../interfaces/dtos/queries/prisma/product/ProductSortOrder";
 import SortOrder from "../../../interfaces/dtos/queries/prisma/SortOrder";
 import QueryMiddleware from "../../../interfaces/middlewares/QueryMiddleware";
 
@@ -11,7 +13,7 @@ class QueryMiddlewareExpress implements QueryMiddleware {
             const {searchBy, keyword, active, sortBy, sortOrder} = req.query
 
             let filter: Operator | ProductFilter = {}
-            let orderBy: ProductOrder = {
+            let orderBy: ProductSortOrder = {
                 // the default is sorted by createdAt
                 createdAt: sortOrder === "asc" ? SortOrder.ASC : SortOrder.DESC
             }
@@ -121,10 +123,112 @@ class QueryMiddlewareExpress implements QueryMiddleware {
 
             
             res.locals.productFilter = filter
-            res.locals.productOrder = orderBy
+            res.locals.productSortOrder = orderBy
+            next()
+        }
+    }
+    
+    filterColorQuery(): (...args: any[]) => any {
+        return (req: Request, res: Response, next: NextFunction) => {
+            const {searchBy, keyword, active, sortBy, sortOrder} = req.query
 
-            console.log("Filter: ",filter)
-            console.log("OrderBy: ",orderBy)
+            let filter: Operator | ColorFilter = {}
+            let orderBy: ColorSortOrder = {
+                // the default is sorted by createdAt descending
+                createdAt: sortOrder === "asc" ? SortOrder.ASC : SortOrder.DESC
+            }
+
+            if (keyword) {
+                if(searchBy) {
+                    switch (searchBy) {
+                        case 'colorName':
+                            filter = {
+                                colorName: {
+                                    contains: keyword as string
+                                }
+                            }
+                        break;
+                        case 'hexValue':
+                            filter = {
+                                hexValue: {
+                                    contains: keyword as string
+                                }
+                            }
+                        break;
+                        case 'description':
+                            filter = {
+                                description: {
+                                    contains: keyword as string
+                                }
+                            }
+                        break;
+                        default:
+                            filter = {
+                                colorName: {
+                                    contains: keyword as string
+                                }
+                            }
+                        break;
+                    }
+                }else{
+                    // if searchBy is undefined but keyword is exist then the default is searched by colorName
+                    filter = {
+                        colorName: {
+                            contains: keyword as string
+                        }
+                    }
+                }
+            }
+
+            if (active) {
+                // if previous filter not set, then filter only contain isActive 
+                if(Object.keys(filter).length === 0) {
+                    filter = {
+                        isActive: active === 'true'
+                    }
+                }else{
+                    // else it concatenate the condition with the previous filter
+                    filter = {
+                        AND: [
+                            filter as ColorFilter,
+                            {
+                                isActive: active === 'true'
+                            }
+                        ]
+                    }
+                }
+            }
+
+            if(sortBy){
+                switch (sortBy) {
+                    case 'created':
+                        orderBy = {
+                            createdAt: sortOrder === "asc" ? SortOrder.ASC : SortOrder.DESC
+                        }
+                    break;
+                    case 'updated':
+                        orderBy = {
+                            updatedAt: sortOrder === "asc" ? SortOrder.ASC : SortOrder.DESC
+                        }
+                    break;
+                    case 'deactivated':
+                        orderBy = {
+                            deactivatedAt: sortOrder === "asc" ? SortOrder.ASC : SortOrder.DESC
+                        }
+                    break;
+                    default:
+                        // if sortBy is invalid than those 3 defined then
+                        // the default is sortBy createdAt
+                        orderBy = {
+                            createdAt: sortOrder === "asc" ? SortOrder.ASC : SortOrder.DESC
+                        }
+                    break;
+                }
+            }
+
+            
+            res.locals.colorFilter = filter
+            res.locals.colorSortOrder = orderBy
             next()
         }
     }
