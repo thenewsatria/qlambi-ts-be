@@ -32,6 +32,11 @@ class ColorService {
         return Promise.resolve(color)
     }
 
+    async fetchDetailById(data: ColorIdDTO): Promise<Color|null> {
+        const color = this.repository.readById(data.id, true)
+        return Promise.resolve(color)
+    }
+
     async updateColor(data: ColorDTO): Promise<Color> {
         const updatedColor = await this.repository.updateColor(data.color)
         return Promise.resolve(updatedColor)

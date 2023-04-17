@@ -8,6 +8,7 @@ import ColorVSchema from "../../../interfaces/validators/schemas/ColorVSchema";
 import BaseError from "../../errors/BaseError";
 import ExpressJsendPresenter from "../../presenters/express/ExpressJsendPresenter";
 import AddColorUseCase from "../../usecases/color/AddColorUseCase";
+import GetColorDetailUseCase from "../../usecases/color/GetColorDetailUseCase";
 import GetColorListUseCase from "../../usecases/color/GetColorListUseCase";
 import RemoveColorUseCase from "../../usecases/color/RemoveColorUseCase";
 import ToggleColorActiveUseCase from "../../usecases/color/ToggleColorActiveUseCase";
@@ -22,6 +23,22 @@ class ColorControllerExpress implements ColorController{
         this.colorSchemas = colorSchemas
         this.presenter = presenter
         this.errorTranslator = errorTranslator
+    }
+
+    getColorDetail(useCase: GetColorDetailUseCase): (...args: any[]) => any {
+        return async(req: Request, res: Response, next: NextFunction) => {
+            try {
+                const result = await useCase.execute({id: req.params["colorID"]}, this.colorSchemas.getColorByIdRequestSchema())
+                return this.presenter.successReponse<ColorGeneralResponse>(res, 200, result)
+            }catch(error: unknown) {
+                if(error instanceof Error) {
+                    const apiError = this.errorTranslator.translateError(error)
+                    next(apiError)
+                }else{
+                    next(new BaseError("Unknown Error Occured", false, error))
+                }
+            }
+        }
     }
 
     getColorList(useCase: GetColorListUseCase): (...args: any[]) => any {
