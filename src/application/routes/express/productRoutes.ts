@@ -13,6 +13,7 @@ import AddColorToProductUseCase from '../../usecases/product/AddColorToProductUs
 import AddProductUseCase from '../../usecases/product/AddProductUseCase'
 import GetProductDetailUseCase from '../../usecases/product/GetProductDetailUseCase'
 import GetProductListUseCase from '../../usecases/product/GetProductListUseCase'
+import RemoveColorFromProductUseCase from '../../usecases/product/RemoveColorFromProductUseCase'
 import RemoveProductUseCase from '../../usecases/product/RemoveProductUseCase'
 import ToggleProductActiveUseCase from '../../usecases/product/ToggleProductActiveUseCase'
 import UpdateProductUseCase from '../../usecases/product/UpdateProductUseCase'
@@ -56,6 +57,7 @@ const toggleProductActiveUC = new ToggleProductActiveUseCase(productService)
 const removeProductUC = new RemoveProductUseCase(productService)
 const getProductListUC = new GetProductListUseCase(productService)
 const addColorToProductUC = new AddColorToProductUseCase(productService, colorService)
+const removeColorFromProductUC = new RemoveColorFromProductUseCase(productService, colorService)
 
 const authMW = middlewareFactory.createAuthMiddleware(tokenSchemas, errorTranslator)
 const queryMW = middlewareFactory.createQueryMiddleware()
@@ -71,6 +73,8 @@ productRoutes.route('/:productID')
 
 productRoutes.post('/:productID/add/:colorID', 
     productController.addColorToProduct(addColorToProductUC))
+productRoutes.delete('/:productID/remove/:colorID',
+    productController.removeColorFromProduct(removeColorFromProductUC))
 productRoutes.put('/toggle/:productID',
     productController.toggleProductActive(toggleProductActiveUC))
 

@@ -11,6 +11,7 @@ import AddColorToProductUseCase from "../../usecases/product/AddColorToProductUs
 import AddProductUseCase from "../../usecases/product/AddProductUseCase";
 import GetProductDetailUseCase from "../../usecases/product/GetProductDetailUseCase";
 import GetProductListUseCase from "../../usecases/product/GetProductListUseCase";
+import RemoveColorFromProductUseCase from "../../usecases/product/RemoveColorFromProductUseCase";
 import RemoveProductUseCase from "../../usecases/product/RemoveProductUseCase";
 import ToggleProductActiveUseCase from "../../usecases/product/ToggleProductActiveUseCase";
 import UpdateProductUseCase from "../../usecases/product/UpdateProductUseCase";
@@ -136,6 +137,26 @@ class ProductControllerExpress implements ProductController {
                     this.productSchemas.getAddColorToProductRequestSchema())
                 return this.presenter.successReponse<ProductGeneralResponseDTO>(res, 200, result)
             }catch(error: unknown) {
+            
+                if(error instanceof Error) {
+                    const apiError = this.errorTranslator.translateError(error)
+                    next(apiError)
+                }else{
+                    next(new BaseError("Unknown Error Occured", false, error))
+                }
+            }
+        }
+    }
+
+    removeColorFromProduct(useCase: RemoveColorFromProductUseCase): (...args: any[]) => any {
+        return async(req: Request, res: Response, next: NextFunction) => {
+            try {
+                const result = await useCase.execute({colorId: req.params["colorID"],
+                    productId: req.params["productID"]},
+                    this.productSchemas.getRemoveColorFromProductRequestSchema())
+                return this.presenter.successReponse<ProductGeneralResponseDTO>(res, 200, result)
+            }catch(error: unknown) {
+            
                 if(error instanceof Error) {
                     const apiError = this.errorTranslator.translateError(error)
                     next(apiError)

@@ -1,6 +1,8 @@
 import z, { ZodEffects, ZodPipeline, ZodSchema, ZodString } from "zod";
+import ProductAddColorRequestDTO from "../../../../interfaces/dtos/product/ProductAddColorRequestDTO";
 import ProductCreationRequestDTO from "../../../../interfaces/dtos/product/ProductCreationRequestDTO";
 import ProductDeletionRequestDTO from "../../../../interfaces/dtos/product/ProductDeletionRequestDTO";
+import ProductRemoveColorRequestDTO from "../../../../interfaces/dtos/product/ProductRemoveColorRequestDTO";
 import ProductUpdateRequestDTO from "../../../../interfaces/dtos/product/ProductUpdateRequestDTO";
 import ProductIdDTO from "../../../../interfaces/dtos/product/singular/ProductIdDTO";
 import ProductVSchema from "../../../../interfaces/validators/schemas/ProductVSchema";
@@ -174,7 +176,7 @@ class ProductVSchemaZod implements ProductVSchema {
         })
     }
 
-    getAddColorToProductRequestSchema() {
+    getAddColorToProductRequestSchema(): ZodSchema<ProductAddColorRequestDTO> {
         return z.object({
             productId: this.setNoEmptyString(
                 "Product ID",
@@ -200,6 +202,25 @@ class ProductVSchemaZod implements ProductVSchema {
                     message: "Invalid email"
                 }),
             ),
+        })
+    }
+
+    getRemoveColorFromProductRequestSchema(): ZodSchema<ProductRemoveColorRequestDTO> {
+        return z.object({
+            productId: this.setNoEmptyString(
+                "Product ID",
+                z.string({
+                    required_error: "Product ID is required",
+                    invalid_type_error: "Product ID must be a string"
+                })
+            ),
+            colorId: this.setNoEmptyString(
+                "Color ID",
+                z.string({
+                    required_error: "Color ID is required",
+                    invalid_type_error: "Color ID must be a string"
+                })
+            )
         })
     }
 }

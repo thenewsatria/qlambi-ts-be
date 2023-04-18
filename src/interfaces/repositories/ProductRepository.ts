@@ -11,6 +11,7 @@ interface ProductRepository {
     readAllwSearch(query: any, detailed: boolean): Promise<Product[]>
     hasColor(product: Product, color: Color): Promise<Boolean>
     addColor(product: Product, color: Color, assigner: string): Promise<Product>
+    removeColor(product: Product, color: Color): Promise<Product>
 }
 
 export default ProductRepository

@@ -4,6 +4,7 @@ interface ProductVSchema {
     getProductByIdRequestSchema(): any
     getProductDeletionRequestSchema(): any
     getAddColorToProductRequestSchema(): any
+    getRemoveColorFromProductRequestSchema(): any
 }
 
 export default ProductVSchema

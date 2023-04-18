@@ -1,4 +1,5 @@
 import ProductService from "../../../domain/services/ProductService";
+import ColorGeneralResponseDTO from "../../../interfaces/dtos/color/ColorGeneralResponseDTO";
 import ProductGeneralResponseDTO from "../../../interfaces/dtos/product/ProductGeneralResponse";
 import ProductIdDTO from "../../../interfaces/dtos/product/singular/ProductIdDTO";
 import AppOperationType from "../../../interfaces/enums/AppOperationType";
@@ -20,6 +21,23 @@ class GetProductDetailUseCase {
             )
         }
         const creator = productDetail.getCreator()
+        const colors: ColorGeneralResponseDTO[] = []
+        const availableColors = productDetail.getAvailableColors()
+        if(availableColors){
+            for (const currColor of availableColors) {
+                colors.push({
+                    id: currColor.getId(),
+                    creator: currColor.getUserEmail(),
+                    colorName: currColor.getColorName(),
+                    hexValue: currColor.getHexValue(),
+                    description: currColor.getDescription(),
+                    isActive: currColor.getIsActive(),
+                    deactivatedAt: currColor.getDeactivatedAt(),
+                    createdAt: currColor.getCreatedAt(),
+                    updatedAt: currColor.getUpdatedAt()
+                })
+            }
+        }
         return Promise.resolve({
             id: productDetail.getId(),
             creator: creator ? {
@@ -33,6 +51,7 @@ class GetProductDetailUseCase {
             productType: productDetail.getProductType(),
             material: productDetail.getMaterial(),
             description: productDetail.getDescription(),
+            availableColors: colors.length > 0 ? colors : undefined,
             isActive: productDetail.getIsActive(),
             deactivatedAt: productDetail.getDeactivatedAt(),
             createdAt: productDetail.getCreatedAt(),

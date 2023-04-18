@@ -1,27 +1,27 @@
 import ColorService from "../../../domain/services/ColorService"
 import ProductService from "../../../domain/services/ProductService"
 import ColorGeneralResponseDTO from "../../../interfaces/dtos/color/ColorGeneralResponseDTO"
-import ProductAddColorRequestDTO from "../../../interfaces/dtos/product/ProductAddColorRequestDTO"
 import ProductGeneralResponseDTO from "../../../interfaces/dtos/product/ProductGeneralResponse"
+import ProductRemoveColorRequestDTO from "../../../interfaces/dtos/product/ProductRemoveColorRequestDTO"
 import AppOperationType from "../../../interfaces/enums/AppOperationType"
 import ResourceType from "../../../interfaces/enums/ResourceType"
 import ResourceNotFoundError from "../../errors/app/ResourceNotFoundError"
 
-class AddColorToProductUseCase {
+class RemoveColorFromProductUseCase {
     private readonly productService: ProductService
     private readonly colorService: ColorService
-
+    
     constructor(productService: ProductService, colorService: ColorService) {
         this.productService = productService
         this.colorService = colorService
     }
 
-    async execute(data: ProductAddColorRequestDTO, requestSchema: any): Promise<ProductGeneralResponseDTO> {
+    async execute(data: ProductRemoveColorRequestDTO, requestSchema: any): Promise<ProductGeneralResponseDTO> {
         // Step:
         // 1. Cek apakah id dari product ada v
         // 2. Cek apakah id dari color ada v
-        // 3. Cek apakah relasi sudah ada v
-        // 4. Tambahkan color pada relasi colorOnProduct v
+        // 3. Cek apakah relasi masih ada v
+        // 4. Hapus color pada relasi colorOnProduct v
         // 5. Buat populasi color v
         // 6. Masukan populasi color pada available color pada product v
 
@@ -40,52 +40,50 @@ class AddColorToProductUseCase {
                     AppOperationType.FETCHING, ResourceType.COLOR)
             )
         }
+        
         const condition = await this.productService.hasColor({product: product, color: color})
-        if(condition) {
+        if(!condition) {
             return Promise.reject(
-                new ResourceNotFoundError("Product already have the the same color", true, 
+                new ResourceNotFoundError("Color doesn't available on the current product", true, 
                     AppOperationType.FETCHING, ResourceType.PRODUCT)
             )
         }
-        const addedColorProduct = await this.productService.addColor({product: product, color: color, asssigner: data.userEmail})
-        const creator = addedColorProduct.getCreator()
+        const deletedColorProduct = await this.productService.removeColor({product: product, color: color})
+        const creator = deletedColorProduct.getCreator()
         const colors: ColorGeneralResponseDTO[] = []
-        const availableColors = addedColorProduct.getAvailableColors()
-        if(availableColors){
-            for (const currColor of availableColors) {
-                colors.push({
-                    id: currColor.getId(),
-                    creator: currColor.getUserEmail(),
-                    colorName: currColor.getColorName(),
-                    hexValue: currColor.getHexValue(),
-                    description: currColor.getDescription(),
-                    isActive: currColor.getIsActive(),
-                    deactivatedAt: currColor.getDeactivatedAt(),
-                    createdAt: currColor.getCreatedAt(),
-                    updatedAt: currColor.getUpdatedAt()
-                })
-            }
+        for (const currColor of deletedColorProduct.getAvailableColors()!) {
+            colors.push({
+                id: currColor.getId(),
+                creator: currColor.getUserEmail(),
+                colorName: currColor.getColorName(),
+                hexValue: currColor.getHexValue(),
+                description: currColor.getDescription(),
+                isActive: currColor.getIsActive(),
+                deactivatedAt: currColor.getDeactivatedAt(),
+                createdAt: currColor.getCreatedAt(),
+                updatedAt: currColor.getUpdatedAt()
+            })
         }
         return Promise.resolve({
-            id: addedColorProduct.getId(),
+            id: deletedColorProduct.getId(),
             creator: creator ? {
                 email: creator.getEmail(),
                 username: creator.getUsername(),
             }   
                 :
-                addedColorProduct.getUserEmail(),
-            productClass: addedColorProduct.getProductClass(),
-            productName: addedColorProduct.getProductName(),
-            productType: addedColorProduct.getProductType(),
-            material: addedColorProduct.getMaterial(),
-            availableColors: colors.length > 0 ? colors : undefined,
-            description: addedColorProduct.getDescription(),
-            isActive: addedColorProduct.getIsActive(),
-            deactivatedAt: addedColorProduct.getDeactivatedAt(),
-            createdAt: addedColorProduct.getCreatedAt(),
-            updatedAt: addedColorProduct.getUpdatedAt()
+                deletedColorProduct.getUserEmail(),
+            productClass: deletedColorProduct.getProductClass(),
+            productName: deletedColorProduct.getProductName(),
+            productType: deletedColorProduct.getProductType(),
+            material: deletedColorProduct.getMaterial(),
+            availableColors: colors,
+            description: deletedColorProduct.getDescription(),
+            isActive: deletedColorProduct.getIsActive(),
+            deactivatedAt: deletedColorProduct.getDeactivatedAt(),
+            createdAt: deletedColorProduct.getCreatedAt(),
+            updatedAt: deletedColorProduct.getUpdatedAt()
         })
     }
 }
 
-export default AddColorToProductUseCase
+export default RemoveColorFromProductUseCase

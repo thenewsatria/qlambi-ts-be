@@ -6,7 +6,7 @@ import ProductRepository from "../../../interfaces/repositories/ProductRepositor
 import prismaClient from "../../databases/prisma/client"
 
 class ProductRepositoryPrisma implements ProductRepository {
-           
+              
     private readonly _client = prismaClient
     private static instance: ProductRepositoryPrisma
     
@@ -124,17 +124,35 @@ class ProductRepositoryPrisma implements ProductRepository {
 
     async readById(productId: string, detailed: boolean = false): Promise<Product|null> {
         let product: Product | null = null
-
+        let colors: Color[] = []
         const productResult = await this._client.product.findUnique({
             where: {
                 id: +productId
             },
             include: {
-                creator: detailed
+                creator: detailed,
+                availableColors: {
+                    include: {
+                        color: detailed
+                    }
+                }
             }
         })
 
         if (productResult) {
+            if(productResult.availableColors && detailed) {
+                for(const currColor of productResult.availableColors) {
+                    const color = new Color(currColor.color.userEmail, currColor.color.colorName,
+                        currColor.color.hexValue, currColor.color.description)
+                    color.setId(currColor.color.id+"")
+                    color.setIsActive(currColor.color.isActive)
+                    currColor.color.deactivatedAt ? color.setDeactivatedAt(currColor.color.deactivatedAt) : null
+                    color.setCreatedAt(currColor.color.createdAt)
+                    color.setUpdatedAt(currColor.color.updatedAt)
+                    colors.push(color)
+                }
+            }
+
             product = new Product(productResult.userEmail, productResult.productName, productResult.productClass,
                 productResult.productType, productResult.material, productResult.description)
             product.setId(productResult.id+"")
@@ -143,6 +161,10 @@ class ProductRepositoryPrisma implements ProductRepository {
             productResult.creator ? 
                 product.setCreator(new User(productResult.creator.email, productResult.creator.username, "")) 
                 : null
+
+            if(colors.length > 0) {
+                colors ? product.setAvailableColors(colors) : null
+            }
             product.setCreatedAt(productResult.createdAt)
             product.setUpdatedAt(productResult.updatedAt)
         }
@@ -198,13 +220,29 @@ class ProductRepositoryPrisma implements ProductRepository {
             }
         })
         
-        const curretColors = product.getAvailableColors()
-        if(curretColors){
-            colors = curretColors
+        const currentColors = product.getAvailableColors()
+        if(currentColors){
+            colors = currentColors
         }
         colors.push(color)
 
         product.setAvailableColors(colors)
+        return Promise.resolve(product)
+    }
+
+    async removeColor(product: Product, color: Color): Promise<Product> {
+        await this._client.colorsOnProducts.delete({
+            where: {
+                colorId_productId: {
+                    productId: +product.getId()!,
+                    colorId: +color.getId()!,
+                }    
+            }
+        })
+        
+        let currentColors = product.getAvailableColors()!
+        currentColors = currentColors.filter(el => el.getId() !== color.getId())
+        product.setAvailableColors(currentColors)
         return Promise.resolve(product)
     }
 }
