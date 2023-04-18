@@ -245,6 +245,17 @@ class ProductRepositoryPrisma implements ProductRepository {
         product.setAvailableColors(currentColors)
         return Promise.resolve(product)
     }
+
+    async clearColors(product: Product): Promise<Product> {
+        await this._client.colorsOnProducts.deleteMany({
+            where: {
+                productId: +product.getId()!
+            }
+        })
+
+        product.setAvailableColors([])
+        return Promise.resolve(product)
+    }
 }
 
 export default ProductRepositoryPrisma

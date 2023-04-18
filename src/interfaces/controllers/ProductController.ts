@@ -1,5 +1,6 @@
 import AddColorToProductUseCase from "../../application/usecases/product/AddColorToProductUseCase";
 import AddProductUseCase from "../../application/usecases/product/AddProductUseCase";
+import ClearColorFromProductUseCase from "../../application/usecases/product/ClearColorFromProductUseCase";
 import GetProductDetailUseCase from "../../application/usecases/product/GetProductDetailUseCase";
 import GetProductListUseCase from "../../application/usecases/product/GetProductListUseCase";
 import RemoveColorFromProductUseCase from "../../application/usecases/product/RemoveColorFromProductUseCase";
@@ -16,6 +17,7 @@ interface ProductController {
     getProductList(useCase: GetProductListUseCase): (...args: any[]) => any
     addColorToProduct(useCase: AddColorToProductUseCase): (...args: any[]) => any
     removeColorFromProduct(useCase: RemoveColorFromProductUseCase): (...args: any[]) => any
+    clearColorFromProduct(useCase: ClearColorFromProductUseCase): (...args: any[]) => any
 }
 
 export default ProductController

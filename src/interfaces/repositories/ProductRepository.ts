@@ -12,6 +12,7 @@ interface ProductRepository {
     hasColor(product: Product, color: Color): Promise<Boolean>
     addColor(product: Product, color: Color, assigner: string): Promise<Product>
     removeColor(product: Product, color: Color): Promise<Product>
+    clearColors(product: Product): Promise<Product>
 }
 
 export default ProductRepository

@@ -73,6 +73,11 @@ class ProductService {
         const product = await this.repository.addColor(data.product, data.color, data.asssigner)
         return Promise.resolve(product)
     }
+
+    async clearColors(data: ProductDTO): Promise<Product> {
+        const product = await this.repository.clearColors(data.product)
+        return Promise.resolve(product)
+    }
 }
 
 export default ProductService
