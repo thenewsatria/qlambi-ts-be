@@ -21,6 +21,7 @@ model User {
   colorAssigned ColorsOnProducts[]
   products      Product[]
   colors        Color[]
+  productSizes  Size[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
@@ -55,6 +56,7 @@ model Product {
   material          String
   description       String
   availableColors   ColorsOnProducts[]
+  availableSizes    Size[]
   creator           User     @relation(fields: [userEmail], references: [email])
   userEmail         String
   isActive          Boolean   @default(true)
@@ -87,4 +89,21 @@ model ColorsOnProducts {
   userEmail   String
 
   @@id([colorId, productId])
+}
+
+model Size {
+  id              Int         @id @default(autoincrement())
+  sizeName        String
+  sizeCategory    String
+  length          Int
+  width           Int
+  description     String
+  creator         User        @relation(fields: [userEmail], references: [email])
+  userEmail       String
+  product         Product     @relation(fields: [productId], references: [id])
+  productId       Int    
+  isActive        Boolean     @default(true)
+  deactivatedAt   DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 }
