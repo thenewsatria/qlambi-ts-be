@@ -1,3 +1,4 @@
+import { Size } from "@prisma/client"
 import Color from "./Color"
 import User from "./User"
 
@@ -9,6 +10,7 @@ class Product {
     private material: string
     private description: string
     private availableColors?: Color[]
+    private availableSizes?: Size[]
     private creator?: User
     private userEmail: string
     private isActive: boolean
@@ -48,6 +50,10 @@ class Product {
 
     public getAvailableColors(): Color[] | undefined {
         return this.availableColors
+    }
+
+    public getAvailableSizes(): Size[] | undefined {
+        return this.availableSizes
     }
 
     public getDescription(): string {
@@ -106,6 +112,10 @@ class Product {
 
     public setAvailableColors(availableColors: Color[]) {
         this.availableColors = availableColors
+    }
+
+    public setAvailableSizes(availableSizes: Size[]) {
+        this.availableSizes = availableSizes
     }
 
     public setCreator(creator: User) {

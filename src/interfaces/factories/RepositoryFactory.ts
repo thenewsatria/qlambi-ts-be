@@ -1,5 +1,6 @@
 import ColorRepository from "../repositories/ColorRepository";
 import ProductRepository from "../repositories/ProductRepository";
+import SizeRepository from "../repositories/SizeRepository";
 import TokenRepository from "../repositories/TokenRepository";
 import UsedTokenRepository from "../repositories/UsedTokenRepository";
 import UserRepository from "../repositories/UserRepository";
@@ -10,6 +11,7 @@ interface RepositoryFactory {
     createUsedTokenRepository(): UsedTokenRepository
     createProductRepository(): ProductRepository
     createColorRepository(): ColorRepository
+    createSizeRepository(): SizeRepository
 }
 
 export default RepositoryFactory
