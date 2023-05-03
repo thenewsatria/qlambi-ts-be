@@ -5,6 +5,7 @@ import MiddlewareFactoryExpress from '../../middlewares/factories/MiddlewareFact
 import tokenRoutes from './tokenRoutes'
 import productRoutes from './productRoutes'
 import colorRoutes from './colorRoutes'
+import sizeRoutes from './sizeRoutes'
 const APIRouter = express.Router()
 const V1Router = express.Router()
 
@@ -28,6 +29,7 @@ export function routeApp(app: Express) {
     V1Router.use('/token', tokenRoutes)
     V1Router.use('/products', productRoutes)
     V1Router.use('/colors', colorRoutes)
+    V1Router.use('/sizes', sizeRoutes)
     
     app.use(handlerMW.handleErrors(ExpressJsendPresenter.getInstance()))
 }
