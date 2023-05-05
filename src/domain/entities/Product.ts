@@ -1,4 +1,4 @@
-import { Size } from "@prisma/client"
+import Size from "./Size"
 import Color from "./Color"
 import User from "./User"
 

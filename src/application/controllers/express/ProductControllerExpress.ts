@@ -28,6 +28,7 @@ class ProductControllerExpress implements ProductController {
         this.presenter = presenter
         this.errorTranslator = errorTranslator
     }
+    
     addProduct(useCase: AddProductUseCase): (...args: any[]) => any {
         return async (req: Request, res: Response, next: NextFunction) => {
             try{
@@ -182,7 +183,6 @@ class ProductControllerExpress implements ProductController {
             }
         }
     }
-
 }
 
 export default ProductControllerExpress

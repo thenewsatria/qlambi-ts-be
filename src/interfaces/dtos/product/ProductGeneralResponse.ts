@@ -1,4 +1,5 @@
 import ColorGeneralResponseDTO from "../color/ColorGeneralResponseDTO";
+import SizeGeneralResponseDTO from "../size/SizeGeneralResponseDTO";
 import UserDetailDTO from "../user/UserDetailDTO";
 
 interface ProductGeneralResponseDTO {
@@ -9,7 +10,8 @@ interface ProductGeneralResponseDTO {
     productType: string;
     material: string;
     description: string;
-    availableColors?: ColorGeneralResponseDTO[] | string[] 
+    availableColors?: ColorGeneralResponseDTO[] | string[]
+    availableSizes?: SizeGeneralResponseDTO[] | string[]
     isActive: boolean;
     deactivatedAt?: Date;
     createdAt?: Date;

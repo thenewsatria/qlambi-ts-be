@@ -1,5 +1,6 @@
 import Color from "../../../domain/entities/Color"
 import Product from "../../../domain/entities/Product"
+import Size from "../../../domain/entities/Size"
 import User from "../../../domain/entities/User"
 import ProductGeneralListRequestDTO from "../../../interfaces/dtos/product/ProductGeneralListRequestDTO"
 import ProductRepository from "../../../interfaces/repositories/ProductRepository"
@@ -125,6 +126,7 @@ class ProductRepositoryPrisma implements ProductRepository {
     async readById(productId: string, detailed: boolean = false): Promise<Product|null> {
         let product: Product | null = null
         let colors: Color[] = []
+        let sizes: Size[] = []
         const productResult = await this._client.product.findUnique({
             where: {
                 id: +productId
@@ -135,12 +137,13 @@ class ProductRepositoryPrisma implements ProductRepository {
                     include: {
                         color: detailed
                     }
-                }
+                },
+                availableSizes: detailed
             }
         })
 
         if (productResult) {
-            if(productResult.availableColors && detailed) {
+            if(productResult.availableColors) {
                 for(const currColor of productResult.availableColors) {
                     const color = new Color(currColor.color.userEmail, currColor.color.colorName,
                         currColor.color.hexValue, currColor.color.description)
@@ -153,6 +156,19 @@ class ProductRepositoryPrisma implements ProductRepository {
                 }
             }
 
+            if(productResult.availableSizes) {
+                for(const currSize of productResult.availableSizes) {
+                    const size = new Size(currSize.userEmail, currSize.productId+"", currSize.sizeName,
+                        currSize.sizeCategory, currSize.length, currSize.width, currSize.description)
+                    size.setId(currSize.id+"")
+                    size.setActive(currSize.isActive)
+                    currSize.deactivatedAt ? size.setDeactivatedAt(currSize.deactivatedAt) : null
+                    size.setCreatedAt(currSize.createdAt)
+                    size.setUpdatedAt(currSize.updatedAt)
+                    sizes.push(size)
+                }
+            }
+
             product = new Product(productResult.userEmail, productResult.productName, productResult.productClass,
                 productResult.productType, productResult.material, productResult.description)
             product.setId(productResult.id+"")
@@ -161,10 +177,8 @@ class ProductRepositoryPrisma implements ProductRepository {
             productResult.creator ? 
                 product.setCreator(new User(productResult.creator.email, productResult.creator.username, "")) 
                 : null
-
-            if(colors.length > 0) {
-                colors ? product.setAvailableColors(colors) : null
-            }
+            product.setAvailableColors(colors)
+            product.setAvailableSizes(sizes)
             product.setCreatedAt(productResult.createdAt)
             product.setUpdatedAt(productResult.updatedAt)
         }

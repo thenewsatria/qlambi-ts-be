@@ -9,7 +9,7 @@ import AllErrorToAPIErrorTranslator from '../../errors/AllErrorToAPIErrorTransla
 import MiddlewareFactoryExpress from '../../middlewares/factories/MiddlewareFactoryExpress'
 import ExpressJsendPresenter from '../../presenters/express/ExpressJsendPresenter'
 import GetUserByAccesTokenUseCase from '../../usecases/middleware/GetUserByAccesTokenUseCase'
-import AddSizeToProductUseCase from '../../usecases/size/AddSizeToProductUseCase'
+import AddSizeToProductUseCase from '../../usecases/product/AddSizeToProductUseCase'
 import JsonWebToken from '../../utils/token/jsonwebtoken/JsonWebToken'
 import VSchemaFactoryZod from '../../validators/factories/VSchemaFactoryZod'
 import ValidatorZod from '../../validators/zod/ValidatorZod'
@@ -45,8 +45,6 @@ const authMW = middlewareFactory.createAuthMiddleware(tokenSchemas, errorTransla
 const getUserByTokenUC = new GetUserByAccesTokenUseCase(tokenService, userService)
 const addSizeToProductUC = new AddSizeToProductUseCase(sizeService, productService)
 const sizeController = controllerFactory.createSizeController(sizeSchemas, presenter, errorTranslator)
-
-
 
 sizeRoutes.use(authMW.protect(getUserByTokenUC))
 sizeRoutes.use(authMW.checkAllowedRoles(['ADMIN']))

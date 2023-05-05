@@ -75,11 +75,12 @@ productRoutes.route('/:productID')
 
 productRoutes.put('/toggle/:productID',
     productController.toggleProductActive(toggleProductActiveUC))
-productRoutes.delete('/clear/:productID',
+
+productRoutes.delete('/color/clear/:productID',
     productController.clearColorFromProduct(clearColorFromProductUC))
-    
-productRoutes.post('/:productID/add/:colorID', 
+productRoutes.post('/color/:productID/add/:colorID', 
     productController.addColorToProduct(addColorToProductUC))
-productRoutes.delete('/:productID/remove/:colorID',
+productRoutes.delete('/color/:productID/remove/:colorID',
     productController.removeColorFromProduct(removeColorFromProductUC))
+    
 export default productRoutes

@@ -1,4 +1,3 @@
-import Product from "../../../domain/entities/Product"
 import ProductService from "../../../domain/services/ProductService"
 import SizeService from "../../../domain/services/SizeService"
 import SizeCreationRequestDTO from "../../../interfaces/dtos/size/SizeCreationRequestDTO"
@@ -18,8 +17,8 @@ class AddSizeToProductUseCase {
 
     async execute(data: SizeCreationRequestDTO, requestSchema: any): Promise<SizeGeneralResponseDTO> {
         await this.sizeService.validateData<SizeCreationRequestDTO>(requestSchema, data)
-        const product = await this.productService.fetchById({id: data.productId})
-        if(!product) {
+        const currProduct = await this.productService.fetchById({id: data.productId})
+        if(!currProduct) {
             return Promise.reject(
                 new ResourceNotFoundError("Product with specified id doesn't exist", true, 
                     AppOperationType.FETCHING, ResourceType.PRODUCT)
@@ -40,18 +39,18 @@ class AddSizeToProductUseCase {
             length: size.getLength(),
             width: size.getWidth(),
             description: size.getDescription(),
-            product: product ? {
-                id: product.getId(),
-                creator: product.getUserEmail(),
-                productName: product.getProductName(),
-                productClass: product.getProductClass(),
-                productType: product.getProductType(),
-                material: product.getMaterial(),
-                description: product.getDescription(),
-                isActive: product.getIsActive(),
-                deactivatedAt: product.getDeactivatedAt(),
-                createdAt: product.getCreatedAt(),
-                updatedAt: product.getUpdatedAt(),
+            product: currProduct ? {
+                id: currProduct.getId(),
+                creator: currProduct.getUserEmail(),
+                productName: currProduct.getProductName(),
+                productClass: currProduct.getProductClass(),
+                productType: currProduct.getProductType(),
+                material: currProduct.getMaterial(),
+                description: currProduct.getDescription(),
+                isActive: currProduct.getIsActive(),
+                deactivatedAt: currProduct.getDeactivatedAt(),
+                createdAt: currProduct.getCreatedAt(),
+                updatedAt: currProduct.getUpdatedAt(),
             }
             :
             size.getProductId(),

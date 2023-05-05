@@ -6,7 +6,7 @@ import ErrorTranslator from "../../../interfaces/errors/ErrorTranslator";
 import SizeVSchema from "../../../interfaces/validators/schemas/SizeVSchema";
 import BaseError from "../../errors/BaseError";
 import ExpressJsendPresenter from "../../presenters/express/ExpressJsendPresenter";
-import AddSizeToProductUseCase from "../../usecases/size/AddSizeToProductUseCase";
+import AddSizeToProductUseCase from "../../usecases/product/AddSizeToProductUseCase";
 
 class SizeControllerExpress implements SizeController {
     private sizeSchemas: SizeVSchema

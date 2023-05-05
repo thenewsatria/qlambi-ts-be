@@ -7,7 +7,7 @@ import ProductUpdateRequestDTO from "../../../../interfaces/dtos/product/Product
 import ProductIdDTO from "../../../../interfaces/dtos/product/singular/ProductIdDTO";
 import ProductVSchema from "../../../../interfaces/validators/schemas/ProductVSchema";
 
-class ProductVSchemaZod implements ProductVSchema {     
+class ProductVSchemaZod implements ProductVSchema {   
     private static instance: ProductVSchemaZod
     
     public static getInstance(): ProductVSchemaZod {
@@ -223,6 +223,62 @@ class ProductVSchemaZod implements ProductVSchema {
             )
         })
     }
+
+    getAddSizeToProductRequestSchema() {
+        return z.object({
+            sizeName: this.setNoEmptyString(
+                "Size Name",
+                z.string({
+                    required_error: "Size Name is required",
+                    invalid_type_error: "Size Name must be a string"
+                })
+                .max(64, {
+                    message: "Size Name must be less than 64 character"
+                })
+            ),
+            sizeCategory: this.setNoEmptyString(
+                "Size Category",
+                z.string({
+                    required_error: "Size Category is required",
+                    invalid_type_error: "Size Category must be a string"
+                })
+                .max(64, {
+                    message: "Size Category must be less than 64 character"
+                })
+            ),
+            length: z.number({
+                required_error: "Length is required",
+                invalid_type_error: "Length must be a number"
+            })
+            .nonnegative(),
+            width:z.number({
+                required_error: "Length is required",
+                invalid_type_error: "Length must be a number"
+            })
+            .nonnegative(),
+            description: z.string({
+                required_error: "Description is required",
+                invalid_type_error: "Description must be a string"
+            }),
+            userEmail: this.setNoEmptyString(
+                "User Email",
+                z.string({
+                    required_error: "User Email is required",
+                    invalid_type_error: "User Email must be a string"
+                })
+                .email({
+                    message: "Invalid email"
+                }),
+            ),
+            productId: this.setNoEmptyString(
+                "Product ID",
+                z.string({
+                    required_error: "Product ID is required",
+                    invalid_type_error: "Product ID must be a string"
+                })
+            ),
+        })
+    }  
 }
 
 export default ProductVSchemaZod

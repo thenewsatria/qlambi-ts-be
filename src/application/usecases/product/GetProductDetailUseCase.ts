@@ -2,6 +2,7 @@ import ProductService from "../../../domain/services/ProductService";
 import ColorGeneralResponseDTO from "../../../interfaces/dtos/color/ColorGeneralResponseDTO";
 import ProductGeneralResponseDTO from "../../../interfaces/dtos/product/ProductGeneralResponse";
 import ProductIdDTO from "../../../interfaces/dtos/product/singular/ProductIdDTO";
+import SizeGeneralResponseDTO from "../../../interfaces/dtos/size/SizeGeneralResponseDTO";
 import AppOperationType from "../../../interfaces/enums/AppOperationType";
 import ResourceType from "../../../interfaces/enums/ResourceType";
 import ResourceNotFoundError from "../../errors/app/ResourceNotFoundError";
@@ -22,7 +23,10 @@ class GetProductDetailUseCase {
         }
         const creator = productDetail.getCreator()
         const colors: ColorGeneralResponseDTO[] = []
+        const sizes: SizeGeneralResponseDTO[] = []
         const availableColors = productDetail.getAvailableColors()
+        const availableSizes = productDetail.getAvailableSizes()
+
         if(availableColors){
             for (const currColor of availableColors) {
                 colors.push({
@@ -35,6 +39,23 @@ class GetProductDetailUseCase {
                     deactivatedAt: currColor.getDeactivatedAt(),
                     createdAt: currColor.getCreatedAt(),
                     updatedAt: currColor.getUpdatedAt()
+                })
+            }
+        }
+        if(availableSizes){
+            for (const currSize of availableSizes) {
+                sizes.push({
+                    id: currSize.getId(),
+                    creator: currSize.getUserEmail(),
+                    sizeName: currSize.getSizeName(),
+                    sizeCategory: currSize.getSizeCategory(),
+                    length: currSize.getLength(),
+                    width: currSize.getWidth(),
+                    description: currSize.getDescription(),
+                    isActive: currSize.getIsActive(),
+                    deactivatedAt: currSize.getDeactivatedAt(),
+                    createdAt: currSize.getCreatedAt(),
+                    updatedAt: currSize.getUpdatedAt()
                 })
             }
         }
@@ -51,7 +72,8 @@ class GetProductDetailUseCase {
             productType: productDetail.getProductType(),
             material: productDetail.getMaterial(),
             description: productDetail.getDescription(),
-            availableColors: colors.length > 0 ? colors : undefined,
+            availableColors: colors,
+            availableSizes: sizes,
             isActive: productDetail.getIsActive(),
             deactivatedAt: productDetail.getDeactivatedAt(),
             createdAt: productDetail.getCreatedAt(),
