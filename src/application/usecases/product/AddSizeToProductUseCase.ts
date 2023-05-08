@@ -17,12 +17,6 @@ class AddSizeToProductUseCase {
     }
 
     async execute(data: SizeCreationRequestDTO, requestSchema: any): Promise<ProductGeneralResponseDTO> {
-        // Step:
-        // 1. Cek apakah id dari product ada 
-        // 2. buat size dengan product id yang tertera
-        // 5. Buat populasi color dan size
-        // 6. Masukan populasi color pada available color pada product 
-
 
         await this.productService.validateData(requestSchema, data)
         const product = await this.productService.fetchDetailById({id: data.productId})

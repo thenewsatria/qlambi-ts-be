@@ -161,7 +161,7 @@ class ProductRepositoryPrisma implements ProductRepository {
                     const size = new Size(currSize.userEmail, currSize.productId+"", currSize.sizeName,
                         currSize.sizeCategory, currSize.length, currSize.width, currSize.description)
                     size.setId(currSize.id+"")
-                    size.setActive(currSize.isActive)
+                    size.setIsActive(currSize.isActive)
                     currSize.deactivatedAt ? size.setDeactivatedAt(currSize.deactivatedAt) : null
                     size.setCreatedAt(currSize.createdAt)
                     size.setUpdatedAt(currSize.updatedAt)

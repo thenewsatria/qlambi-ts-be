@@ -1,5 +1,6 @@
 import { z, ZodEffects, ZodPipeline, ZodSchema, ZodString } from "zod";
 import SizeCreationRequestDTO from "../../../../interfaces/dtos/size/SizeCreationRequestDTO";
+import SizeUpdateRequestDTO from "../../../../interfaces/dtos/size/SizeUpdateRequestDTO";
 import SizeVSchema from "../../../../interfaces/validators/schemas/SizeVSchema";
 
 class SizeVSchemaZod implements SizeVSchema {
@@ -78,6 +79,52 @@ class SizeVSchemaZod implements SizeVSchema {
                     invalid_type_error: "Product ID must be a string"
                 })
             ),
+        })
+    }
+
+    getUpdateSizeVSchema(): ZodSchema<SizeUpdateRequestDTO> {
+        return z.object({
+            id: this.setNoEmptyString(
+                "Product ID",
+                z.string({
+                    required_error: "Product ID is required",
+                    invalid_type_error: "Product ID must be a string"
+                })
+            ),
+            sizeName: this.setNoEmptyString(
+                "Size Name",
+                z.string({
+                    required_error: "Size Name is required",
+                    invalid_type_error: "Size Name must be a string"
+                })
+                .max(64, {
+                    message: "Size Name must be less than 64 character"
+                })
+            ),
+            sizeCategory: this.setNoEmptyString(
+                "Size Category",
+                z.string({
+                    required_error: "Size Category is required",
+                    invalid_type_error: "Size Category must be a string"
+                })
+                .max(64, {
+                    message: "Size Category must be less than 64 character"
+                })
+            ),
+            length: z.number({
+                required_error: "Length is required",
+                invalid_type_error: "Length must be a number"
+            })
+            .nonnegative(),
+            width:z.number({
+                required_error: "Length is required",
+                invalid_type_error: "Length must be a number"
+            })
+            .nonnegative(),
+            description: z.string({
+                required_error: "Description is required",
+                invalid_type_error: "Description must be a string"
+            }),
         })
     }
 }

@@ -7,6 +7,7 @@ import SizeVSchema from "../../../interfaces/validators/schemas/SizeVSchema";
 import BaseError from "../../errors/BaseError";
 import ExpressJsendPresenter from "../../presenters/express/ExpressJsendPresenter";
 import AddSizeUseCase from "../../usecases/size/AddSizeUseCase";
+import UpdateSizeUseCase from "../../usecases/size/UpdateSizeUseCase";
 
 class SizeControllerExpress implements SizeController {
     private sizeSchemas: SizeVSchema
@@ -17,6 +18,7 @@ class SizeControllerExpress implements SizeController {
     constructor(sizeSchemas: SizeVSchema, presenter: ExpressJsendPresenter, errorTranslator: ErrorTranslator) {
         this.sizeSchemas = sizeSchemas
         this.presenter = presenter
+        
         this.errorTranslator = errorTranslator
     }
         
@@ -28,6 +30,22 @@ class SizeControllerExpress implements SizeController {
                     productId: req.params["productID"]},
                     this.sizeSchemas.getCreateSizeVSchema())
                 return this.presenter.successReponse<SizeGeneralResponseDTO>(res, 201, result)
+            }catch(error: unknown) {
+                if(error instanceof Error) {
+                    const apiError = this.errorTranslator.translateError(error)
+                    next(apiError)
+                }else{
+                    next(new BaseError("Unknown Error Occured", false, error))
+                }
+            }
+        }
+    }
+
+    updateSize(useCase: UpdateSizeUseCase): (...args: any[]) => any {
+        return async(req: Request, res: Response, next: NextFunction) => {
+            try {
+                const updatedSize = await useCase.execute({...req.body, id: req.params["sizeID"]}, this.sizeSchemas.getUpdateSizeVSchema())
+                return this.presenter.successReponse<SizeGeneralResponseDTO>(res, 200, updatedSize)
             }catch(error: unknown) {
                 if(error instanceof Error) {
                     const apiError = this.errorTranslator.translateError(error)

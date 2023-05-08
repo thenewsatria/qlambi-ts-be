@@ -127,7 +127,7 @@ class Size {
         
     }
 
-    public setActive(isActive: boolean) {
+    public setIsActive(isActive: boolean) {
         this.isActive = isActive
     }
 

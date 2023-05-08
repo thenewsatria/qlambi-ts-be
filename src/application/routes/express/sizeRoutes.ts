@@ -10,6 +10,7 @@ import MiddlewareFactoryExpress from '../../middlewares/factories/MiddlewareFact
 import ExpressJsendPresenter from '../../presenters/express/ExpressJsendPresenter'
 import GetUserByAccesTokenUseCase from '../../usecases/middleware/GetUserByAccesTokenUseCase'
 import AddSizeUseCase from '../../usecases/size/AddSizeUseCase'
+import UpdateSizeUseCase from '../../usecases/size/UpdateSizeUseCase'
 import JsonWebToken from '../../utils/token/jsonwebtoken/JsonWebToken'
 import VSchemaFactoryZod from '../../validators/factories/VSchemaFactoryZod'
 import ValidatorZod from '../../validators/zod/ValidatorZod'
@@ -43,13 +44,15 @@ const productService = new ProductService(productRepository, validator)
 const authMW = middlewareFactory.createAuthMiddleware(tokenSchemas, errorTranslator)
 
 const getUserByTokenUC = new GetUserByAccesTokenUseCase(tokenService, userService)
-const addSizeUseCase = new AddSizeUseCase(sizeService, productService)
+const addSizeUC = new AddSizeUseCase(sizeService, productService)
+const updateSizeUC = new UpdateSizeUseCase(sizeService)
+
 const sizeController = controllerFactory.createSizeController(sizeSchemas, presenter, errorTranslator)
 
 sizeRoutes.use(authMW.protect(getUserByTokenUC))
 sizeRoutes.use(authMW.checkAllowedRoles(['ADMIN']))
 
 // add or remove size from product
-sizeRoutes.post('/add/:productID', sizeController.addSizeToProduct(addSizeUseCase))
-
+sizeRoutes.post('/add/:productID', sizeController.addSizeToProduct(addSizeUC))
+sizeRoutes.put('/:sizeID', sizeController.updateSize(updateSizeUC))
 export default sizeRoutes

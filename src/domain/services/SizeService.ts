@@ -1,3 +1,5 @@
+import SizeDTO from "../../interfaces/dtos/size/singular/SizeDTO"
+import SizeIdDTO from "../../interfaces/dtos/size/singular/SizeIdDTO"
 import SizeCreationRequestDTO from "../../interfaces/dtos/size/SizeCreationRequestDTO"
 import SizeRepository from "../../interfaces/repositories/SizeRepository"
 import Validator from "../../interfaces/validators/Validator"
@@ -21,6 +23,16 @@ class SizeService {
             data.sizeCategory, data.length, data.width, data.description)
         const insertedSize = await this.repository.createSize(newSize)
         return Promise.resolve(insertedSize)
+    }
+
+    async updateSize(data: SizeDTO): Promise<Size> {
+        const updatedSize = await this.repository.updateSize(data.size)
+        return Promise.resolve(updatedSize)
+    }
+
+    async fetchById(data: SizeIdDTO): Promise<Size|null> {
+        const size = await  this.repository.readById(data.id, false)
+        return Promise.resolve(size)
     }
 }
 
