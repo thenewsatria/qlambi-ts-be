@@ -39,6 +39,11 @@ class SizeService {
         const size = await  this.repository.readById(data.id, false)
         return Promise.resolve(size)
     }
+
+    async fetchDetailById(data: SizeIdDTO): Promise<Size|null> {
+        const size = await this.repository.readById(data.id, true)
+        return Promise.resolve(size)
+    }
 }
 
 export default SizeService
