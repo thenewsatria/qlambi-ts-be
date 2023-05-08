@@ -270,6 +270,33 @@ class ProductRepositoryPrisma implements ProductRepository {
         product.setAvailableColors([])
         return Promise.resolve(product)
     }
+
+    async addSize(product: Product, size: Size): Promise<Product> {
+        let sizes: Size[] = []
+        const insertedSize = await this._client.size.create({
+            data: {
+                sizeName: size.getSizeName(),
+                sizeCategory: size.getSizeCategory(),
+                length: size.getLength(),
+                width: size.getWidth(),
+                description: size.getDescription(),
+                userEmail: size.getUserEmail(),
+                productId: +product.getId()!,
+            }
+        })
+        
+        size.setId(insertedSize.id+"")
+        size.setCreatedAt(insertedSize.createdAt)
+        size.setUpdatedAt(insertedSize.updatedAt) 
+
+        const currentSizes = product.getAvailableSizes()
+        if(currentSizes){
+            sizes = currentSizes
+        }
+        sizes.push(size)
+
+        return Promise.resolve(product)
+    }
 }
 
 export default ProductRepositoryPrisma

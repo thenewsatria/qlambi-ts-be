@@ -124,6 +124,7 @@ class Size {
 
     public setProductId(productId: string) {
         this.productId = productId
+        
     }
 
     public setActive(isActive: boolean) {

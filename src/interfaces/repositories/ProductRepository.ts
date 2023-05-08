@@ -1,5 +1,6 @@
 import Color from "../../domain/entities/Color"
 import Product from "../../domain/entities/Product"
+import Size from "../../domain/entities/Size"
 
 interface ProductRepository {
     createProduct(product: Product): Promise<Product>
@@ -11,6 +12,7 @@ interface ProductRepository {
     readAllwSearch(query: any, detailed: boolean): Promise<Product[]>
     hasColor(product: Product, color: Color): Promise<Boolean>
     addColor(product: Product, color: Color, assigner: string): Promise<Product>
+    addSize(product: Product, size: Size): Promise<Product>
     removeColor(product: Product, color: Color): Promise<Product>
     clearColors(product: Product): Promise<Product>
 }

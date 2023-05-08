@@ -1,7 +1,7 @@
-import AddSizeToProductUseCase from "../../application/usecases/product/AddSizeToProductUseCase"
+import AddSizeUseCase from "../../application/usecases/size/AddSizeUseCase"
 
 interface SizeController {
-    addSizeToProduct(useCase: AddSizeToProductUseCase): (...args: any[]) => any
+    addSizeToProduct(useCase: AddSizeUseCase): (...args: any[]) => any
 }
 
 export default SizeController

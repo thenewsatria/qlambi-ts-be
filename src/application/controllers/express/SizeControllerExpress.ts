@@ -6,7 +6,7 @@ import ErrorTranslator from "../../../interfaces/errors/ErrorTranslator";
 import SizeVSchema from "../../../interfaces/validators/schemas/SizeVSchema";
 import BaseError from "../../errors/BaseError";
 import ExpressJsendPresenter from "../../presenters/express/ExpressJsendPresenter";
-import AddSizeToProductUseCase from "../../usecases/product/AddSizeToProductUseCase";
+import AddSizeUseCase from "../../usecases/size/AddSizeUseCase";
 
 class SizeControllerExpress implements SizeController {
     private sizeSchemas: SizeVSchema
@@ -20,7 +20,7 @@ class SizeControllerExpress implements SizeController {
         this.errorTranslator = errorTranslator
     }
         
-    addSizeToProduct(useCase: AddSizeToProductUseCase): (...args: any[]) => any {
+    addSizeToProduct(useCase: AddSizeUseCase): (...args: any[]) => any {
         return async (req: Request, res: Response, next: NextFunction) => {
             try{
                 const currentLoggedUser: User = res.locals.currentLoggedUser

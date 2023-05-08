@@ -9,6 +9,7 @@ import BaseError from "../../errors/BaseError";
 import ExpressJsendPresenter from "../../presenters/express/ExpressJsendPresenter";
 import AddColorToProductUseCase from "../../usecases/product/AddColorToProductUseCase";
 import AddProductUseCase from "../../usecases/product/AddProductUseCase";
+import AddSizeToProductUseCase from "../../usecases/product/AddSizeToProductUseCase";
 import ClearColorFromProductUseCase from "../../usecases/product/ClearColorFromProductUseCase";
 import GetProductDetailUseCase from "../../usecases/product/GetProductDetailUseCase";
 import GetProductListUseCase from "../../usecases/product/GetProductListUseCase";
@@ -172,6 +173,24 @@ class ProductControllerExpress implements ProductController {
         return async(req: Request, res: Response, next: NextFunction) => {
             try {
                 const result = await useCase.execute({id: req.params["productID"]}, this.productSchemas.getProductByIdRequestSchema())
+                return this.presenter.successReponse<ProductGeneralResponseDTO>(res, 200, result)
+            }catch(error: unknown) {
+                if(error instanceof Error) {
+                    const apiError = this.errorTranslator.translateError(error)
+                    next(apiError)
+                }else{
+                    next(new BaseError("Unknown Error Occured", false, error))
+                }
+            }
+        }
+    }
+
+    addSizeToProduct(useCase: AddSizeToProductUseCase): (...args: any[]) => any {
+        return async(req: Request, res: Response, next: NextFunction) => {
+            try {
+                const currentLoggedUser: User = res.locals.currentLoggedUser
+                const result = await useCase.execute({...req.body, productId: req.params["productID"],
+                    userEmail: currentLoggedUser.getEmail()}, this.productSchemas.getAddSizeToProductRequestSchema())
                 return this.presenter.successReponse<ProductGeneralResponseDTO>(res, 200, result)
             }catch(error: unknown) {
                 if(error instanceof Error) {

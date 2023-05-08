@@ -11,6 +11,7 @@ import ExpressJsendPresenter from '../../presenters/express/ExpressJsendPresente
 import GetUserByAccesTokenUseCase from '../../usecases/middleware/GetUserByAccesTokenUseCase'
 import AddColorToProductUseCase from '../../usecases/product/AddColorToProductUseCase'
 import AddProductUseCase from '../../usecases/product/AddProductUseCase'
+import AddSizeToProductUseCase from '../../usecases/product/AddSizeToProductUseCase'
 import ClearColorFromProductUseCase from '../../usecases/product/ClearColorFromProductUseCase'
 import GetProductDetailUseCase from '../../usecases/product/GetProductDetailUseCase'
 import GetProductListUseCase from '../../usecases/product/GetProductListUseCase'
@@ -60,6 +61,7 @@ const getProductListUC = new GetProductListUseCase(productService)
 const addColorToProductUC = new AddColorToProductUseCase(productService, colorService)
 const removeColorFromProductUC = new RemoveColorFromProductUseCase(productService, colorService)
 const clearColorFromProductUC = new ClearColorFromProductUseCase(productService)
+const addSizeToProductUC = new AddSizeToProductUseCase(productService)
 
 const authMW = middlewareFactory.createAuthMiddleware(tokenSchemas, errorTranslator)
 const queryMW = middlewareFactory.createQueryMiddleware()
@@ -82,5 +84,9 @@ productRoutes.post('/color/:productID/add/:colorID',
     productController.addColorToProduct(addColorToProductUC))
 productRoutes.delete('/color/:productID/remove/:colorID',
     productController.removeColorFromProduct(removeColorFromProductUC))
+
+productRoutes.post('/size/:productID/add',
+    productController.addSizeToProduct(addSizeToProductUC))
+
     
 export default productRoutes

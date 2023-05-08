@@ -2,6 +2,7 @@ import ProductService from "../../../domain/services/ProductService"
 import ColorGeneralResponseDTO from "../../../interfaces/dtos/color/ColorGeneralResponseDTO"
 import ProductGeneralResponseDTO from "../../../interfaces/dtos/product/ProductGeneralResponse"
 import ProductIdDTO from "../../../interfaces/dtos/product/singular/ProductIdDTO"
+import SizeGeneralResponseDTO from "../../../interfaces/dtos/size/SizeGeneralResponseDTO"
 import AppOperationType from "../../../interfaces/enums/AppOperationType"
 import ResourceType from "../../../interfaces/enums/ResourceType"
 import ResourceNotFoundError from "../../errors/app/ResourceNotFoundError"
@@ -26,7 +27,9 @@ class ClearColorFromProductUseCase {
         const clearedColorProduct = await this.productService.clearColors({product: product})
         const creator = clearedColorProduct.getCreator()
         const colors: ColorGeneralResponseDTO[] = []
+        const sizes: SizeGeneralResponseDTO[] = []
         const availableColors = clearedColorProduct.getAvailableColors()
+        const availableSizes = clearedColorProduct.getAvailableSizes()
         if(availableColors) {
             for (const currColor of availableColors) {
                 colors.push({
@@ -42,6 +45,25 @@ class ClearColorFromProductUseCase {
                 })
             }
         }
+
+        if(availableSizes){
+            for (const currSize of availableSizes) {
+                sizes.push({
+                    id: currSize.getId(),
+                    creator: currSize.getUserEmail(),
+                    sizeName: currSize.getSizeName(),
+                    sizeCategory: currSize.getSizeCategory(),
+                    length: currSize.getLength(),
+                    width: currSize.getWidth(),
+                    description: currSize.getDescription(),
+                    isActive: currSize.getIsActive(),
+                    deactivatedAt: currSize.getDeactivatedAt(),
+                    createdAt: currSize.getCreatedAt(),
+                    updatedAt: currSize.getUpdatedAt()
+                })
+            }
+        }
+
         return Promise.resolve({
             id: clearedColorProduct.getId(),
             creator: creator ? {
@@ -55,6 +77,7 @@ class ClearColorFromProductUseCase {
             productType: clearedColorProduct.getProductType(),
             material: clearedColorProduct.getMaterial(),
             availableColors: colors,
+            availableSizes: sizes,
             description: clearedColorProduct.getDescription(),
             isActive: clearedColorProduct.getIsActive(),
             deactivatedAt: clearedColorProduct.getDeactivatedAt(),

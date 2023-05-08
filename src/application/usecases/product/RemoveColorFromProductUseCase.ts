@@ -3,6 +3,7 @@ import ProductService from "../../../domain/services/ProductService"
 import ColorGeneralResponseDTO from "../../../interfaces/dtos/color/ColorGeneralResponseDTO"
 import ProductGeneralResponseDTO from "../../../interfaces/dtos/product/ProductGeneralResponse"
 import ProductRemoveColorRequestDTO from "../../../interfaces/dtos/product/ProductRemoveColorRequestDTO"
+import SizeGeneralResponseDTO from "../../../interfaces/dtos/size/SizeGeneralResponseDTO"
 import AppOperationType from "../../../interfaces/enums/AppOperationType"
 import ResourceType from "../../../interfaces/enums/ResourceType"
 import ResourceNotFoundError from "../../errors/app/ResourceNotFoundError"
@@ -51,18 +52,40 @@ class RemoveColorFromProductUseCase {
         const deletedColorProduct = await this.productService.removeColor({product: product, color: color})
         const creator = deletedColorProduct.getCreator()
         const colors: ColorGeneralResponseDTO[] = []
-        for (const currColor of deletedColorProduct.getAvailableColors()!) {
-            colors.push({
-                id: currColor.getId(),
-                creator: currColor.getUserEmail(),
-                colorName: currColor.getColorName(),
-                hexValue: currColor.getHexValue(),
-                description: currColor.getDescription(),
-                isActive: currColor.getIsActive(),
-                deactivatedAt: currColor.getDeactivatedAt(),
-                createdAt: currColor.getCreatedAt(),
-                updatedAt: currColor.getUpdatedAt()
-            })
+        const sizes: SizeGeneralResponseDTO[] = []
+        const availableColors = deletedColorProduct.getAvailableColors()
+        const availableSizes = deletedColorProduct.getAvailableSizes()
+        if(availableColors){
+            for (const currColor of availableColors) {
+                colors.push({
+                    id: currColor.getId(),
+                    creator: currColor.getUserEmail(),
+                    colorName: currColor.getColorName(),
+                    hexValue: currColor.getHexValue(),
+                    description: currColor.getDescription(),
+                    isActive: currColor.getIsActive(),
+                    deactivatedAt: currColor.getDeactivatedAt(),
+                    createdAt: currColor.getCreatedAt(),
+                    updatedAt: currColor.getUpdatedAt()
+                })
+            }
+        }
+        if(availableSizes){
+            for (const currSize of availableSizes) {
+                sizes.push({
+                    id: currSize.getId(),
+                    creator: currSize.getUserEmail(),
+                    sizeName: currSize.getSizeName(),
+                    sizeCategory: currSize.getSizeCategory(),
+                    length: currSize.getLength(),
+                    width: currSize.getWidth(),
+                    description: currSize.getDescription(),
+                    isActive: currSize.getIsActive(),
+                    deactivatedAt: currSize.getDeactivatedAt(),
+                    createdAt: currSize.getCreatedAt(),
+                    updatedAt: currSize.getUpdatedAt()
+                })
+            }
         }
         return Promise.resolve({
             id: deletedColorProduct.getId(),
@@ -77,6 +100,7 @@ class RemoveColorFromProductUseCase {
             productType: deletedColorProduct.getProductType(),
             material: deletedColorProduct.getMaterial(),
             availableColors: colors,
+            availableSizes: sizes,
             description: deletedColorProduct.getDescription(),
             isActive: deletedColorProduct.getIsActive(),
             deactivatedAt: deletedColorProduct.getDeactivatedAt(),

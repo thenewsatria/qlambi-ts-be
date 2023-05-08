@@ -1,4 +1,5 @@
 import ProductAddColorDTO from "../../interfaces/dtos/product/ProductAddColorDTO";
+import ProductAddSizeDTO from "../../interfaces/dtos/product/ProductAddSizeDTO";
 import ProductCreationRequestDTO from "../../interfaces/dtos/product/ProductCreationRequestDTO";
 import ProductGeneralListRequestDTO from "../../interfaces/dtos/product/ProductGeneralListRequestDTO";
 import ProductHasColorDTO from "../../interfaces/dtos/product/ProductHasColorRequestDTO";
@@ -76,6 +77,11 @@ class ProductService {
 
     async clearColors(data: ProductDTO): Promise<Product> {
         const product = await this.repository.clearColors(data.product)
+        return Promise.resolve(product)
+    }
+
+    async addSize(data: ProductAddSizeDTO): Promise<Product> {
+        const product = await this.repository.addSize(data.product, data.size)
         return Promise.resolve(product)
     }
 }

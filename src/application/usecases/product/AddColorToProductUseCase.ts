@@ -3,6 +3,7 @@ import ProductService from "../../../domain/services/ProductService"
 import ColorGeneralResponseDTO from "../../../interfaces/dtos/color/ColorGeneralResponseDTO"
 import ProductAddColorRequestDTO from "../../../interfaces/dtos/product/ProductAddColorRequestDTO"
 import ProductGeneralResponseDTO from "../../../interfaces/dtos/product/ProductGeneralResponse"
+import SizeGeneralResponseDTO from "../../../interfaces/dtos/size/SizeGeneralResponseDTO"
 import AppOperationType from "../../../interfaces/enums/AppOperationType"
 import ResourceType from "../../../interfaces/enums/ResourceType"
 import ResourceNotFoundError from "../../errors/app/ResourceNotFoundError"
@@ -50,7 +51,10 @@ class AddColorToProductUseCase {
         const addedColorProduct = await this.productService.addColor({product: product, color: color, asssigner: data.userEmail})
         const creator = addedColorProduct.getCreator()
         const colors: ColorGeneralResponseDTO[] = []
+        const sizes: SizeGeneralResponseDTO[] = []
         const availableColors = addedColorProduct.getAvailableColors()
+        const availableSizes = addedColorProduct.getAvailableSizes()
+
         if(availableColors){
             for (const currColor of availableColors) {
                 colors.push({
@@ -66,6 +70,25 @@ class AddColorToProductUseCase {
                 })
             }
         }
+
+        if(availableSizes){
+            for (const currSize of availableSizes) {
+                sizes.push({
+                    id: currSize.getId(),
+                    creator: currSize.getUserEmail(),
+                    sizeName: currSize.getSizeName(),
+                    sizeCategory: currSize.getSizeCategory(),
+                    length: currSize.getLength(),
+                    width: currSize.getWidth(),
+                    description: currSize.getDescription(),
+                    isActive: currSize.getIsActive(),
+                    deactivatedAt: currSize.getDeactivatedAt(),
+                    createdAt: currSize.getCreatedAt(),
+                    updatedAt: currSize.getUpdatedAt()
+                })
+            }
+        }
+
         return Promise.resolve({
             id: addedColorProduct.getId(),
             creator: creator ? {
@@ -78,7 +101,8 @@ class AddColorToProductUseCase {
             productName: addedColorProduct.getProductName(),
             productType: addedColorProduct.getProductType(),
             material: addedColorProduct.getMaterial(),
-            availableColors: colors.length > 0 ? colors : undefined,
+            availableColors: colors,
+            availableSizes: sizes,
             description: addedColorProduct.getDescription(),
             isActive: addedColorProduct.getIsActive(),
             deactivatedAt: addedColorProduct.getDeactivatedAt(),

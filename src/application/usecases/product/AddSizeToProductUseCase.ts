@@ -1,63 +1,98 @@
-import ProductService from "../../../domain/services/ProductService"
-import SizeService from "../../../domain/services/SizeService"
-import SizeCreationRequestDTO from "../../../interfaces/dtos/size/SizeCreationRequestDTO"
-import SizeGeneralResponseDTO from "../../../interfaces/dtos/size/SizeGeneralResponseDTO"
-import AppOperationType from "../../../interfaces/enums/AppOperationType"
-import ResourceType from "../../../interfaces/enums/ResourceType"
-import ResourceNotFoundError from "../../errors/app/ResourceNotFoundError"
+import Size from "../../../domain/entities/Size";
+import ProductService from "../../../domain/services/ProductService";
+import SizeService from "../../../domain/services/SizeService";
+import ColorGeneralResponseDTO from "../../../interfaces/dtos/color/ColorGeneralResponseDTO";
+import ProductGeneralResponseDTO from "../../../interfaces/dtos/product/ProductGeneralResponse";
+import SizeCreationRequestDTO from "../../../interfaces/dtos/size/SizeCreationRequestDTO";
+import SizeGeneralResponseDTO from "../../../interfaces/dtos/size/SizeGeneralResponseDTO";
+import AppOperationType from "../../../interfaces/enums/AppOperationType";
+import ResourceType from "../../../interfaces/enums/ResourceType";
+import ResourceNotFoundError from "../../errors/app/ResourceNotFoundError";
 
 class AddSizeToProductUseCase {
-    private readonly sizeService: SizeService
     private readonly productService: ProductService
-
-    constructor(sizeService: SizeService, productService: ProductService) {
-        this.sizeService = sizeService
+    
+    constructor(productService: ProductService) {
         this.productService = productService
     }
 
-    async execute(data: SizeCreationRequestDTO, requestSchema: any): Promise<SizeGeneralResponseDTO> {
-        await this.sizeService.validateData<SizeCreationRequestDTO>(requestSchema, data)
-        const currProduct = await this.productService.fetchById({id: data.productId})
-        if(!currProduct) {
+    async execute(data: SizeCreationRequestDTO, requestSchema: any): Promise<ProductGeneralResponseDTO> {
+        // Step:
+        // 1. Cek apakah id dari product ada 
+        // 2. buat size dengan product id yang tertera
+        // 5. Buat populasi color dan size
+        // 6. Masukan populasi color pada available color pada product 
+
+
+        await this.productService.validateData(requestSchema, data)
+        const product = await this.productService.fetchDetailById({id: data.productId})
+        if(!product) {
             return Promise.reject(
                 new ResourceNotFoundError("Product with specified id doesn't exist", true, 
                     AppOperationType.FETCHING, ResourceType.PRODUCT)
             )
         }
-        const size = await this.sizeService.insertSize(data)
-        const creator = size.getCreator()
+        const newSize = new Size(data.userEmail, data.productId, data.sizeName, data.sizeCategory, data.length, data.width, data.description)
+        const addedProduct = await this.productService.addSize({product: product, size: newSize})
+        const creator = addedProduct.getCreator()
+        const colors: ColorGeneralResponseDTO[] = []
+        const sizes: SizeGeneralResponseDTO[] = []
+        const availableColor = addedProduct.getAvailableColors()
+        const availableSizes = addedProduct.getAvailableSizes()
+
+        if(availableColor){
+            for(const currColor of availableColor) {
+                colors.push({
+                    id: currColor.getId(),
+                    creator: currColor.getUserEmail(),
+                    colorName: currColor.getColorName(),
+                    hexValue: currColor.getHexValue(),
+                    description: currColor.getDescription(),
+                    isActive: currColor.getIsActive(),
+                    deactivatedAt: currColor.getDeactivatedAt(),
+                    createdAt: currColor.getCreatedAt(),
+                    updatedAt: currColor.getUpdatedAt()
+                })
+            }
+        }
+
+        if(availableSizes){
+            for (const currSize of availableSizes) {
+                sizes.push({
+                    id: currSize.getId(),
+                    creator: currSize.getUserEmail(),
+                    sizeName: currSize.getSizeName(),
+                    sizeCategory: currSize.getSizeCategory(),
+                    length: currSize.getLength(),
+                    width: currSize.getWidth(),
+                    description: currSize.getDescription(),
+                    isActive: currSize.getIsActive(),
+                    deactivatedAt: currSize.getDeactivatedAt(),
+                    createdAt: currSize.getCreatedAt(),
+                    updatedAt: currSize.getUpdatedAt()
+                })
+            }
+        }
+
         return Promise.resolve({
-            id: size.getId(),
+            id: addedProduct.getId(),
             creator: creator ? {
                 email: creator.getEmail(),
                 username: creator.getUsername(),
             }   
                 :
-            size.getUserEmail(),
-            sizeName: size.getSizeName(),
-            sizeCategory: size.getSizeCategory(),
-            length: size.getLength(),
-            width: size.getWidth(),
-            description: size.getDescription(),
-            product: currProduct ? {
-                id: currProduct.getId(),
-                creator: currProduct.getUserEmail(),
-                productName: currProduct.getProductName(),
-                productClass: currProduct.getProductClass(),
-                productType: currProduct.getProductType(),
-                material: currProduct.getMaterial(),
-                description: currProduct.getDescription(),
-                isActive: currProduct.getIsActive(),
-                deactivatedAt: currProduct.getDeactivatedAt(),
-                createdAt: currProduct.getCreatedAt(),
-                updatedAt: currProduct.getUpdatedAt(),
-            }
-            :
-            size.getProductId(),
-            isActive: size.getIsActive(),
-            deactivatedAt: size.getDeactivatedAt(),
-            createdAt: size.getCreatedAt(),
-            updatedAt: size.getUpdatedAt(),
+                addedProduct.getUserEmail(),
+            productClass: addedProduct.getProductClass(),
+            productName: addedProduct.getProductName(),
+            productType: addedProduct.getProductType(),
+            material: addedProduct.getMaterial(),
+            availableColors: colors,
+            availableSizes: sizes,
+            description: addedProduct.getDescription(),
+            isActive: addedProduct.getIsActive(),
+            deactivatedAt: addedProduct.getDeactivatedAt(),
+            createdAt: addedProduct.getCreatedAt(),
+            updatedAt: addedProduct.getUpdatedAt()
         })
     }
 }
