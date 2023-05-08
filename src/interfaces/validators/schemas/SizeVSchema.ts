@@ -1,6 +1,7 @@
 interface SizeVSchema {
-    getCreateSizeVSchema(): any
-    getUpdateSizeVSchema(): any
+    getAddSizeRequestVSchema(): any
+    getUpdateSizeRequestVSchema(): any
+    getSizeByIdRequestVSchema(): any
 }
 
 export default SizeVSchema

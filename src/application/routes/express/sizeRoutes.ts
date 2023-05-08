@@ -10,6 +10,7 @@ import MiddlewareFactoryExpress from '../../middlewares/factories/MiddlewareFact
 import ExpressJsendPresenter from '../../presenters/express/ExpressJsendPresenter'
 import GetUserByAccesTokenUseCase from '../../usecases/middleware/GetUserByAccesTokenUseCase'
 import AddSizeUseCase from '../../usecases/size/AddSizeUseCase'
+import ToggleSizeActiveUseCase from '../../usecases/size/ToggleSizeActiveUseCase'
 import UpdateSizeUseCase from '../../usecases/size/UpdateSizeUseCase'
 import JsonWebToken from '../../utils/token/jsonwebtoken/JsonWebToken'
 import VSchemaFactoryZod from '../../validators/factories/VSchemaFactoryZod'
@@ -46,6 +47,7 @@ const authMW = middlewareFactory.createAuthMiddleware(tokenSchemas, errorTransla
 const getUserByTokenUC = new GetUserByAccesTokenUseCase(tokenService, userService)
 const addSizeUC = new AddSizeUseCase(sizeService, productService)
 const updateSizeUC = new UpdateSizeUseCase(sizeService)
+const toggleSizeActiveUC = new ToggleSizeActiveUseCase(sizeService)
 
 const sizeController = controllerFactory.createSizeController(sizeSchemas, presenter, errorTranslator)
 
@@ -53,6 +55,7 @@ sizeRoutes.use(authMW.protect(getUserByTokenUC))
 sizeRoutes.use(authMW.checkAllowedRoles(['ADMIN']))
 
 // add or remove size from product
+sizeRoutes.put('/toggle/:sizeID', sizeController.toggleSizeActive(toggleSizeActiveUC))
 sizeRoutes.post('/add/:productID', sizeController.addSizeToProduct(addSizeUC))
 sizeRoutes.put('/:sizeID', sizeController.updateSize(updateSizeUC))
 export default sizeRoutes

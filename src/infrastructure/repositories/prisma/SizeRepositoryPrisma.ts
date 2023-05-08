@@ -6,7 +6,7 @@ import SizeRepository from "../../../interfaces/repositories/SizeRepository";
 import prismaClient from "../../databases/prisma/client";
 
 class SizeRepositoryPrisma implements SizeRepository {
-    
+        
     private readonly _client = prismaClient
     private static instance: SizeRepositoryPrisma
     
@@ -94,10 +94,27 @@ class SizeRepositoryPrisma implements SizeRepository {
             size.setCreatedAt(sizeResult.createdAt)
             size.setUpdatedAt(sizeResult.updatedAt)
         }
-
         return Promise.resolve(size)
     }
 
+    async updateActiveStatus(size: Size): Promise<Size> {
+        const now = new Date()
+        const updatedSize = await this._client.size.update({
+            where: {
+                id: +size.getId()!
+            },
+            data: {
+                isActive: size.getIsActive(),
+                
+                // update only when its deactivated
+                deactivatedAt: !size.getIsActive() ? now : size.getDeactivatedAt()
+            }
+        })
+        
+        size.setDeactivatedAt(updatedSize.deactivatedAt!)
+        size.setUpdatedAt(updatedSize.updatedAt)
+        return Promise.resolve(size)
+    }
 }
 
 export default SizeRepositoryPrisma

@@ -30,6 +30,11 @@ class SizeService {
         return Promise.resolve(updatedSize)
     }
 
+    async setActiveStatus(data: SizeDTO): Promise<Size> {
+        const updatedSize = await this.repository.updateActiveStatus(data.size)
+        return Promise.resolve(updatedSize)
+    }
+
     async fetchById(data: SizeIdDTO): Promise<Size|null> {
         const size = await  this.repository.readById(data.id, false)
         return Promise.resolve(size)

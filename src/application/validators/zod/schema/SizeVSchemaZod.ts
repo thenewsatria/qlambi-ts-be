@@ -1,4 +1,5 @@
 import { z, ZodEffects, ZodPipeline, ZodSchema, ZodString } from "zod";
+import SizeIdDTO from "../../../../interfaces/dtos/size/singular/SizeIdDTO";
 import SizeCreationRequestDTO from "../../../../interfaces/dtos/size/SizeCreationRequestDTO";
 import SizeUpdateRequestDTO from "../../../../interfaces/dtos/size/SizeUpdateRequestDTO";
 import SizeVSchema from "../../../../interfaces/validators/schemas/SizeVSchema";
@@ -26,7 +27,7 @@ class SizeVSchemaZod implements SizeVSchema {
             )
     }
     
-    getCreateSizeVSchema(): ZodSchema<SizeCreationRequestDTO>{
+    getAddSizeRequestVSchema(): ZodSchema<SizeCreationRequestDTO>{
         return z.object({
             sizeName: this.setNoEmptyString(
                 "Size Name",
@@ -82,13 +83,13 @@ class SizeVSchemaZod implements SizeVSchema {
         })
     }
 
-    getUpdateSizeVSchema(): ZodSchema<SizeUpdateRequestDTO> {
+    getUpdateSizeRequestVSchema(): ZodSchema<SizeUpdateRequestDTO> {
         return z.object({
             id: this.setNoEmptyString(
-                "Product ID",
+                "Size ID",
                 z.string({
-                    required_error: "Product ID is required",
-                    invalid_type_error: "Product ID must be a string"
+                    required_error: "Size ID is required",
+                    invalid_type_error: "Size ID must be a string"
                 })
             ),
             sizeName: this.setNoEmptyString(
@@ -120,11 +121,24 @@ class SizeVSchemaZod implements SizeVSchema {
                 required_error: "Length is required",
                 invalid_type_error: "Length must be a number"
             })
+
             .nonnegative(),
             description: z.string({
                 required_error: "Description is required",
                 invalid_type_error: "Description must be a string"
             }),
+        })
+    }
+
+    getSizeByIdRequestVSchema(): ZodSchema<SizeIdDTO> {
+        return z.object({
+            id: this.setNoEmptyString(
+                "Size ID",
+                z.string({
+                    required_error: "Size ID is required",
+                    invalid_type_error: "Size ID must be a string"
+                })
+            ),
         })
     }
 }

@@ -63,7 +63,9 @@ class ProductRepositoryPrisma implements ProductRepository {
             },
             data: {
                 isActive: product.getIsActive(),
-                deactivatedAt: now
+
+                // update only when its deactivated
+                deactivatedAt: !product.getIsActive() ? now : product.getDeactivatedAt()
             }
         })
         product.setDeactivatedAt(updatedProduct.deactivatedAt!)

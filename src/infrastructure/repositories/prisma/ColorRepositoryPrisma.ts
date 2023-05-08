@@ -108,7 +108,9 @@ class ColorRepositoryPrisma implements ColorRepository {
             },
             data: {
                 isActive: color.getIsActive(),
-                deactivatedAt: now
+
+                // update only when its deactivated
+                deactivatedAt: !color.getIsActive() ? now : color.getDeactivatedAt()
             }
         })
         color.setDeactivatedAt(updatedColor.deactivatedAt!)

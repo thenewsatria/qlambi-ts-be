@@ -7,6 +7,7 @@ import SizeVSchema from "../../../interfaces/validators/schemas/SizeVSchema";
 import BaseError from "../../errors/BaseError";
 import ExpressJsendPresenter from "../../presenters/express/ExpressJsendPresenter";
 import AddSizeUseCase from "../../usecases/size/AddSizeUseCase";
+import ToggleSizeActiveUseCase from "../../usecases/size/ToggleSizeActiveUseCase";
 import UpdateSizeUseCase from "../../usecases/size/UpdateSizeUseCase";
 
 class SizeControllerExpress implements SizeController {
@@ -28,7 +29,7 @@ class SizeControllerExpress implements SizeController {
                 const currentLoggedUser: User = res.locals.currentLoggedUser
                 const result = await useCase.execute({...req.body, userEmail: currentLoggedUser.getEmail(),
                     productId: req.params["productID"]},
-                    this.sizeSchemas.getCreateSizeVSchema())
+                    this.sizeSchemas.getAddSizeRequestVSchema())
                 return this.presenter.successReponse<SizeGeneralResponseDTO>(res, 201, result)
             }catch(error: unknown) {
                 if(error instanceof Error) {
@@ -44,8 +45,25 @@ class SizeControllerExpress implements SizeController {
     updateSize(useCase: UpdateSizeUseCase): (...args: any[]) => any {
         return async(req: Request, res: Response, next: NextFunction) => {
             try {
-                const updatedSize = await useCase.execute({...req.body, id: req.params["sizeID"]}, this.sizeSchemas.getUpdateSizeVSchema())
+                const updatedSize = await useCase.execute({...req.body, id: req.params["sizeID"]},
+                    this.sizeSchemas.getUpdateSizeRequestVSchema())
                 return this.presenter.successReponse<SizeGeneralResponseDTO>(res, 200, updatedSize)
+            }catch(error: unknown) {
+                if(error instanceof Error) {
+                    const apiError = this.errorTranslator.translateError(error)
+                    next(apiError)
+                }else{
+                    next(new BaseError("Unknown Error Occured", false, error))
+                }
+            }
+        }
+    }
+
+    toggleSizeActive(useCase: ToggleSizeActiveUseCase): (...args: any[]) => any {
+        return async(req: Request, res: Response, next: NextFunction) => {
+            try {
+                const toggledActiveSize = await useCase.execute({id: req.params["sizeID"]}, this.sizeSchemas.getSizeByIdRequestVSchema())
+                return this.presenter.successReponse<SizeGeneralResponseDTO>(res, 200, toggledActiveSize)
             }catch(error: unknown) {
                 if(error instanceof Error) {
                     const apiError = this.errorTranslator.translateError(error)
