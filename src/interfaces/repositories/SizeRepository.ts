@@ -5,6 +5,7 @@ interface SizeRepository {
     updateSize(size: Size): Promise<Size>
     readById(sizeId: string, detailed: boolean): Promise<Size|null>
     updateActiveStatus(size: Size): Promise<Size>
+    deleteSize(size: Size, detailed: boolean): Promise<Size>
 }
 
 

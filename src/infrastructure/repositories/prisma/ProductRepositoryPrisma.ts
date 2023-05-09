@@ -190,7 +190,7 @@ class ProductRepositoryPrisma implements ProductRepository {
 
 
     async deleteProduct(product: Product, detailed: boolean = false): Promise<Product> {
-        const colorRelation = await this._client.product.delete({
+        const deletedProduct = await this._client.product.delete({
             where: {
                 id: +product.getId()!
             },
@@ -198,17 +198,17 @@ class ProductRepositoryPrisma implements ProductRepository {
                 creator: detailed
             }
         })
-        if(colorRelation){
-            product = new Product(colorRelation.userEmail, colorRelation.productName, colorRelation.productClass,
-                colorRelation.productType, colorRelation.material, colorRelation.description)
-            product.setId(colorRelation.id+"")
-            product.setIsActive(colorRelation.isActive)
-            colorRelation.deactivatedAt ? product.setDeactivatedAt(colorRelation.deactivatedAt) : null
-            colorRelation.creator ? 
-                product.setCreator(new User(colorRelation.creator.email, colorRelation.creator.username, "")) 
+        if(deletedProduct){
+            product = new Product(deletedProduct.userEmail, deletedProduct.productName, deletedProduct.productClass,
+                deletedProduct.productType, deletedProduct.material, deletedProduct.description)
+            product.setId(deletedProduct.id+"")
+            product.setIsActive(deletedProduct.isActive)
+            deletedProduct.deactivatedAt ? product.setDeactivatedAt(deletedProduct.deactivatedAt) : null
+            deletedProduct.creator ? 
+                product.setCreator(new User(deletedProduct.creator.email, deletedProduct.creator.username, "")) 
                 : null
-            product.setCreatedAt(colorRelation.createdAt)
-            product.setUpdatedAt(colorRelation.updatedAt)
+            product.setCreatedAt(deletedProduct.createdAt)
+            product.setUpdatedAt(deletedProduct.updatedAt)
         }
 
         return Promise.resolve(product)

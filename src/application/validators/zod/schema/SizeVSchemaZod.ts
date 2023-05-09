@@ -1,6 +1,7 @@
 import { z, ZodEffects, ZodPipeline, ZodSchema, ZodString } from "zod";
 import SizeIdDTO from "../../../../interfaces/dtos/size/singular/SizeIdDTO";
 import SizeCreationRequestDTO from "../../../../interfaces/dtos/size/SizeCreationRequestDTO";
+import SizeDeletionRequestDTO from "../../../../interfaces/dtos/size/SizeDeletionRequestDTO";
 import SizeUpdateRequestDTO from "../../../../interfaces/dtos/size/SizeUpdateRequestDTO";
 import SizeVSchema from "../../../../interfaces/validators/schemas/SizeVSchema";
 
@@ -137,6 +138,28 @@ class SizeVSchemaZod implements SizeVSchema {
                 z.string({
                     required_error: "Size ID is required",
                     invalid_type_error: "Size ID must be a string"
+                })
+            ),
+        })
+    }
+
+    getRemoveSizeByIdRequestVSchema(): ZodSchema<SizeDeletionRequestDTO> {
+        return z.object({
+            id: this.setNoEmptyString(
+                "Size ID",
+                z.string({
+                    required_error: "Size ID is required",
+                    invalid_type_error: "Size ID must be a string"
+                })
+            ),
+            sizeName: this.setNoEmptyString(
+                "Size Name",
+                z.string({
+                    required_error: "Size Name is required",
+                    invalid_type_error: "Size Name must be a string"
+                })
+                .max(64, {
+                    message: "Size Name must be less than 64 character"
                 })
             ),
         })

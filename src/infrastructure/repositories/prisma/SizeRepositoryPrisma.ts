@@ -115,6 +115,41 @@ class SizeRepositoryPrisma implements SizeRepository {
         size.setUpdatedAt(updatedSize.updatedAt)
         return Promise.resolve(size)
     }
+
+    async deleteSize(size: Size, detailed: boolean): Promise<Size> {
+        const currentSize = await this._client.size.delete({
+            where: {
+                id: +size.getId()!
+            },
+            include: {
+                creator: detailed,
+                product: detailed
+            }
+        })
+
+        if(currentSize) {    
+            currentSize.deactivatedAt ? size.setDeactivatedAt(currentSize.deactivatedAt) : null
+            currentSize.creator ? size.setCreator(new User(currentSize.creator.email, currentSize.creator.username, ""))
+                : null
+            if(currentSize.product) {
+                const relatedProduct = new Product(currentSize.product.userEmail, currentSize.product.productName,
+                    currentSize.product.productClass, currentSize.product.productType, currentSize.product.material, currentSize.product.description)
+
+                relatedProduct.setId(currentSize.product.id+"")
+                relatedProduct.setIsActive(currentSize.product.isActive)
+                relatedProduct.setCreatedAt(currentSize.product.createdAt)
+                relatedProduct.setUpdatedAt(currentSize.product.updatedAt)
+                
+                currentSize.product.deactivatedAt ? relatedProduct.setDeactivatedAt(currentSize.product.deactivatedAt)
+                    : null
+
+                size.setProduct(relatedProduct)
+            }
+            size.setCreatedAt(currentSize.createdAt)
+            size.setUpdatedAt(currentSize.updatedAt)
+        }
+        return Promise.resolve(size)
+    }
 }
 
 export default SizeRepositoryPrisma

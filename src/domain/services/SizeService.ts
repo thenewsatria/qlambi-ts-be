@@ -44,6 +44,11 @@ class SizeService {
         const size = await this.repository.readById(data.id, true)
         return Promise.resolve(size)
     }
+
+    async removeSize(data: SizeDTO): Promise<Size> {
+        const deletedSize = await this.repository.deleteSize(data.size, true)
+        return Promise.resolve(deletedSize)
+    }
 }
 
 export default SizeService

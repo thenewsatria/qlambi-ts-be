@@ -10,6 +10,7 @@ import MiddlewareFactoryExpress from '../../middlewares/factories/MiddlewareFact
 import ExpressJsendPresenter from '../../presenters/express/ExpressJsendPresenter'
 import GetUserByAccesTokenUseCase from '../../usecases/middleware/GetUserByAccesTokenUseCase'
 import AddSizeUseCase from '../../usecases/size/AddSizeUseCase'
+import DeleteSizeUseCase from '../../usecases/size/DeleteSizeUseCase'
 import GetSizeDetailUseCase from '../../usecases/size/GetSizeDetailUseCase'
 import ToggleSizeActiveUseCase from '../../usecases/size/ToggleSizeActiveUseCase'
 import UpdateSizeUseCase from '../../usecases/size/UpdateSizeUseCase'
@@ -50,6 +51,7 @@ const addSizeUC = new AddSizeUseCase(sizeService, productService)
 const updateSizeUC = new UpdateSizeUseCase(sizeService)
 const toggleSizeActiveUC = new ToggleSizeActiveUseCase(sizeService)
 const getSizeDetailUC = new GetSizeDetailUseCase(sizeService)
+const deleteSizeUC = new DeleteSizeUseCase(sizeService)
 
 const sizeController = controllerFactory.createSizeController(sizeSchemas, presenter, errorTranslator)
 
@@ -62,4 +64,5 @@ sizeRoutes.post('/add/:productID', sizeController.addSizeToProduct(addSizeUC))
 sizeRoutes.route("/:sizeID")
     .put(sizeController.updateSize(updateSizeUC))
     .get(sizeController.getSizeDetail(getSizeDetailUC))
+    .delete(sizeController.deleteSize(deleteSizeUC))
 export default sizeRoutes
