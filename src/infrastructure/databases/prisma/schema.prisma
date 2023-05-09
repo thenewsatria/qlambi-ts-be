@@ -22,6 +22,7 @@ model User {
   products      Product[]
   colors        Color[]
   productSizes  Size[]
+  itemsCreated  Item[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
@@ -57,6 +58,7 @@ model Product {
   description       String
   availableColors   ColorsOnProducts[]
   availableSizes    Size[]
+  itemsRelated      Item[]
   creator           User?     @relation(fields: [userEmail], references: [email], onDelete: SetNull)
   userEmail         String?
   isActive          Boolean   @default(true)
@@ -71,6 +73,7 @@ model Color {
   hexValue          String
   description       String
   productsRelated   ColorsOnProducts[]
+  itemsRelated      Item[]
   creator           User?      @relation(fields: [userEmail], references: [email], onDelete: SetNull)
   userEmail         String?
   isActive          Boolean   @default(true)
@@ -98,10 +101,33 @@ model Size {
   length          Int
   width           Int
   description     String
+  itemsRelated    Item[]
   creator         User?      @relation(fields: [userEmail], references: [email], onDelete: SetNull)
   userEmail       String?
   product         Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId       Int    
+  isActive        Boolean     @default(true)
+  deactivatedAt   DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model Item {
+  id              Int         @id @default(autoincrement())
+  itemCode        String      @unique
+  itemName        String
+  product         Product?    @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productId       Int?
+  color           Color?      @relation(fields: [colorId], references: [id], onDelete: SetNull)
+  colorId         Int?
+  size            Size?       @relation(fields: [sizeId], references: [id], onDelete: SetNull)
+  sizeId          Int?
+  price           Int
+  itemImage       String
+  stock           Int
+  description     String
+  creator         User?       @relation(fields: [userEmail], references: [email], onDelete: SetNull)
+  userEmail       String?
   isActive        Boolean     @default(true)
   deactivatedAt   DateTime?
   createdAt       DateTime    @default(now())
