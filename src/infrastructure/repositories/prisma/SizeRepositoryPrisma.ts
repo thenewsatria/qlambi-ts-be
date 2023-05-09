@@ -69,7 +69,7 @@ class SizeRepositoryPrisma implements SizeRepository {
         })
 
         if(sizeResult) {
-            size = new Size(sizeResult.userEmail, sizeResult.productId+"", 
+            size = new Size(sizeResult.userEmail || "deleted_user", sizeResult.productId+"", 
                 sizeResult.sizeName, sizeResult.sizeCategory, sizeResult.length,
                 sizeResult.width, sizeResult.description)
             size.setId(sizeResult.id+"")
@@ -78,7 +78,7 @@ class SizeRepositoryPrisma implements SizeRepository {
             sizeResult.creator ? size.setCreator(new User(sizeResult.creator.email, sizeResult.creator.username, ""))
                 : null
             if(sizeResult.product) {
-                const relatedProduct = new Product(sizeResult.product.userEmail, sizeResult.product.productName,
+                const relatedProduct = new Product(sizeResult.product.userEmail || "deleted_user", sizeResult.product.productName,
                     sizeResult.product.productClass, sizeResult.product.productType, sizeResult.product.material, sizeResult.product.description)
 
                 relatedProduct.setId(sizeResult.product.id+"")
@@ -132,7 +132,7 @@ class SizeRepositoryPrisma implements SizeRepository {
             currentSize.creator ? size.setCreator(new User(currentSize.creator.email, currentSize.creator.username, ""))
                 : null
             if(currentSize.product) {
-                const relatedProduct = new Product(currentSize.product.userEmail, currentSize.product.productName,
+                const relatedProduct = new Product(currentSize.product.userEmail || "deleted_user", currentSize.product.productName,
                     currentSize.product.productClass, currentSize.product.productType, currentSize.product.material, currentSize.product.description)
 
                 relatedProduct.setId(currentSize.product.id+"")

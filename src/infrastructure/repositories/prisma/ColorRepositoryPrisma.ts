@@ -56,7 +56,7 @@ class ColorRepositoryPrisma implements ColorRepository {
             }
         })
         for (const currColor of colorRes) {
-            const color = new Color(currColor.userEmail, currColor.colorName, currColor.hexValue, currColor.description)
+            const color = new Color(currColor.userEmail || "deleted_user", currColor.colorName, currColor.hexValue, currColor.description)
             color.setId(currColor.id+"")
             color.setIsActive(currColor.isActive)
             currColor.deactivatedAt ? color.setDeactivatedAt(currColor.deactivatedAt) : null
@@ -84,7 +84,7 @@ class ColorRepositoryPrisma implements ColorRepository {
         })
 
         if(colorResult) {
-            color = new Color(colorResult.userEmail, colorResult.colorName,
+            color = new Color(colorResult.userEmail || "deleted_user", colorResult.colorName,
                 colorResult.hexValue, colorResult.description)
             color.setId(colorResult.id+"")
             color.setIsActive(colorResult.isActive)
@@ -128,7 +128,7 @@ class ColorRepositoryPrisma implements ColorRepository {
             }
         })
         if(deletedColor){
-            color = new Color(deletedColor.userEmail, deletedColor.colorName, deletedColor.hexValue, deletedColor.description)
+            color = new Color(deletedColor.userEmail || "deleted_user", deletedColor.colorName, deletedColor.hexValue, deletedColor.description)
             color.setId(deletedColor.id+"")
             color.setIsActive(deletedColor.isActive)
             deletedColor.deactivatedAt ? color.setDeactivatedAt(deletedColor.deactivatedAt) : null

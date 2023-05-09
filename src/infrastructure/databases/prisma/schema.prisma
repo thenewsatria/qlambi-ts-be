@@ -28,7 +28,7 @@ model User {
 
 model Token {
   id            Int       @id @default(autoincrement())
-  user          User      @relation(fields: [userEmail], references: [email])
+  user          User      @relation(fields: [userEmail], references: [email], onDelete: Cascade)
   userEmail     String    @unique
   refreshToken  String    @db.VarChar(255) //prisma default is 191, while token length vary, so modified using db.Varchar with specified length
   IP            String
@@ -41,7 +41,7 @@ model Token {
 
 model UsedToken {
   id                Int       @id @default(autoincrement())
-  user              User      @relation(fields: [userEmail], references: [email])
+  user              User      @relation(fields: [userEmail], references: [email], onDelete: Cascade)
   userEmail         String    @unique
   usedRefreshToken  String    @db.VarChar(255) //prisma default is 191, while token length vary, so modified using db.Varchar with specified length
   createdAt         DateTime  @default(now())
@@ -57,8 +57,8 @@ model Product {
   description       String
   availableColors   ColorsOnProducts[]
   availableSizes    Size[]
-  creator           User     @relation(fields: [userEmail], references: [email])
-  userEmail         String
+  creator           User?     @relation(fields: [userEmail], references: [email], onDelete: SetNull)
+  userEmail         String?
   isActive          Boolean   @default(true)
   deactivatedAt     DateTime?
   createdAt         DateTime  @default(now())
@@ -71,8 +71,8 @@ model Color {
   hexValue          String
   description       String
   productsRelated   ColorsOnProducts[]
-  creator           User      @relation(fields: [userEmail], references: [email])
-  userEmail         String
+  creator           User?      @relation(fields: [userEmail], references: [email], onDelete: SetNull)
+  userEmail         String?
   isActive          Boolean   @default(true)
   deactivatedAt     DateTime?
   createdAt         DateTime  @default(now())
@@ -80,13 +80,13 @@ model Color {
 }
 
 model ColorsOnProducts {
-  color       Color @relation(fields: [colorId], references: [id])
+  color       Color @relation(fields: [colorId], references: [id], onDelete: Cascade)
   colorId     Int
-  product     Product @relation(fields: [productId], references: [id])
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId   Int
   assignedAt  DateTime @default(now())
-  assignedBy  User @relation(fields: [userEmail], references: [email])
-  userEmail   String
+  assignedBy  User? @relation(fields: [userEmail], references: [email], onDelete: SetNull)
+  userEmail   String?
 
   @@id([colorId, productId])
 }
@@ -98,9 +98,9 @@ model Size {
   length          Int
   width           Int
   description     String
-  creator         User        @relation(fields: [userEmail], references: [email])
-  userEmail       String
-  product         Product     @relation(fields: [productId], references: [id])
+  creator         User?      @relation(fields: [userEmail], references: [email], onDelete: SetNull)
+  userEmail       String?
+  product         Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId       Int    
   isActive        Boolean     @default(true)
   deactivatedAt   DateTime?

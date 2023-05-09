@@ -83,7 +83,7 @@ class ProductRepositoryPrisma implements ProductRepository {
             }
         })
         for (const currProd of productsRes) {
-            const product = new Product(currProd.userEmail, currProd.productName, currProd.productClass,
+            const product = new Product(currProd.userEmail || "deleted_user", currProd.productName, currProd.productClass,
                 currProd.productType, currProd.material, currProd.description)
             product.setId(currProd.id+"")
             product.setIsActive(currProd.isActive)
@@ -108,7 +108,7 @@ class ProductRepositoryPrisma implements ProductRepository {
             }
         })
         for (const currProd of productsRes) {
-            const product = new Product(currProd.userEmail, currProd.productName, currProd.productClass,
+            const product = new Product(currProd.userEmail || "deleted_user", currProd.productName, currProd.productClass,
                 currProd.productType, currProd.material, currProd.description)
             product.setId(currProd.id+"")
             product.setIsActive(currProd.isActive)
@@ -145,9 +145,9 @@ class ProductRepositoryPrisma implements ProductRepository {
         })
 
         if (productResult) {
-            if(productResult.availableColors) {
+            if(productResult.availableColors && detailed) {
                 for(const currColor of productResult.availableColors) {
-                    const color = new Color(currColor.color.userEmail, currColor.color.colorName,
+                    const color = new Color(currColor.color.userEmail || "deleted_user", currColor.color.colorName,
                         currColor.color.hexValue, currColor.color.description)
                     color.setId(currColor.color.id+"")
                     color.setIsActive(currColor.color.isActive)
@@ -158,9 +158,9 @@ class ProductRepositoryPrisma implements ProductRepository {
                 }
             }
 
-            if(productResult.availableSizes) {
+            if(productResult.availableSizes && detailed) {
                 for(const currSize of productResult.availableSizes) {
-                    const size = new Size(currSize.userEmail, currSize.productId+"", currSize.sizeName,
+                    const size = new Size(currSize.userEmail || "deleted_user", currSize.productId+"", currSize.sizeName,
                         currSize.sizeCategory, currSize.length, currSize.width, currSize.description)
                     size.setId(currSize.id+"")
                     size.setIsActive(currSize.isActive)
@@ -171,7 +171,8 @@ class ProductRepositoryPrisma implements ProductRepository {
                 }
             }
 
-            product = new Product(productResult.userEmail, productResult.productName, productResult.productClass,
+
+            product = new Product(productResult.userEmail || "deleted_user", productResult.productName, productResult.productClass,
                 productResult.productType, productResult.material, productResult.description)
             product.setId(productResult.id+"")
             product.setIsActive(productResult.isActive)
@@ -199,7 +200,7 @@ class ProductRepositoryPrisma implements ProductRepository {
             }
         })
         if(deletedProduct){
-            product = new Product(deletedProduct.userEmail, deletedProduct.productName, deletedProduct.productClass,
+            product = new Product(deletedProduct.userEmail || "deleted_user", deletedProduct.productName, deletedProduct.productClass,
                 deletedProduct.productType, deletedProduct.material, deletedProduct.description)
             product.setId(deletedProduct.id+"")
             product.setIsActive(deletedProduct.isActive)
