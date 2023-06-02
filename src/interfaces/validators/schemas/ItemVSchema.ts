@@ -1,0 +1,3 @@
+interface ItemVSchema {
+    getCreateItemRequestSchema(): any
+}

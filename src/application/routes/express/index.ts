@@ -6,6 +6,7 @@ import tokenRoutes from './tokenRoutes'
 import productRoutes from './productRoutes'
 import colorRoutes from './colorRoutes'
 import sizeRoutes from './sizeRoutes'
+import itemRoutes from './itemRoutes'
 const APIRouter = express.Router()
 const V1Router = express.Router()
 
@@ -30,6 +31,7 @@ export function routeApp(app: Express) {
     V1Router.use('/products', productRoutes)
     V1Router.use('/colors', colorRoutes)
     V1Router.use('/sizes', sizeRoutes)
+    V1Router.use('/items', itemRoutes)
     
     app.use(handlerMW.handleErrors(ExpressJsendPresenter.getInstance()))
 }
