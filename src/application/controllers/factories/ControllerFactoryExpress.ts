@@ -1,4 +1,5 @@
 import AuthController from "../../../interfaces/controllers/AuthController";
+import ItemController from "../../../interfaces/controllers/ItemController";
 import ProductController from "../../../interfaces/controllers/ProductController";
 import SizeController from "../../../interfaces/controllers/SizeController";
 import TokenController from "../../../interfaces/controllers/TokenController";
@@ -12,6 +13,7 @@ import SizeVSchema from "../../../interfaces/validators/schemas/SizeVSchema";
 import TokenVSchema from "../../../interfaces/validators/schemas/TokenVSchema";
 import AuthControllerExpress from "../express/AuthControllerExpress";
 import ColorControllerExpress from "../express/ColorControllerExpress";
+import ItemControllerExpress from "../express/ItemControllerExpress";
 import ProductControllerExpress from "../express/ProductControllerExpress";
 import SizeControllerExpress from "../express/SizeControllerExpress";
 import TokenControllerExpress from "../express/TokenControllerExpress";
@@ -46,6 +48,10 @@ class ControllerFactoryExpress implements ControllerFactory {
 
     createSizeController(sizeSchemas: SizeVSchema, presenter: JsendPresenter, errorTranslator: ErrorTranslator): SizeController {
         return new SizeControllerExpress(sizeSchemas, presenter, errorTranslator)
+    }
+
+    createItemController(itemSchemas: ItemVSchema, presenter: JsendPresenter, errorTranslator: ErrorTranslator): ItemController {
+        return new ItemControllerExpress(itemSchemas, presenter, errorTranslator)
     }
 }
 

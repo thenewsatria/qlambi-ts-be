@@ -33,7 +33,7 @@ const tokenTools = new JsonWebToken()
 const repositoryFactory = RepositoryFactoryPrisma.getInstance()
 const controllerFactory = ControllerFactoryExpress.getInstance()
 const middlewareFactory = MiddlewareFactoryExpress.getInstance()
-const valSchemaFactory = VSchemaFactoryZod.getInstance() 
+const valSchemaFactory = VSchemaFactoryZod.getInstance()
 
 const productRepository = repositoryFactory.createProductRepository()
 const tokenRepository = repositoryFactory.createTokenRepository()

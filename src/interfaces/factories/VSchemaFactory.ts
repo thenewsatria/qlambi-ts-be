@@ -10,7 +10,7 @@ interface VSchemaFactory {
     createProductVSchema(): ProductVSchema
     createColorVSchema(): ColorVSchema
     createSizeVSchema(): SizeVSchema
-    
+    createItemVSchema(): ItemVSchema
 }
 
 export default VSchemaFactory

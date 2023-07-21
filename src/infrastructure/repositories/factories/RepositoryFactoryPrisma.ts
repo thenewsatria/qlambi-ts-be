@@ -1,11 +1,13 @@
 import RepositoryFactory from "../../../interfaces/factories/RepositoryFactory";
 import ColorRepository from "../../../interfaces/repositories/ColorRepository";
+import ItemRepository from "../../../interfaces/repositories/ItemRepository";
 import ProductRepository from "../../../interfaces/repositories/ProductRepository";
 import SizeRepository from "../../../interfaces/repositories/SizeRepository";
 import TokenRepository from "../../../interfaces/repositories/TokenRepository";
 import UsedTokenRepository from "../../../interfaces/repositories/UsedTokenRepository";
 import UserRepository from "../../../interfaces/repositories/UserRepository";
 import ColorRepositoryPrisma from "../prisma/ColorRepositoryPrisma";
+import ItemRepositoryPrisma from "../prisma/ItemRepositoryPrisma";
 import ProductRepositoryPrisma from "../prisma/ProductRepositoryPrisma";
 import SizeRepositoryPrisma from "../prisma/SizeRepositoryPrisma";
 import TokenRepositoryPrisma from "../prisma/TokenRepositoryPrisma";
@@ -45,6 +47,10 @@ class RepositoryFactoryPrisma implements RepositoryFactory {
 
     createSizeRepository(): SizeRepository {
         return SizeRepositoryPrisma.getInstance()
+    }
+
+    createItemRepository(): ItemRepository {
+        return ItemRepositoryPrisma.getInstance()
     }
 }
 

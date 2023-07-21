@@ -6,6 +6,7 @@ import SizeVSchema from "../../../interfaces/validators/schemas/SizeVSchema";
 import TokenVSchema from "../../../interfaces/validators/schemas/TokenVSchema";
 import AuthVSchemaZod from "../zod/schema/AuthVSchemaZod";
 import ColorVSchemaZod from "../zod/schema/ColorVSchemaZod";
+import ItemVSchemaZod from "../zod/schema/ItemVSchemaZod";
 import ProductVSchemaZod from "../zod/schema/ProductVSchemaZod";
 import SizeVSchemaZod from "../zod/schema/SizeVSchemaZod";
 import TokenVSchemaZod from "../zod/schema/TokenVSchemaZod";
@@ -37,7 +38,11 @@ class VSchemaFactoryZod implements VSchemaFactory {
 
     createSizeVSchema(): SizeVSchema {
         return SizeVSchemaZod.getInstance()
-    }    
+    }
+    
+    createItemVSchema(): ItemVSchema {
+        return ItemVSchemaZod.getInstance()
+    }
 }
 
 export default VSchemaFactoryZod

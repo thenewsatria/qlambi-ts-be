@@ -1,5 +1,6 @@
 import AuthController from "../controllers/AuthController"
 import ColorController from "../controllers/ColorController"
+import ItemController from "../controllers/ItemController"
 import ProductController from "../controllers/ProductController"
 import SizeController from "../controllers/SizeController"
 import TokenController from "../controllers/TokenController"
@@ -17,6 +18,7 @@ interface ControllerFactory {
     createProductController(productSchemas: ProductVSchema, presenter: JsendPresenter, errorTranslator: ErrorTranslator): ProductController
     createColorController(colorSchemas: ColorVSchema, presenter: JsendPresenter, errorTranslator: ErrorTranslator): ColorController
     createSizeController(sizeSchemas: SizeVSchema, presenter: JsendPresenter, errorTranslator: ErrorTranslator): SizeController
+    createItemController(itemSchemas: ItemVSchema, presenter: JsendPresenter, errorTranslator: ErrorTranslator): ItemController
 }
 
 export default ControllerFactory

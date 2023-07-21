@@ -25,7 +25,7 @@ class Item {
   private updatedAt?: Date     
 
   constructor(userEmail: string, productId: string, colorId: string, sizeId:string, 
-    itemCode: string, itemName: string, price: number, itemImage: string, stock: number, description: string = "") {
+    itemCode: string, itemName: string, price: number, stock: number, itemImage: string = "",description: string = "") {
         this.userEmail = userEmail
         this.productId = productId
         this.colorId = colorId
@@ -33,8 +33,8 @@ class Item {
         this.itemCode = itemCode
         this.itemName = itemName
         this.price = price
-        this.itemImage = itemImage
         this.stock = stock
+        this.itemImage = itemImage
         this.description = description
 
         this.isActive = true
