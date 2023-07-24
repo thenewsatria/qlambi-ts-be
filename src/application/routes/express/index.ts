@@ -27,11 +27,11 @@ export function routeApp(app: Express) {
     })
 
     V1Router.use('/auth', authRoutes)
-    // V1Router.use('/token', tokenRoutes)
-    // V1Router.use('/products', productRoutes)
-    // V1Router.use('/colors', colorRoutes)
-    // V1Router.use('/sizes', sizeRoutes)
-    // V1Router.use('/items', itemRoutes)
+    V1Router.use('/token', tokenRoutes)
+    V1Router.use('/products', productRoutes)
+    V1Router.use('/colors', colorRoutes)
+    V1Router.use('/sizes', sizeRoutes)
+    V1Router.use('/items', itemRoutes)
     
     app.use(handlerMW.handleErrors(ExpressJsendPresenter.getInstance()))
 }

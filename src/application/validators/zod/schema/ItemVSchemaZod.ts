@@ -72,11 +72,14 @@ class ItemVSchemaZod implements ItemVSchema {
                 invalid_type_error: "Price must be a number"
             })
             .nonnegative(),
-            itemImage: z.string({
-                required_error: "Item Name is required",
-                invalid_type_error: "Item Name must be a string"
-            })
-            .url(),
+            itemImage: z.union([
+                z.string({
+                    required_error: "Item Name is required",
+                    invalid_type_error: "Item Name must be a string"
+                })
+                .url(),
+                z.literal("")
+            ]),
             stock: z.number({
                 required_error: "Price is required",
                 invalid_type_error: "Price must be a number"

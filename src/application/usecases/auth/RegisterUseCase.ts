@@ -4,7 +4,6 @@ import TokenService from "../../../domain/services/TokenService";
 import UserService from "../../../domain/services/UserService";
 import RegisterRequestDTO from "../../../interfaces/dtos/auth/RegisterRequestDTO";
 import RegisterResponseDTO from "../../../interfaces/dtos/auth/RegisterResponseDTO";
-import EmailDTO from "../../../interfaces/dtos/user/singular/EmailDTO";
 import UserTokenDTO from "../../../interfaces/dtos/user/UserTokenDTO";
 import AppOperationType from "../../../interfaces/enums/AppOperationType";
 import ResourceType from "../../../interfaces/enums/ResourceType";
