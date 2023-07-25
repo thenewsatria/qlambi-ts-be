@@ -25,7 +25,7 @@ class ItemRepositoryPrisma implements ItemRepository {
                 sizeId: +item.getSizeId(),
                 price: item.getPrice(),
                 stock: item.getStock(),
-                itemImage: item.getItemImage(),
+                itemImages: item.getItemImages(),
                 description: item.getDescription(),
                 userEmail: item.getUserEmail(),
             },

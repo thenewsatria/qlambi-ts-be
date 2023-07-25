@@ -14,7 +14,7 @@ class Item {
   private size?: Size           
   private sizeId: string         
   private price: number          
-  private itemImage: string      
+  private itemImages: string[]      
   private stock: number          
   private description: string     
   private creator?: User        
@@ -25,7 +25,7 @@ class Item {
   private updatedAt?: Date     
 
   constructor(userEmail: string, productId: string, colorId: string, sizeId:string, 
-    itemCode: string, itemName: string, price: number, stock: number, itemImage: string = "",description: string = "") {
+    itemCode: string, itemName: string, price: number, stock: number, itemImages: string[] = [],description: string = "") {
         this.userEmail = userEmail
         this.productId = productId
         this.colorId = colorId
@@ -34,7 +34,7 @@ class Item {
         this.itemName = itemName
         this.price = price
         this.stock = stock
-        this.itemImage = itemImage
+        this.itemImages = itemImages
         this.description = description
 
         this.isActive = true
@@ -80,8 +80,8 @@ class Item {
     return this.price
   }
 
-  public getItemImage(): string {
-    return this.itemImage
+  public getItemImages(): string[] {
+    return this.itemImages
   }
 
   public getStock(): number {
@@ -156,8 +156,8 @@ class Item {
     this.price = price
   }
 
-  public setItemImage(itemImage: string): void {
-    this.itemImage = itemImage
+  public setItemImages(itemImages: string[]): void {
+    this.itemImages = itemImages
   }
 
   public setStock(stock: number): void {

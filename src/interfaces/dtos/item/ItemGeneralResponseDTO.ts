@@ -11,7 +11,7 @@ interface ItemGeneralResponseDTO {
     color?: ColorGeneralResponseDTO | string;
     size?: SizeGeneralResponseDTO | string;
     price: number;
-    itemImage: string;
+    itemImages: string[];
     stock: number;
     description: string;
     creator?: UserDetailDTO | string;

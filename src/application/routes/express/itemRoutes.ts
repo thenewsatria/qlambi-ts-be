@@ -1,5 +1,4 @@
 import express from "express"
-import { Prisma } from "@prisma/client"
 import MiddlewareFactoryExpress from "../../middlewares/factories/MiddlewareFactoryExpress"
 import VSchemaFactoryZod from "../../validators/factories/VSchemaFactoryZod"
 import AllErrorToAPIErrorTranslator from "../../errors/AllErrorToAPIErrorTranslator"
@@ -16,6 +15,7 @@ import ItemService from "../../../domain/services/ItemService"
 import ProductService from "../../../domain/services/ProductService"
 import ColorService from "../../../domain/services/ColorService"
 import SizeService from "../../../domain/services/SizeService"
+import multer from "multer"
 
 const itemRoutes = express.Router()
 
@@ -53,11 +53,17 @@ const getUserByTokenUC = new GetUserByAccesTokenUseCase(tokenService, userServic
 const createItemUC = new CreateItemUseCase(itemService, productService, colorService, sizeService)
 
 const authMW = middlewareFactory.createAuthMiddleware(tokenSchemas, errorTranslator)
+const validationMW = middlewareFactory.createValidationMiddleware()
+
+const handlerMW = middlewareFactory.createHandlerMiddleware()
+const fileUploadMW = handlerMW.handleFileUpload()("public/items", [".png", ".jpeg", ".jpg"], 512 * 1024)
 
 itemRoutes.use(authMW.protect(getUserByTokenUC))
 itemRoutes.use(authMW.checkAllowedRoles(['ADMIN']))
-
-itemRoutes.post('/', itemController.createItem(createItemUC))
-itemRoutes
-
+itemRoutes.post('/', 
+    fileUploadMW.single("itemImages"),
+    validationMW.checkFileIsExist("itemImages"),
+    validationMW.checkFilesMimetype(["image/png", "image/jpeg"]),
+    validationMW.checkFileSize(512*1024),
+    itemController.createItem(createItemUC))
 export default itemRoutes

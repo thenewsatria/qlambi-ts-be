@@ -16,6 +16,7 @@ export function routeApp(app: Express) {
     const handlerMW = middlewareFactory.createHandlerMiddleware()
 
     app.use(setupMW.initialSetup())
+    app.use("/static", setupMW.setStaticFolder("public"))
 
     app.use('/api', APIRouter)
     APIRouter.use('/v1', V1Router)

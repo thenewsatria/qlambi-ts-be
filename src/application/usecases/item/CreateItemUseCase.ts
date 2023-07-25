@@ -87,7 +87,7 @@ class CreateItemUseCase {
         }
 
         // Set Default Image for Item
-        data.itemImage = data.itemImage ? data.itemImage : "https://reactnativecode.com/wp-content/uploads/2018/02/Default_Image_Thumbnail.png"
+        data.itemImages = data.itemImages ? data.itemImages : ["https://reactnativecode.com/wp-content/uploads/2018/02/Default_Image_Thumbnail.png"]
 
         const item = await this.itemService.insertItem(data)
         const itemCreator = item.getCreator()
@@ -144,7 +144,7 @@ class CreateItemUseCase {
                 :
             item.getSizeId(),
             price: item.getPrice(),
-            itemImage: item.getItemImage(),
+            itemImages: item.getItemImages(),
             stock: item.getStock(),
             description: item.getDescription(),
             creator: itemCreator ? {

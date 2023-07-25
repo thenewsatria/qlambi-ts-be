@@ -18,7 +18,7 @@ class ItemService {
 
     async insertItem(data: ItemCreationRequestDTO): Promise<Item> {
         const newItem = new Item(data.userEmail, data.productId, data.colorId, data.sizeId, 
-            data.itemCode, data.itemName, data.price, data.stock, data.itemImage, data.description)
+            data.itemCode, data.itemName, data.price, data.stock, data.itemImages, data.description)
         const insertedItem = await this.repository.createItem(newItem)
         return Promise.resolve(insertedItem)
     }

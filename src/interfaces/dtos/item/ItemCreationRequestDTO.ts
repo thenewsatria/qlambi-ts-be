@@ -5,7 +5,7 @@ interface ItemCreationRequestDTO {
     colorId: string;
     sizeId: string;
     price: number;
-    itemImage: string;
+    itemImages: string[];
     stock: number;
     description: string;
     userEmail: string;
