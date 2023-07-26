@@ -61,8 +61,7 @@ const fileUploadMW = handlerMW.handleFileUpload()("public/items", [".png", ".jpe
 itemRoutes.use(authMW.protect(getUserByTokenUC))
 itemRoutes.use(authMW.checkAllowedRoles(['ADMIN']))
 itemRoutes.post('/', 
-    fileUploadMW.single("itemImages"),
-    validationMW.checkFileIsExist("itemImages"),
+    fileUploadMW.array("itemImages", 5),
     validationMW.checkFilesMimetype(["image/png", "image/jpeg"]),
     validationMW.checkFileSize(512*1024),
     itemController.createItem(createItemUC))

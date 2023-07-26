@@ -1,4 +1,5 @@
 import ItemCreationRequestDTO from "../../interfaces/dtos/item/ItemCreationRequestDTO";
+import ItemItemCodeDTO from "../../interfaces/dtos/item/singular/ItemItemCodeDTO";
 import ItemRepository from "../../interfaces/repositories/ItemRepository";
 import Validator from "../../interfaces/validators/Validator";
 import Item from "../entities/Item";
@@ -21,6 +22,11 @@ class ItemService {
             data.itemCode, data.itemName, data.price, data.stock, data.itemImages, data.description)
         const insertedItem = await this.repository.createItem(newItem)
         return Promise.resolve(insertedItem)
+    }
+
+    async isItemCodeExist(data: ItemItemCodeDTO): Promise<boolean> {
+        const condition = await this.repository.readByItemCode(data.itemCode, false) != null
+        return Promise.resolve(condition)
     }
 }
 

@@ -3,7 +3,8 @@ enum ResourceType {
     TOKEN = "TOKEN",
     PRODUCT = "PRODUCT",
     COLOR = "COLOR",
-    SIZE = "SIZE"
+    SIZE = "SIZE",
+    ITEM = "ITEM"
 }
 
 export default ResourceType

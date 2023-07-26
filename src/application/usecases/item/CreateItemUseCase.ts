@@ -6,6 +6,7 @@ import ItemCreationRequestDTO from "../../../interfaces/dtos/item/ItemCreationRe
 import ItemGeneralResponseDTO from "../../../interfaces/dtos/item/ItemGeneralResponseDTO";
 import AppOperationType from "../../../interfaces/enums/AppOperationType";
 import ResourceType from "../../../interfaces/enums/ResourceType";
+import ResourceConflictError from "../../errors/app/ResourceConflictError";
 import ResourceNotFoundError from "../../errors/app/ResourceNotFoundError";
 
 class CreateItemUseCase {
@@ -27,13 +28,32 @@ class CreateItemUseCase {
         // 3. Validasi dan check apakah colorId, active ada dan bagian dari product v
         // 4. Validasi dan check apakah sizeId, active ada dan bagian dari product v
 
+        // Set Default image if itemImages is empty
+        if(data.itemImages.length ==  0){
+            data.itemImages = ["https://reactnativecode.com/wp-content/uploads/2018/02/Default_Image_Thumbnail.png"]
+        }
+
+        // Change data type from string to number because it is from formData
+        data.price = +data.price
+        data.stock = +data.stock
+
+        // Validate Data
         await this.itemService.validateData<ItemCreationRequestDTO>(requestSchema, data);
+        
+        // Check if item code is used
+        const relatedItem = await this.itemService.isItemCodeExist({itemCode: data.itemCode})
+        if(relatedItem){
+            return Promise.reject(
+                new ResourceConflictError("Item with specified code already exists", true,
+                    AppOperationType.VALIDATION, ResourceType.ITEM, ["itemCode"])
+            )
+        }
 
         const product = await this.productService.fetchDetailById({id: data.productId})
         if (!product || !product.getIsActive()) {
             return Promise.reject(
                 new ResourceNotFoundError("Product with specified id doesn't exist", true, 
-                    AppOperationType.FETCHING, ResourceType.PRODUCT)
+                    AppOperationType.VALIDATION, ResourceType.PRODUCT)
             )
         }
 
@@ -44,7 +64,7 @@ class CreateItemUseCase {
         if (!color || !color.getIsActive()) {
             return Promise.reject(
                 new ResourceNotFoundError("Color with specified id doesn't exist", true,
-                    AppOperationType.FETCHING, ResourceType.COLOR)
+                    AppOperationType.VALIDATION, ResourceType.COLOR)
             )
         }
         
@@ -53,13 +73,13 @@ class CreateItemUseCase {
             if (color.length == 0) {
                 return Promise.reject(
                     new ResourceNotFoundError("Colors isn't available on the current product", true,
-                        AppOperationType.FETCHING, ResourceType.COLOR)
+                        AppOperationType.VALIDATION, ResourceType.COLOR)
                 )
             }
         }else{ //if undefined
             return Promise.reject(
                 new ResourceNotFoundError("Colors isn't available on the current product", true,
-                    AppOperationType.FETCHING, ResourceType.COLOR)
+                    AppOperationType.VALIDATION, ResourceType.COLOR)
             )
         }
 
@@ -67,7 +87,7 @@ class CreateItemUseCase {
         if (!size || !size.getIsActive()) {
             return Promise.reject(
                 new ResourceNotFoundError("Size with specified id doesn't exist", true,
-                    AppOperationType.FETCHING, ResourceType.SIZE)
+                    AppOperationType.VALIDATION, ResourceType.SIZE)
             )
         }
 
@@ -76,18 +96,15 @@ class CreateItemUseCase {
             if (size.length == 0) {
                 return Promise.reject(
                     new ResourceNotFoundError("Sizes isn't available on the current product", true,
-                        AppOperationType.FETCHING, ResourceType.COLOR)
+                        AppOperationType.VALIDATION, ResourceType.COLOR)
                 )
             }
         }else{
             return Promise.reject(
                 new ResourceNotFoundError("Sizes isn't available on the current product", true,
-                    AppOperationType.FETCHING, ResourceType.COLOR)
+                    AppOperationType.VALIDATION, ResourceType.COLOR)
             )
         }
-
-        // Set Default Image for Item
-        data.itemImages = data.itemImages ? data.itemImages : ["https://reactnativecode.com/wp-content/uploads/2018/02/Default_Image_Thumbnail.png"]
 
         const item = await this.itemService.insertItem(data)
         const itemCreator = item.getCreator()

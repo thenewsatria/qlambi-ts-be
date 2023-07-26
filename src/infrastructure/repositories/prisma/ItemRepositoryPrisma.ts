@@ -1,4 +1,8 @@
+import Color from "../../../domain/entities/Color";
 import Item from "../../../domain/entities/Item";
+import Product from "../../../domain/entities/Product";
+import Size from "../../../domain/entities/Size";
+import User from "../../../domain/entities/User";
 import ItemRepository from "../../../interfaces/repositories/ItemRepository";
 import prismaClient from "../../databases/prisma/client";
 
@@ -33,6 +37,49 @@ class ItemRepositoryPrisma implements ItemRepository {
         item.setId(newItem.id+"")
         item.setCreatedAt(newItem.createdAt)
         item.setUpdatedAt(newItem.updatedAt)
+        return Promise.resolve(item)
+    }
+
+    async readByItemCode(itemCode: string, detailed: boolean): Promise<Item | null> {
+        let item: Item | null = null
+        const itemResult = await this._client.item.findFirst({
+            where: {
+                itemCode: itemCode
+            },
+            include: {
+                creator: detailed,
+                color: detailed,
+                product: detailed,
+                size: detailed
+            }
+        })
+        if(itemResult){
+            item = new Item(itemResult.userEmail || "deleted_user", itemResult.productId+"" || "deleted_product",
+                    itemResult.colorId+"" || "deteled_color", itemResult.sizeId+"" || "deleted_size",
+                    itemResult.itemCode, itemResult.itemName, itemResult.price, itemResult.stock,
+                    itemResult.itemImages as string[], itemResult.description)
+            item.setId(itemResult.id+"")
+            item.setIsActive(itemResult.isActive)
+            itemResult.deactivatedAt ? item.setDeactivatedAt(itemResult.deactivatedAt) : null
+            itemResult.creator ? 
+                item.setCreator(new User(itemResult.creator.email, itemResult.creator.username, ""))
+                : null
+            itemResult.product ?
+                item.setProduct(new Product(itemResult.product.userEmail || "deleted_user", 
+                    itemResult.product.productName, itemResult.product.productClass, itemResult.product.productType,
+                    itemResult.product.material, itemResult.product.description))
+                : null
+            itemResult.color ?
+                item.setColor(new Color(itemResult.color.userEmail || "deleted_user", itemResult.color.colorName, 
+                    itemResult.color.hexValue, itemResult.color.description))
+                : null
+            itemResult.size ?
+                item.setSize(new Size(itemResult.size.userEmail || "deleted_user", itemResult.size.productId+"", itemResult.size.sizeName,
+                    itemResult.size.sizeCategory, itemResult.size.length, itemResult.size.width, itemResult.size.description))
+                : null
+            item.setCreatedAt(itemResult.createdAt)
+            item.setUpdatedAt(itemResult.updatedAt)
+        }
         return Promise.resolve(item)
     }
 }
