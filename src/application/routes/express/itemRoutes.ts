@@ -16,6 +16,7 @@ import ProductService from "../../../domain/services/ProductService"
 import ColorService from "../../../domain/services/ColorService"
 import SizeService from "../../../domain/services/SizeService"
 import multer from "multer"
+import GetItemDetailUseCase from "../../usecases/item/GetItemDetailUseCase"
 
 const itemRoutes = express.Router()
 
@@ -51,6 +52,7 @@ const itemController = controllerFactory.createItemController(itemSchemas, prese
 
 const getUserByTokenUC = new GetUserByAccesTokenUseCase(tokenService, userService)
 const createItemUC = new CreateItemUseCase(itemService, productService, colorService, sizeService)
+const getItemDetailUC = new GetItemDetailUseCase(itemService)
 
 const authMW = middlewareFactory.createAuthMiddleware(tokenSchemas, errorTranslator)
 const validationMW = middlewareFactory.createValidationMiddleware()
@@ -58,11 +60,13 @@ const validationMW = middlewareFactory.createValidationMiddleware()
 const handlerMW = middlewareFactory.createHandlerMiddleware()
 const fileUploadMW = handlerMW.handleFileUpload()("public/items", [".png", ".jpeg", ".jpg"], 512 * 1024)
 
-itemRoutes.use(authMW.protect(getUserByTokenUC))
+itemRoutes.use(authMW.protect(getUserByTokenUC)) 
+itemRoutes.get("/:itemID", itemController.getItemDetail(getItemDetailUC))
 itemRoutes.use(authMW.checkAllowedRoles(['ADMIN']))
 itemRoutes.post('/', 
     fileUploadMW.array("itemImages", 5),
     validationMW.checkFilesMimetype(["image/png", "image/jpeg"]),
     validationMW.checkFileSize(512*1024),
     itemController.createItem(createItemUC))
+
 export default itemRoutes

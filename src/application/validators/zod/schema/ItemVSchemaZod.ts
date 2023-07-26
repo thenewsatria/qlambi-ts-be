@@ -1,5 +1,6 @@
 import { ZodEffects, ZodPipeline, ZodSchema, ZodString, z } from "zod";
 import ItemCreationRequestDTO from "../../../../interfaces/dtos/item/ItemCreationRequestDTO";
+import ItemIdDTO from "../../../../interfaces/dtos/item/singular/ItemIdDTO";
 
 class ItemVSchemaZod implements ItemVSchema {
     private static instance: ItemVSchemaZod
@@ -22,6 +23,18 @@ class ItemVSchemaZod implements ItemVSchema {
             .pipe(
                 handler
             )
+    }
+
+    getItemByIdRequestSchema(): ZodSchema<ItemIdDTO> {
+        return z.object({
+            id: this.setNoEmptyString(
+                "Item ID",
+                z.string({
+                    required_error: "Item ID is required",
+                    invalid_type_error: "Item ID must be a string"
+                })
+            )
+        })
     }
 
     getCreateItemRequestSchema(): ZodSchema<ItemCreationRequestDTO> {

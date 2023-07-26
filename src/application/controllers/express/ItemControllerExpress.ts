@@ -8,6 +8,7 @@ import BaseError from "../../errors/BaseError"
 import ItemGeneralResponseDTO from "../../../interfaces/dtos/item/ItemGeneralResponseDTO"
 import { unlink } from "fs"
 import InternalServerError from "../../errors/apis/InternalServerError"
+import GetItemDetailUseCase from "../../usecases/item/GetItemDetailUseCase"
 
 class ItemControllerExpress implements ItemController {
     private itemSchemas: ItemVSchema
@@ -19,6 +20,7 @@ class ItemControllerExpress implements ItemController {
         this.presenter = presenter
         this.errorTranslator = errorTranslator
     }
+    
     createItem(useCase: CreateItemUseCase): (...args: any[]) => any{
         return async (req: Request, res: Response, next: NextFunction) => {
             try{
@@ -55,7 +57,23 @@ class ItemControllerExpress implements ItemController {
                 }
             }
         }
-    }   
+    }
+    
+    getItemDetail(useCase: GetItemDetailUseCase): (...args: any[]) => any {
+        return async(req: Request, res: Response, next: NextFunction) => {
+            try{
+               const result = await useCase.execute({id: req.params["itemID"]}, this.itemSchemas.getItemByIdRequestSchema())
+               return this.presenter.successReponse<ItemGeneralResponseDTO>(res, 200, result)
+            }catch(error: unknown) {
+                if(error instanceof Error) {
+                    const apiError = this.errorTranslator.translateError(error)
+                    next(apiError)
+                }else{
+                    next(new BaseError("Unknown Error Occured", false, error))
+                }
+            }
+        }
+    }
 }
 
 export default ItemControllerExpress
