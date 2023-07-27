@@ -6,10 +6,12 @@ import ItemController from "../../../interfaces/controllers/ItemController"
 import User from "../../../domain/entities/User"
 import BaseError from "../../errors/BaseError"
 import ItemGeneralResponseDTO from "../../../interfaces/dtos/item/ItemGeneralResponseDTO"
-import { unlink } from "fs"
+import { stat, unlink } from "fs"
 import InternalServerError from "../../errors/apis/InternalServerError"
 import GetItemDetailUseCase from "../../usecases/item/GetItemDetailUseCase"
 import ToggleItemActiveUseCase from "../../usecases/item/ToggleItemActiveUseCase"
+import RemoveItemUseCase from "../../usecases/item/RemoveItemUseCase"
+import Default from "../../../domain/enums/Default"
 
 class ItemControllerExpress implements ItemController {
     private itemSchemas: ItemVSchema
@@ -21,6 +23,7 @@ class ItemControllerExpress implements ItemController {
         this.presenter = presenter
         this.errorTranslator = errorTranslator
     }
+    
     toggleItemActive(useCase: ToggleItemActiveUseCase): (...args: any[]) => any {
         return async (req: Request, res: Response, next: NextFunction) => {
             try{
@@ -80,6 +83,31 @@ class ItemControllerExpress implements ItemController {
             try{
                const result = await useCase.execute({id: req.params["itemID"]}, this.itemSchemas.getItemByIdRequestSchema())
                return this.presenter.successReponse<ItemGeneralResponseDTO>(res, 200, result)
+            }catch(error: unknown) {
+                if(error instanceof Error) {
+                    const apiError = this.errorTranslator.translateError(error)
+                    next(apiError)
+                }else{
+                    next(new BaseError("Unknown Error Occured", false, error))
+                }
+            }
+        }
+    }
+
+    removeItem(useCase: RemoveItemUseCase): (...args: any[]) => any {
+        return async(req: Request, res: Response, next: NextFunction) => {
+            try {
+                const result = await useCase.execute({...req.body, id: req.params["itemID"]}, 
+                    this.itemSchemas.getItemDeletionRequestSchema())
+                if (result.itemImages.length >= 1 && result.itemImages[0] !== Default.ITEM_IMAGE_URL) {
+                    for (const staticPath of result.itemImages) {
+                        const filename = staticPath.split("/").pop()
+                        unlink(`public/items/${filename}`, (err) => {
+                            if (err) return next(new InternalServerError(`Failed deleting public/items/${filename}`))
+                        })
+                    }
+                }
+                return this.presenter.successReponse<ItemGeneralResponseDTO>(res, 200, result)
             }catch(error: unknown) {
                 if(error instanceof Error) {
                     const apiError = this.errorTranslator.translateError(error)

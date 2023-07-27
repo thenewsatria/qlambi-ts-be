@@ -1,3 +1,4 @@
+import Default from "../../../domain/enums/Default";
 import ColorService from "../../../domain/services/ColorService";
 import ItemService from "../../../domain/services/ItemService";
 import ProductService from "../../../domain/services/ProductService";
@@ -30,7 +31,7 @@ class CreateItemUseCase {
 
         // Set Default image if itemImages is empty
         if(data.itemImages.length ==  0){
-            data.itemImages = ["https://reactnativecode.com/wp-content/uploads/2018/02/Default_Image_Thumbnail.png"]
+            data.itemImages = [Default.ITEM_IMAGE_URL]
         }
 
         // Change data type from string to number because it is from formData

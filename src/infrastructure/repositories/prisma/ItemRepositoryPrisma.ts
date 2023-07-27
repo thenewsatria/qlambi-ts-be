@@ -143,6 +143,49 @@ class ItemRepositoryPrisma implements ItemRepository {
         item.setUpdatedAt(updatedItem.updatedAt)
         return Promise.resolve(item)
     }
+
+    async deleteItem(item: Item, detailed: boolean): Promise<Item> {
+        const deletedItem = await this._client.item.delete({
+            where: {
+                id: +item.getId()!
+            },
+            include: {
+                color: detailed,
+                creator: detailed,
+                product: detailed,
+                size: detailed
+            }
+        })
+
+        if(deletedItem) {
+            item = new Item(deletedItem.userEmail || "deleted_user", deletedItem.productId+"" || "deleted_product",
+                deletedItem.colorId+"" || "deteled_color", deletedItem.sizeId+"" || "deleted_size",
+                deletedItem.itemCode, deletedItem.itemName, deletedItem.price, deletedItem.stock,
+                deletedItem.itemImages as string[], deletedItem.description)
+            item.setId(deletedItem.id+"")
+            item.setIsActive(deletedItem.isActive)
+            deletedItem.deactivatedAt ? item.setDeactivatedAt(deletedItem.deactivatedAt) : null
+            deletedItem.creator ? 
+                item.setCreator(new User(deletedItem.creator.email, deletedItem.creator.username, ""))
+                : null
+                deletedItem.product ?
+                item.setProduct(new Product(deletedItem.product.userEmail || "deleted_user", 
+                    deletedItem.product.productName, deletedItem.product.productClass, deletedItem.product.productType,
+                    deletedItem.product.material, deletedItem.product.description))
+                : null
+            deletedItem.color ?
+                item.setColor(new Color(deletedItem.color.userEmail || "deleted_user", deletedItem.color.colorName, 
+                    deletedItem.color.hexValue, deletedItem.color.description))
+                : null
+            deletedItem.size ?
+                item.setSize(new Size(deletedItem.size.userEmail || "deleted_user", deletedItem.size.productId+"", deletedItem.size.sizeName,
+                    deletedItem.size.sizeCategory, deletedItem.size.length, deletedItem.size.width, deletedItem.size.description))
+                : null
+            item.setCreatedAt(deletedItem.createdAt)
+            item.setUpdatedAt(deletedItem.updatedAt)
+        }
+        return Promise.resolve(item)
+    }
 }
 
 export default ItemRepositoryPrisma

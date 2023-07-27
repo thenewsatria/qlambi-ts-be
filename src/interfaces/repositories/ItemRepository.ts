@@ -5,6 +5,7 @@ interface ItemRepository {
     readByItemCode(itemCode: string, detailed: boolean): Promise<Item|null>
     readById(id: string, detailed: boolean): Promise<Item|null>
     updateActiveStatus(item: Item): Promise<Item>
+    deleteItem(item: Item, detailed: boolean): Promise<Item>
 }
 
 export default ItemRepository;

@@ -18,6 +18,7 @@ import SizeService from "../../../domain/services/SizeService"
 import multer from "multer"
 import GetItemDetailUseCase from "../../usecases/item/GetItemDetailUseCase"
 import ToggleItemActiveUseCase from "../../usecases/item/ToggleItemActiveUseCase"
+import RemoveItemUseCase from "../../usecases/item/RemoveItemUseCase"
 
 const itemRoutes = express.Router()
 
@@ -55,6 +56,7 @@ const getUserByTokenUC = new GetUserByAccesTokenUseCase(tokenService, userServic
 const createItemUC = new CreateItemUseCase(itemService, productService, colorService, sizeService)
 const getItemDetailUC = new GetItemDetailUseCase(itemService)
 const toggleItemActiveUC = new ToggleItemActiveUseCase(itemService)
+const removeItemUC = new RemoveItemUseCase(itemService)
 
 const authMW = middlewareFactory.createAuthMiddleware(tokenSchemas, errorTranslator)
 const validationMW = middlewareFactory.createValidationMiddleware()
@@ -70,6 +72,8 @@ itemRoutes.post('/',
     validationMW.checkFilesMimetype(["image/png", "image/jpeg"]),
     validationMW.checkFileSize(512*1024),
     itemController.createItem(createItemUC))
+itemRoutes.route('/:itemID')
+    .delete(itemController.removeItem(removeItemUC))
 itemRoutes.put("/toggle/:itemID", 
     itemController.toggleItemActive(toggleItemActiveUC))
 

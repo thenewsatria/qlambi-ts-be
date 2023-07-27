@@ -45,6 +45,11 @@ class ItemService {
         const updatedItem = await this.repository.updateActiveStatus(data.item)
         return Promise.resolve(updatedItem)
     }
+
+    async removeItem(data: ItemDTO): Promise<Item> {
+        const deletedItem = await this.repository.deleteItem(data.item, true)
+        return Promise.resolve(deletedItem)
+    }
 }
 
 export default ItemService
