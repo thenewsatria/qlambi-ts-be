@@ -1,4 +1,3 @@
-import Size from "../../../domain/entities/Size";
 import SizeService from "../../../domain/services/SizeService";
 import SizeIdDTO from "../../../interfaces/dtos/size/singular/SizeIdDTO";
 import SizeGeneralResponseDTO from "../../../interfaces/dtos/size/SizeGeneralResponseDTO";

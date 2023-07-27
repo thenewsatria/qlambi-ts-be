@@ -7,6 +7,7 @@ import ItemRepository from "../../../interfaces/repositories/ItemRepository";
 import prismaClient from "../../databases/prisma/client";
 
 class ItemRepositoryPrisma implements ItemRepository {
+    
     private readonly _client = prismaClient
     private static instance: ItemRepositoryPrisma
     
@@ -122,6 +123,24 @@ class ItemRepositoryPrisma implements ItemRepository {
             item.setCreatedAt(itemResult.createdAt)
             item.setUpdatedAt(itemResult.updatedAt)
         }
+        return Promise.resolve(item)
+    }
+
+    async updateActiveStatus(item: Item): Promise<Item> {
+        const now = new Date();
+        const updatedItem = await this._client.item.update({
+            where: {
+                id: +item.getId()!
+            },
+            data: {
+                isActive: item.getIsActive(),
+                
+                // update only when deactivated and not reactivated
+                deactivatedAt: !item.getIsActive() ? now : item.getDeactivatedAt()
+            }
+        })
+        item.setDeactivatedAt(updatedItem.deactivatedAt!)
+        item.setUpdatedAt(updatedItem.updatedAt)
         return Promise.resolve(item)
     }
 }

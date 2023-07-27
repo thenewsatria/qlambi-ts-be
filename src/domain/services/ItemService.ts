@@ -1,4 +1,5 @@
 import ItemCreationRequestDTO from "../../interfaces/dtos/item/ItemCreationRequestDTO";
+import ItemDTO from "../../interfaces/dtos/item/singular/ItemDTO";
 import ItemIdDTO from "../../interfaces/dtos/item/singular/ItemIdDTO";
 import ItemItemCodeDTO from "../../interfaces/dtos/item/singular/ItemItemCodeDTO";
 import ItemRepository from "../../interfaces/repositories/ItemRepository";
@@ -33,6 +34,16 @@ class ItemService {
     async fetchDetailById(data: ItemIdDTO): Promise<Item|null> {
         const item = await this.repository.readById(data.id, true)
         return Promise.resolve(item)
+    }
+
+    async fetchById(data: ItemIdDTO): Promise<Item|null> {
+        const item = await this.repository.readById(data.id, false)
+        return Promise.resolve(item)
+    }
+
+    async setActiveStatus(data: ItemDTO): Promise<Item> {
+        const updatedItem = await this.repository.updateActiveStatus(data.item)
+        return Promise.resolve(updatedItem)
     }
 }
 

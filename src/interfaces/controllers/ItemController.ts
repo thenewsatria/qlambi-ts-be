@@ -4,6 +4,7 @@ import GetItemDetailUseCase from "../../application/usecases/item/GetItemDetailU
 interface ItemController {
     createItem(useCase: CreateItemUseCase): (...args: any[]) => any
     getItemDetail(useCase: GetItemDetailUseCase): (...args: any[]) => any
+    toggleItemActive(useCase: ToggleItemActiveUseCase): (...args: any[]) => any
 }
 
 export default ItemController

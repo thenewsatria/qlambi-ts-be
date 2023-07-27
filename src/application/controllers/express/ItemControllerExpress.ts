@@ -9,6 +9,7 @@ import ItemGeneralResponseDTO from "../../../interfaces/dtos/item/ItemGeneralRes
 import { unlink } from "fs"
 import InternalServerError from "../../errors/apis/InternalServerError"
 import GetItemDetailUseCase from "../../usecases/item/GetItemDetailUseCase"
+import ToggleItemActiveUseCase from "../../usecases/item/ToggleItemActiveUseCase"
 
 class ItemControllerExpress implements ItemController {
     private itemSchemas: ItemVSchema
@@ -19,6 +20,21 @@ class ItemControllerExpress implements ItemController {
         this.itemSchemas = itemSchemas
         this.presenter = presenter
         this.errorTranslator = errorTranslator
+    }
+    toggleItemActive(useCase: ToggleItemActiveUseCase): (...args: any[]) => any {
+        return async (req: Request, res: Response, next: NextFunction) => {
+            try{
+                const item = await useCase.execute({id: req.params["itemID"]}, this.itemSchemas.getItemByIdRequestSchema())
+                return this.presenter.successReponse<ItemGeneralResponseDTO>(res, 200, item)
+            }catch(error: unknown) {
+                if(error instanceof Error) {
+                    const apiError = this.errorTranslator.translateError(error)
+                    next(apiError)
+                }else{
+                    next(new BaseError("Unknown Error Occured", false, error))
+                }
+            }
+        }
     }
     
     createItem(useCase: CreateItemUseCase): (...args: any[]) => any{
