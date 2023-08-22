@@ -1,9 +1,9 @@
-import SearchQuery from "../SearchQuery"
+import StringQuery from "../StringQuery"
 
 interface ColorFilter {
-    colorName?: SearchQuery
-    hexValue?: SearchQuery
-    description?: SearchQuery
+    colorName?: StringQuery
+    hexValue?: StringQuery
+    description?: StringQuery
     isActive?: boolean
 }
 

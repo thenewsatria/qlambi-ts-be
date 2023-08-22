@@ -1,11 +1,11 @@
-import SearchQuery from "../SearchQuery"
+import StringQuery from "../StringQuery"
 
 interface ProductFilter {
-    productClass?: SearchQuery
-    productName?: SearchQuery
-    productType?: SearchQuery
-    material?: SearchQuery
-    description?: SearchQuery
+    productClass?: StringQuery
+    productName?: StringQuery
+    productType?: StringQuery
+    material?: StringQuery
+    description?: StringQuery
     isActive?: boolean
 }
 

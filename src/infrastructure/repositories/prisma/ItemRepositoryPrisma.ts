@@ -40,6 +40,66 @@ class ItemRepositoryPrisma implements ItemRepository {
         return Promise.resolve(item)
     }
 
+    async readAllwSearch(query: any, detailed: boolean): Promise<Item[]> {
+        const items: Item[] = []
+        const itemRes = await this._client.item.findMany({
+            // where: {
+            //     itemName: {
+            //         contains: "test",
+            //     },
+            //     price: {
+            //         lte: 100,
+            //         gte: 50,
+                
+            //     },
+            //     stock: {
+            //         lte: 100,
+            //         gte: 50
+            //     },
+            //     isActive: true,
+            // },
+            where: query.filter as any,
+            orderBy: query.sortOrder as  any,
+            include: {
+                creator: detailed,
+                color: detailed,
+                product: detailed,
+                size: detailed
+            }
+        })
+        for (const currItem of itemRes) {
+            const item = new Item(currItem.userEmail || "deleted_user", currItem.productId+"" || "deleted_product",
+                currItem.colorId+"" || "deteled_color", currItem.sizeId+"" || "deleted_size",
+                currItem.itemCode, currItem.itemName, currItem.price, currItem.stock, currItem.itemImages as string[],
+                currItem.description)
+            item.setId(currItem.id+"")
+            item.setIsActive(currItem.isActive)
+            currItem.deactivatedAt ? item.setDeactivatedAt(currItem.deactivatedAt) : null
+            currItem.creator ? 
+                item.setCreator(new User(currItem.creator.email, currItem.creator.username, ""))
+                : null
+            currItem.color?
+                item.setColor(new Color(currItem.color.userEmail || "deleted_user", 
+                    currItem.color.colorName, currItem.color.hexValue, currItem.color.description)) 
+                :null
+            currItem.product ?
+                item.setProduct(new Product(currItem.product.userEmail || "deleted_user", currItem.product.productName,
+                    currItem.product.productClass, currItem.product.productType, currItem.product.material, 
+                    currItem.product.description))
+                : null
+            currItem.size ?
+                item.setSize(new Size(currItem.size.userEmail || "deleted_user", currItem.size.productId+"",
+                    currItem.size.sizeName, currItem.size.sizeCategory, currItem.size.length, currItem.size.width,
+                    currItem.size.description))
+                : null
+            item.setCreatedAt(currItem.createdAt)
+            item.setUpdatedAt(currItem.updatedAt)
+            items.push(item)
+        }
+
+        return Promise.resolve(items)
+    }
+
     async readByItemCode(itemCode: string, detailed: boolean): Promise<Item | null> {
         let item: Item | null = null
         const itemResult = await this._client.item.findFirst({

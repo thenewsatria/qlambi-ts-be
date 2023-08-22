@@ -19,6 +19,9 @@ import multer from "multer"
 import GetItemDetailUseCase from "../../usecases/item/GetItemDetailUseCase"
 import ToggleItemActiveUseCase from "../../usecases/item/ToggleItemActiveUseCase"
 import RemoveItemUseCase from "../../usecases/item/RemoveItemUseCase"
+import ProductControllerExpress from "../../controllers/express/ProductControllerExpress"
+import ItemControllerExpress from "../../controllers/express/ItemControllerExpress"
+import GetItemListUseCase from "../../usecases/item/GetItemListUseCase"
 
 const itemRoutes = express.Router()
 
@@ -57,14 +60,17 @@ const createItemUC = new CreateItemUseCase(itemService, productService, colorSer
 const getItemDetailUC = new GetItemDetailUseCase(itemService)
 const toggleItemActiveUC = new ToggleItemActiveUseCase(itemService)
 const removeItemUC = new RemoveItemUseCase(itemService)
+const getItemListUC = new GetItemListUseCase(itemService)
 
 const authMW = middlewareFactory.createAuthMiddleware(tokenSchemas, errorTranslator)
 const validationMW = middlewareFactory.createValidationMiddleware()
+const queryMW = middlewareFactory.createQueryMiddleware()
 
 const handlerMW = middlewareFactory.createHandlerMiddleware()
 const fileUploadMW = handlerMW.handleFileUpload()("public/items", [".png", ".jpeg", ".jpg"], 512 * 1024)
 
 itemRoutes.use(authMW.protect(getUserByTokenUC))
+itemRoutes.get("/", queryMW.filterItemQuery(), itemController.getItemList(getItemListUC))
 itemRoutes.get("/:itemID", itemController.getItemDetail(getItemDetailUC))
 itemRoutes.use(authMW.checkAllowedRoles(['ADMIN']))
 itemRoutes.post('/', 

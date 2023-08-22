@@ -12,6 +12,8 @@ import GetItemDetailUseCase from "../../usecases/item/GetItemDetailUseCase"
 import ToggleItemActiveUseCase from "../../usecases/item/ToggleItemActiveUseCase"
 import RemoveItemUseCase from "../../usecases/item/RemoveItemUseCase"
 import Default from "../../../domain/enums/Default"
+import GetItemListUseCase from "../../usecases/item/GetItemListUseCase"
+import ItemGeneralListResponseDTO from "../../../interfaces/dtos/item/ItemGeneralListResponseDTO"
 
 class ItemControllerExpress implements ItemController {
     private itemSchemas: ItemVSchema
@@ -83,6 +85,24 @@ class ItemControllerExpress implements ItemController {
             try{
                const result = await useCase.execute({id: req.params["itemID"]}, this.itemSchemas.getItemByIdRequestSchema())
                return this.presenter.successReponse<ItemGeneralResponseDTO>(res, 200, result)
+            }catch(error: unknown) {
+                if(error instanceof Error) {
+                    const apiError = this.errorTranslator.translateError(error)
+                    next(apiError)
+                }else{
+                    next(new BaseError("Unknown Error Occured", false, error))
+                }
+            }
+        }
+    }
+
+    getItemList(useCase: GetItemListUseCase): (...args: any[]) => any {
+        return async(req: Request, res: Response, next: NextFunction) => {
+            try {
+                const filter = res.locals.itemFilter
+                const order = res.locals.itemSortOrder
+                const result = await useCase.execute({filter: filter, sortOrder: order})
+                return this.presenter.successReponse<ItemGeneralListResponseDTO>(res, 200, result)
             }catch(error: unknown) {
                 if(error instanceof Error) {
                     const apiError = this.errorTranslator.translateError(error)
