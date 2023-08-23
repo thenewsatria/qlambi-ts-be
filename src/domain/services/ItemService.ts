@@ -47,6 +47,11 @@ class ItemService {
         return Promise.resolve(item)
     }
 
+    async updateItem(data: ItemDTO): Promise<Item> {
+        const updatedItem = await this.repository.updateItem(data.item)
+        return Promise.resolve(updatedItem)
+    }
+
     async setActiveStatus(data: ItemDTO): Promise<Item> {
         const updatedItem = await this.repository.updateActiveStatus(data.item)
         return Promise.resolve(updatedItem)

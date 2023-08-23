@@ -1,3 +1,4 @@
+import productRoutes from "../../../application/routes/express/productRoutes";
 import Color from "../../../domain/entities/Color";
 import Item from "../../../domain/entities/Item";
 import Product from "../../../domain/entities/Product";
@@ -7,7 +8,6 @@ import ItemRepository from "../../../interfaces/repositories/ItemRepository";
 import prismaClient from "../../databases/prisma/client";
 
 class ItemRepositoryPrisma implements ItemRepository {
-    
     private readonly _client = prismaClient
     private static instance: ItemRepositoryPrisma
     
@@ -185,6 +185,27 @@ class ItemRepositoryPrisma implements ItemRepository {
         }
         return Promise.resolve(item)
     }
+
+    async updateItem(item: Item): Promise<Item> {
+        const updatedItem = await this._client.item.update({
+            where: {
+                id: +item.getId()!
+            },
+            data: {
+                itemCode: item.getItemCode(),
+                itemName: item.getItemName(),
+                productId: +item.getProductId(),
+                colorId: +item.getColorId(),
+                sizeId: +item.getSizeId(),
+                price: item.getPrice(),
+                stock: item.getStock(),
+                description: item.getDescription()
+            }
+        })
+        item.setUpdatedAt(updatedItem.updatedAt)
+        return Promise.resolve(item)
+    }
+    
 
     async updateActiveStatus(item: Item): Promise<Item> {
         const now = new Date();

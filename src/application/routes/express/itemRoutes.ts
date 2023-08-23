@@ -15,13 +15,11 @@ import ItemService from "../../../domain/services/ItemService"
 import ProductService from "../../../domain/services/ProductService"
 import ColorService from "../../../domain/services/ColorService"
 import SizeService from "../../../domain/services/SizeService"
-import multer from "multer"
 import GetItemDetailUseCase from "../../usecases/item/GetItemDetailUseCase"
 import ToggleItemActiveUseCase from "../../usecases/item/ToggleItemActiveUseCase"
 import RemoveItemUseCase from "../../usecases/item/RemoveItemUseCase"
-import ProductControllerExpress from "../../controllers/express/ProductControllerExpress"
-import ItemControllerExpress from "../../controllers/express/ItemControllerExpress"
 import GetItemListUseCase from "../../usecases/item/GetItemListUseCase"
+import UpdateItemUseCase from "../../usecases/item/UpdateItemUseCase"
 
 const itemRoutes = express.Router()
 
@@ -61,6 +59,7 @@ const getItemDetailUC = new GetItemDetailUseCase(itemService)
 const toggleItemActiveUC = new ToggleItemActiveUseCase(itemService)
 const removeItemUC = new RemoveItemUseCase(itemService)
 const getItemListUC = new GetItemListUseCase(itemService)
+const updateItemUC = new UpdateItemUseCase(itemService, productService, colorService, sizeService)
 
 const authMW = middlewareFactory.createAuthMiddleware(tokenSchemas, errorTranslator)
 const validationMW = middlewareFactory.createValidationMiddleware()
@@ -79,6 +78,7 @@ itemRoutes.post('/',
     validationMW.checkFileSize(512*1024),
     itemController.createItem(createItemUC))
 itemRoutes.route('/:itemID')
+    .put(itemController.updateItem(updateItemUC))
     .delete(itemController.removeItem(removeItemUC))
 itemRoutes.put("/toggle/:itemID", 
     itemController.toggleItemActive(toggleItemActiveUC))

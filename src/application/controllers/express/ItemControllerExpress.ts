@@ -14,6 +14,7 @@ import RemoveItemUseCase from "../../usecases/item/RemoveItemUseCase"
 import Default from "../../../domain/enums/Default"
 import GetItemListUseCase from "../../usecases/item/GetItemListUseCase"
 import ItemGeneralListResponseDTO from "../../../interfaces/dtos/item/ItemGeneralListResponseDTO"
+import UpdateItemUseCase from "../../usecases/item/UpdateItemUseCase"
 
 class ItemControllerExpress implements ItemController {
     private itemSchemas: ItemVSchema
@@ -128,6 +129,22 @@ class ItemControllerExpress implements ItemController {
                     }
                 }
                 return this.presenter.successReponse<ItemGeneralResponseDTO>(res, 200, result)
+            }catch(error: unknown) {
+                if(error instanceof Error) {
+                    const apiError = this.errorTranslator.translateError(error)
+                    next(apiError)
+                }else{
+                    next(new BaseError("Unknown Error Occured", false, error))
+                }
+            }
+        }
+    }
+
+    updateItem(useCase: UpdateItemUseCase): (...args: any[]) => any {
+        return async(req: Request, res: Response, next: NextFunction) => {
+            try{
+               const result = await useCase.execute({...req.body, id: req.params["itemID"]}, this.itemSchemas.getUpdateItemRequestSchema())
+               return this.presenter.successReponse<ItemGeneralResponseDTO>(res, 200, result)
             }catch(error: unknown) {
                 if(error instanceof Error) {
                     const apiError = this.errorTranslator.translateError(error)
