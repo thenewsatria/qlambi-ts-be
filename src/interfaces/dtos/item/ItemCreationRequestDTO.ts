@@ -1,11 +1,11 @@
 interface ItemCreationRequestDTO {
     itemCode: string;
     itemName: string;
-    productId: string; //should it be here? probably need some validation
-    colorId: string; //should it be here? probably need some validation
-    sizeId: string; //should it be here?, probably need some validation
+    productId: string; 
+    colorId: string;
+    sizeId: string;
     price: number;
-    itemImages: string[]; //should it be here?
+    itemImages: string[];
     stock: number;
     description: string;
     userEmail: string;

@@ -1,5 +1,6 @@
 import AuthVSchema from "../validators/schemas/AuthVSchema"
 import ColorVSchema from "../validators/schemas/ColorVSchema"
+import ItemVSchema from "../validators/schemas/ItemVSchema"
 import ProductVSchema from "../validators/schemas/ProductVSchema"
 import SizeVSchema from "../validators/schemas/SizeVSchema"
 import TokenVSchema from "../validators/schemas/TokenVSchema"

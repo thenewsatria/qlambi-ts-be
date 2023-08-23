@@ -20,6 +20,8 @@ import ToggleItemActiveUseCase from "../../usecases/item/ToggleItemActiveUseCase
 import RemoveItemUseCase from "../../usecases/item/RemoveItemUseCase"
 import GetItemListUseCase from "../../usecases/item/GetItemListUseCase"
 import UpdateItemUseCase from "../../usecases/item/UpdateItemUseCase"
+import UploadItemImageUseCase from "../../usecases/item/UploadItemImageUseCase"
+import RemoveItemImageUseCase from "../../usecases/item/RemoveItemImageUseCase"
 
 const itemRoutes = express.Router()
 
@@ -60,6 +62,8 @@ const toggleItemActiveUC = new ToggleItemActiveUseCase(itemService)
 const removeItemUC = new RemoveItemUseCase(itemService)
 const getItemListUC = new GetItemListUseCase(itemService)
 const updateItemUC = new UpdateItemUseCase(itemService, productService, colorService, sizeService)
+const uploadItemImageUC = new UploadItemImageUseCase(itemService)
+const removeItemImageUC = new RemoveItemImageUseCase(itemService)
 
 const authMW = middlewareFactory.createAuthMiddleware(tokenSchemas, errorTranslator)
 const validationMW = middlewareFactory.createValidationMiddleware()
@@ -77,6 +81,12 @@ itemRoutes.post('/',
     validationMW.checkFilesMimetype(["image/png", "image/jpeg"]),
     validationMW.checkFileSize(512*1024),
     itemController.createItem(createItemUC))
+itemRoutes.route("/upload/:itemID")
+    .put(fileUploadMW.single("itemImage"),
+        validationMW.checkFilesMimetype(["image/png", "image/jpeg"]),
+        validationMW.checkFileSize(512*1024),
+        itemController.uploadItemImage(uploadItemImageUC))
+    .delete(itemController.removeItemImage(removeItemImageUC))
 itemRoutes.route('/:itemID')
     .put(itemController.updateItem(updateItemUC))
     .delete(itemController.removeItem(removeItemUC))

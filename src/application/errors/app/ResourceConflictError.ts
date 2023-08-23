@@ -6,6 +6,7 @@ import AppError from "./AppError";
  * Represents an error for resource conflict, for example:
  * - Username is already used so new user cant use this username
  * - Email is already used so new user cant use this email
+ * - Some resource already at maximum capacity (item images is already has 5 images)
  *
  * @class
  */

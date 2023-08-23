@@ -15,6 +15,9 @@ import Default from "../../../domain/enums/Default"
 import GetItemListUseCase from "../../usecases/item/GetItemListUseCase"
 import ItemGeneralListResponseDTO from "../../../interfaces/dtos/item/ItemGeneralListResponseDTO"
 import UpdateItemUseCase from "../../usecases/item/UpdateItemUseCase"
+import UploadItemImageUseCase from "../../usecases/item/UploadItemImageUseCase"
+import RemoveItemImageUseCase from "../../usecases/item/RemoveItemImageUseCase"
+import ItemVSchema from "../../../interfaces/validators/schemas/ItemVSchema"
 
 class ItemControllerExpress implements ItemController {
     private itemSchemas: ItemVSchema
@@ -145,6 +148,59 @@ class ItemControllerExpress implements ItemController {
             try{
                const result = await useCase.execute({...req.body, id: req.params["itemID"]}, this.itemSchemas.getUpdateItemRequestSchema())
                return this.presenter.successReponse<ItemGeneralResponseDTO>(res, 200, result)
+            }catch(error: unknown) {
+                if(error instanceof Error) {
+                    const apiError = this.errorTranslator.translateError(error)
+                    next(apiError)
+                }else{
+                    next(new BaseError("Unknown Error Occured", false, error))
+                }
+            }
+        }
+    }
+
+    uploadItemImage(useCase: UploadItemImageUseCase): (...args: any[]) => any {
+        return async(req: Request, res: Response, next: NextFunction) => {
+            try{
+                // Get uploaded filename from locals
+                const itemImage: string = res.locals.fileName 
+                const itemImageRoute = `${req.protocol}://${req.get('host')}/static/items/${itemImage}`
+
+                // Set itemImage request before validation
+                req.body.itemImage = itemImageRoute
+                const result = await useCase.execute({...req.body, id: req.params["itemID"]}, this.itemSchemas.getUpdateItemRequestSchema())
+                return this.presenter.successReponse<ItemGeneralResponseDTO>(res, 200, result)
+            }catch(error: unknown) {
+                const itemImagePath: string = res.locals.filePath
+                if(itemImagePath) {
+                    unlink(itemImagePath, (err) => {
+                        if (err) return next(new InternalServerError(`Failed deleting ${itemImagePath}}`))
+                    })
+                }
+                if(error instanceof Error) {
+                    const apiError = this.errorTranslator.translateError(error)
+                    next(apiError)
+                }else{
+                    next(new BaseError("Unknown Error Occured", false, error))
+                }
+            }
+        }
+    }
+
+    removeItemImage(useCase: RemoveItemImageUseCase): (...args: any[]) => any {
+        return async(req: Request, res: Response, next: NextFunction) => {
+            try{
+                const result = await useCase.execute({...req.body, id: req.params["itemID"]}, this.itemSchemas.getUpdateItemRequestSchema())
+                
+                // Deleting file after successfully updating item images
+                const itemRoute = req.body.itemImage
+                const itemFileName = itemRoute.split("/items/").pop()
+                unlink(`public/items/${itemFileName}`, (err) => {
+                    if (err) return next(new InternalServerError(`Failed deleting ${itemFileName}}`))
+                })
+
+                // return updated result
+                return this.presenter.successReponse<ItemGeneralResponseDTO>(res, 200, result)
             }catch(error: unknown) {
                 if(error instanceof Error) {
                     const apiError = this.errorTranslator.translateError(error)

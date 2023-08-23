@@ -8,6 +8,7 @@ import ControllerFactory from "../../../interfaces/factories/ControllerFactory";
 import JsendPresenter from "../../../interfaces/presenters/JsendPresenter";
 import AuthVSchema from "../../../interfaces/validators/schemas/AuthVSchema";
 import ColorVSchema from "../../../interfaces/validators/schemas/ColorVSchema";
+import ItemVSchema from "../../../interfaces/validators/schemas/ItemVSchema";
 import ProductVSchema from "../../../interfaces/validators/schemas/ProductVSchema";
 import SizeVSchema from "../../../interfaces/validators/schemas/SizeVSchema";
 import TokenVSchema from "../../../interfaces/validators/schemas/TokenVSchema";

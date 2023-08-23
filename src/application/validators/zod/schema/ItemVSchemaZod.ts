@@ -3,6 +3,8 @@ import ItemCreationRequestDTO from "../../../../interfaces/dtos/item/ItemCreatio
 import ItemIdDTO from "../../../../interfaces/dtos/item/singular/ItemIdDTO";
 import ItemDeletionRequestDTO from "../../../../interfaces/dtos/item/ItemDeletionRequestDTO";
 import ItemUpdateRequestDTO from "../../../../interfaces/dtos/item/ItemUpdateRequestDTO";
+import ItemUploadImageRequestDTO from "../../../../interfaces/dtos/item/ItemImageUpdateRequestDTO";
+import ItemVSchema from "../../../../interfaces/validators/schemas/ItemVSchema";
 
 class ItemVSchemaZod implements ItemVSchema {
     private static instance: ItemVSchemaZod
@@ -193,6 +195,26 @@ class ItemVSchemaZod implements ItemVSchema {
                     required_error: "Item Name is required",
                     invalid_type_error: "Item Name must be a string"
                 })
+            ),
+        })
+    }
+
+    getUploadItemImageRequestSchema(): ZodSchema<ItemUploadImageRequestDTO> {
+        return z.object({
+            id: this.setNoEmptyString(
+                "Item ID",
+                z.string({
+                    required_error: "Item ID is required",
+                    invalid_type_error: "Item ID must be a string"
+                })
+            ),
+            itemImage: this.setNoEmptyString(
+                "Item Name",
+                z.string({
+                    required_error: "Item Image is required",
+                    invalid_type_error: "Item Image must be a string"
+                })
+                .url()
             ),
         })
     }
