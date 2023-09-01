@@ -40,7 +40,7 @@ class UploadItemImageUseCase {
         }else{
             item.setItemImages([...currentItemImages, data.itemImage])
         }
-
+        
         const updatedItem = await this.itemService.updateItem({item: item})
         const itemCreator = updatedItem.getCreator()
         const itemProduct = updatedItem.getProduct() 

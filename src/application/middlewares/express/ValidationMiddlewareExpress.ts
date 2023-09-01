@@ -24,7 +24,9 @@ class ValidationMiddlewareExpress implements ValidationMiddleware {
                 }
                 return next()
             }
-            next(new BadRequestError(`File for ${fieldName} is required`, [`File for ${fieldName} is required`]))
+            const output: {[index: string]: string} = {}
+            output[fieldName] = `File for ${fieldName} is required`
+            next(new BadRequestError(`File for ${fieldName} is required`, [output]))
         }
     }
     checkFileSize(maxSize: number): (...args: any[]) => any {

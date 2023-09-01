@@ -168,7 +168,7 @@ class ItemControllerExpress implements ItemController {
 
                 // Set itemImage request before validation
                 req.body.itemImage = itemImageRoute
-                const result = await useCase.execute({...req.body, id: req.params["itemID"]}, this.itemSchemas.getUpdateItemRequestSchema())
+                const result = await useCase.execute({...req.body, id: req.params["itemID"]}, this.itemSchemas.getUploadItemImageRequestSchema())
                 return this.presenter.successReponse<ItemGeneralResponseDTO>(res, 200, result)
             }catch(error: unknown) {
                 const itemImagePath: string = res.locals.filePath
@@ -190,7 +190,7 @@ class ItemControllerExpress implements ItemController {
     removeItemImage(useCase: RemoveItemImageUseCase): (...args: any[]) => any {
         return async(req: Request, res: Response, next: NextFunction) => {
             try{
-                const result = await useCase.execute({...req.body, id: req.params["itemID"]}, this.itemSchemas.getUpdateItemRequestSchema())
+                const result = await useCase.execute({...req.body, id: req.params["itemID"]}, this.itemSchemas.getUploadItemImageRequestSchema())
                 
                 // Deleting file after successfully updating item images
                 const itemRoute = req.body.itemImage

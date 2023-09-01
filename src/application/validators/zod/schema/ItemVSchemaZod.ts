@@ -209,7 +209,7 @@ class ItemVSchemaZod implements ItemVSchema {
                 })
             ),
             itemImage: this.setNoEmptyString(
-                "Item Name",
+                "Item Image",
                 z.string({
                     required_error: "Item Image is required",
                     invalid_type_error: "Item Image must be a string"

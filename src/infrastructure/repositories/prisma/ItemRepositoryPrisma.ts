@@ -1,4 +1,3 @@
-import productRoutes from "../../../application/routes/express/productRoutes";
 import Color from "../../../domain/entities/Color";
 import Item from "../../../domain/entities/Item";
 import Product from "../../../domain/entities/Product";
@@ -43,23 +42,8 @@ class ItemRepositoryPrisma implements ItemRepository {
     async readAllwSearch(query: any, detailed: boolean): Promise<Item[]> {
         const items: Item[] = []
         const itemRes = await this._client.item.findMany({
-            // where: {
-            //     itemName: {
-            //         contains: "test",
-            //     },
-            //     price: {
-            //         lte: 100,
-            //         gte: 50,
-                
-            //     },
-            //     stock: {
-            //         lte: 100,
-            //         gte: 50
-            //     },
-            //     isActive: true,
-            // },
             where: query.filter as any,
-            orderBy: query.sortOrder as  any,
+            orderBy: query.sortOrder as any,
             include: {
                 creator: detailed,
                 color: detailed,
@@ -199,6 +183,7 @@ class ItemRepositoryPrisma implements ItemRepository {
                 sizeId: +item.getSizeId(),
                 price: item.getPrice(),
                 stock: item.getStock(),
+                itemImages: item.getItemImages(),
                 description: item.getDescription()
             }
         })

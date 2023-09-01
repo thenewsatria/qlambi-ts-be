@@ -7,7 +7,7 @@ interface ItemFilter {
     price?: NumberQuery
     stock?: NumberQuery
     description?: SearchQuery
-    isactive?: boolean
+    isActive?: boolean
 }
 
 export default ItemFilter

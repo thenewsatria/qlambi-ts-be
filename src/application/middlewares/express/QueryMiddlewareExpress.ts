@@ -339,7 +339,7 @@ class QueryMiddlewareExpress implements QueryMiddleware {
                 //         ]
                 //     }
                 // }
-                filter.isactive = active == 'true'
+                filter.isActive = active == 'true'
             }
 
             if(sortBy){

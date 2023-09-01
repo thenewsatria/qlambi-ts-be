@@ -1,4 +1,4 @@
-import express from "express"
+import express, {Request, Response} from "express"
 import MiddlewareFactoryExpress from "../../middlewares/factories/MiddlewareFactoryExpress"
 import VSchemaFactoryZod from "../../validators/factories/VSchemaFactoryZod"
 import AllErrorToAPIErrorTranslator from "../../errors/AllErrorToAPIErrorTranslator"
@@ -83,6 +83,7 @@ itemRoutes.post('/',
     itemController.createItem(createItemUC))
 itemRoutes.route("/upload/:itemID")
     .put(fileUploadMW.single("itemImage"),
+        validationMW.checkFileIsExist("itemImage"), //its mandatory to upload image in this route
         validationMW.checkFilesMimetype(["image/png", "image/jpeg"]),
         validationMW.checkFileSize(512*1024),
         itemController.uploadItemImage(uploadItemImageUC))

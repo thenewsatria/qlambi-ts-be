@@ -23,10 +23,13 @@ class UpdateItemUseCase {
     }
 
     async execute(data: ItemUpdateRequestDTO, requestSchema: any): Promise<ItemGeneralResponseDTO> {
-        // 1. Validasi data request 
-        // 2. Validasi dan check apakah productId ada dan active 
-        // 3. Validasi dan check apakah colorId, active ada dan bagian dari product 
-        // 4. Validasi dan check apakah sizeId, active ada dan bagian dari product 
+        // 1. Validasi data request v
+        // 2. Validasi apakah item ada
+        // 3. Vaildasi apakah itemCode diubah? jika iya maka check apakah itemCode digunakan v
+        // 4. Validasi dan check apakah productId ada dan active v
+        // 5. Validasi dan check apakah colorId, active ada dan bagian dari product v
+        // 6. Validasi dan check apakah sizeId, active ada dan bagian dari product v
+        // 7. Update item
 
         await this.itemService.validateData<ItemUpdateRequestDTO>(requestSchema, data)
         const item = await this.itemService.fetchById({id: data.id})

@@ -42,6 +42,11 @@ class RemoveItemImageUseCase {
             )
         }
 
+        // if all photos are deleted then replace it with default image
+        if(filteredItemImages.length == 0){
+            filteredItemImages.push(Default.ITEM_IMAGE_URL)
+        }
+
         // update item images after deletion
         item.setItemImages(filteredItemImages)
 
