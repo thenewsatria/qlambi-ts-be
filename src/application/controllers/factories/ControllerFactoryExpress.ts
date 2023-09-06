@@ -1,5 +1,6 @@
 import AuthController from "../../../interfaces/controllers/AuthController";
 import ItemController from "../../../interfaces/controllers/ItemController";
+import PrintMethodController from "../../../interfaces/controllers/PrintMethodController";
 import ProductController from "../../../interfaces/controllers/ProductController";
 import SizeController from "../../../interfaces/controllers/SizeController";
 import TokenController from "../../../interfaces/controllers/TokenController";
@@ -9,12 +10,14 @@ import JsendPresenter from "../../../interfaces/presenters/JsendPresenter";
 import AuthVSchema from "../../../interfaces/validators/schemas/AuthVSchema";
 import ColorVSchema from "../../../interfaces/validators/schemas/ColorVSchema";
 import ItemVSchema from "../../../interfaces/validators/schemas/ItemVSchema";
+import PrintMethodSchema from "../../../interfaces/validators/schemas/PrintMethodVSchema";
 import ProductVSchema from "../../../interfaces/validators/schemas/ProductVSchema";
 import SizeVSchema from "../../../interfaces/validators/schemas/SizeVSchema";
 import TokenVSchema from "../../../interfaces/validators/schemas/TokenVSchema";
 import AuthControllerExpress from "../express/AuthControllerExpress";
 import ColorControllerExpress from "../express/ColorControllerExpress";
 import ItemControllerExpress from "../express/ItemControllerExpress";
+import PrintMethodControllerExpress from "../express/PrintMethodControllerExpress";
 import ProductControllerExpress from "../express/ProductControllerExpress";
 import SizeControllerExpress from "../express/SizeControllerExpress";
 import TokenControllerExpress from "../express/TokenControllerExpress";
@@ -53,6 +56,10 @@ class ControllerFactoryExpress implements ControllerFactory {
 
     createItemController(itemSchemas: ItemVSchema, presenter: JsendPresenter, errorTranslator: ErrorTranslator): ItemController {
         return new ItemControllerExpress(itemSchemas, presenter, errorTranslator)
+    }
+
+    createPrintMethodController(printMethodSchemas: PrintMethodSchema, presenter: JsendPresenter, errorTranslator: ErrorTranslator): PrintMethodController {
+        return new PrintMethodControllerExpress(printMethodSchemas, presenter, errorTranslator)
     }
 }
 

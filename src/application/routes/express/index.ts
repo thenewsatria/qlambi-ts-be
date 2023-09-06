@@ -7,6 +7,7 @@ import productRoutes from './productRoutes'
 import colorRoutes from './colorRoutes'
 import sizeRoutes from './sizeRoutes'
 import itemRoutes from './itemRoutes'
+import printMethodRoutes from './printMethodRoutes'
 const APIRouter = express.Router()
 const V1Router = express.Router()
 
@@ -33,6 +34,7 @@ export function routeApp(app: Express) {
     V1Router.use('/colors', colorRoutes)
     V1Router.use('/sizes', sizeRoutes)
     V1Router.use('/items', itemRoutes)
+    V1Router.use('/printMethods', printMethodRoutes)
     
     app.use(handlerMW.handleErrors(ExpressJsendPresenter.getInstance()))
 }

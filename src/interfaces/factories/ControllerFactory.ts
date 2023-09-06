@@ -1,6 +1,7 @@
 import AuthController from "../controllers/AuthController"
 import ColorController from "../controllers/ColorController"
 import ItemController from "../controllers/ItemController"
+import PrintMethodController from "../controllers/PrintMethodController"
 import ProductController from "../controllers/ProductController"
 import SizeController from "../controllers/SizeController"
 import TokenController from "../controllers/TokenController"
@@ -9,6 +10,7 @@ import JsendPresenter from "../presenters/JsendPresenter"
 import AuthVSchema from "../validators/schemas/AuthVSchema"
 import ColorVSchema from "../validators/schemas/ColorVSchema"
 import ItemVSchema from "../validators/schemas/ItemVSchema"
+import PrintMethodSchema from "../validators/schemas/PrintMethodVSchema"
 import ProductVSchema from "../validators/schemas/ProductVSchema"
 import SizeVSchema from "../validators/schemas/SizeVSchema"
 import TokenVSchema from "../validators/schemas/TokenVSchema"
@@ -20,6 +22,7 @@ interface ControllerFactory {
     createColorController(colorSchemas: ColorVSchema, presenter: JsendPresenter, errorTranslator: ErrorTranslator): ColorController
     createSizeController(sizeSchemas: SizeVSchema, presenter: JsendPresenter, errorTranslator: ErrorTranslator): SizeController
     createItemController(itemSchemas: ItemVSchema, presenter: JsendPresenter, errorTranslator: ErrorTranslator): ItemController
+    createPrintMethodController(printMethodSchemas: PrintMethodSchema, presenter: JsendPresenter, errorTranslator: ErrorTranslator): PrintMethodController
 }
 
 export default ControllerFactory

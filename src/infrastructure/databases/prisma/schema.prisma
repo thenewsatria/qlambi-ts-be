@@ -11,20 +11,21 @@ datasource db {
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
-  email         String    @unique
-  username      String    @unique
-  password      String
-  role          String    @default("USER")
-  token         Token?
-  previousToken UsedToken?
-  colorAssigned ColorsOnProducts[]
-  products      Product[]
-  colors        Color[]
-  productSizes  Size[]
-  itemsCreated  Item[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                  Int       @id @default(autoincrement())
+  email               String    @unique
+  username            String    @unique
+  password            String
+  role                String    @default("USER")
+  token               Token?
+  previousToken       UsedToken?
+  colorAssigned       ColorsOnProducts[]
+  products            Product[]
+  colors              Color[]
+  productSizes        Size[]
+  itemsCreated        Item[]
+  printMethodCreated  PrintMethod[]
+  createdAt            DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
 }
 
 model Token {
@@ -89,7 +90,7 @@ model ColorsOnProducts {
   productId   Int
   assignedAt  DateTime @default(now())
   assignedBy  User? @relation(fields: [userEmail], references: [email], onDelete: SetNull)
-  userEmail   String?
+  userEmail   String? 
 
   @@id([colorId, productId])
 }
@@ -125,6 +126,18 @@ model Item {
   price           Int
   itemImages      Json
   stock           Int
+  description     String
+  creator         User?       @relation(fields: [userEmail], references: [email], onDelete: SetNull)
+  userEmail       String?
+  isActive        Boolean     @default(true)
+  deactivatedAt   DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model PrintMethod {
+  id              Int         @id @default(autoincrement())
+  printMethodName String
   description     String
   creator         User?       @relation(fields: [userEmail], references: [email], onDelete: SetNull)
   userEmail       String?
