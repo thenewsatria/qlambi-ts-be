@@ -1,4 +1,5 @@
 import PrintMethodCreationRequestDTO from "../../interfaces/dtos/printMethod/PrintMethodCreationRequestDTO"
+import PrintMethodIdDTO from "../../interfaces/dtos/printMethod/singular/PrintMethodIdDTO"
 import PrintMethodRepository from "../../interfaces/repositories/PrintMethodRepository"
 import Validator from "../../interfaces/validators/Validator"
 import PrintMethod from "../entities/PrintMethod"
@@ -20,6 +21,11 @@ class PrintMethodService {
         const newPrintMethod = new PrintMethod(data.userEmail, data.printMethodName, data.description)
         const insertedPrintMethod = await this.repository.createPrintMethod(newPrintMethod)
         return Promise.resolve(insertedPrintMethod)
+    }
+
+    async fetchDetailById(data: PrintMethodIdDTO): Promise<PrintMethod|null> {
+        const printMethod = await this.repository.readById(data.id, true)
+        return Promise.resolve(printMethod)
     }
 }
 

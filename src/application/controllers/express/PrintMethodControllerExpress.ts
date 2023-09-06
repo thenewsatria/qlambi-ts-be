@@ -7,6 +7,7 @@ import CreatePrintMethodUseCase from "../../usecases/printMethod/CreatePrintMeth
 import PrintMethodGeneralResponseDTO from "../../../interfaces/dtos/printMethod/PrintMethodGeneralResponseDTO";
 import BaseError from "../../errors/BaseError";
 import User from "../../../domain/entities/User";
+import GetPrintMethodDetailUseCase from "../../usecases/printMethod/GetPrintMethodDetailUseCase";
 
 class PrintMethodControllerExpress implements PrintMethodController {
     private printMethodSchemas: PrintMethodVSchema
@@ -26,6 +27,23 @@ class PrintMethodControllerExpress implements PrintMethodController {
                 const result = await useCase.execute({...req.body, userEmail: currentLoggedUser.getEmail()},
                     this.printMethodSchemas.getCreatePrintMethodRequestSchema())
                 return this.presenter.successReponse<PrintMethodGeneralResponseDTO>(res, 201, result)
+            }catch(error: unknown) {
+                if(error instanceof Error) {
+                    const apiError = this.errorTranslator.translateError(error)
+                    next(apiError)
+                }else{
+                    next(new BaseError("Unknown Error Occured", false, error))
+                }
+            }
+        }
+    }
+
+    getPrintMethodDetail(useCase: GetPrintMethodDetailUseCase): (...args: any[]) => any {
+        return async(req: Request, res: Response, next: NextFunction) => {
+            try {
+                const printMethod = await useCase.execute({id: req.params["printMethodID"]}, 
+                    this.printMethodSchemas.getPrintMethodByIdRequestSchema())
+                return this.presenter.successReponse<PrintMethodGeneralResponseDTO>(res, 200, printMethod)
             }catch(error: unknown) {
                 if(error instanceof Error) {
                     const apiError = this.errorTranslator.translateError(error)

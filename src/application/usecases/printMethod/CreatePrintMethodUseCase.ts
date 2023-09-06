@@ -3,15 +3,15 @@ import PrintMethodCreationRequestDTO from "../../../interfaces/dtos/printMethod/
 import PrintMethodGeneralResponseDTO from "../../../interfaces/dtos/printMethod/PrintMethodGeneralResponseDTO";
 
 class CreatePrintMethodUseCase {
-    private readonly printMethodService: PrintMethodService
+    private readonly service: PrintMethodService
 
-    constructor(printMethodService: PrintMethodService) {
-        this.printMethodService = printMethodService
+    constructor(service: PrintMethodService) {
+        this.service = service
     }
 
     async execute(data: PrintMethodCreationRequestDTO, requestSchema: any): Promise<PrintMethodGeneralResponseDTO> {
-        await this.printMethodService.validateData<PrintMethodCreationRequestDTO>(requestSchema, data)
-        const printMethod = await this.printMethodService.insertPrintMethod(data)
+        await this.service.validateData<PrintMethodCreationRequestDTO>(requestSchema, data)
+        const printMethod = await this.service.insertPrintMethod(data)
         const creator = printMethod.getCreator()
         return Promise.resolve({
             id: printMethod.getId(),

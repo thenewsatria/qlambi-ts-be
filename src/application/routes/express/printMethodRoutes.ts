@@ -12,6 +12,7 @@ import ControllerFactoryExpress from '../../controllers/factories/ControllerFact
 import ExpressJsendPresenter from '../../presenters/express/ExpressJsendPresenter'
 import CreatePrintMethodUseCase from '../../usecases/printMethod/CreatePrintMethodUseCase'
 import PrintMethodService from '../../../domain/services/PrintMethodService'
+import GetPrintMethodDetailUseCase from '../../usecases/printMethod/GetPrintMethodDetailUseCase'
 
 const printMethodRoutes = express.Router()
 
@@ -38,6 +39,7 @@ const printMethodService = new PrintMethodService(printMethodRepository, validat
 
 const getUserByTokenUC = new GetUserByAccesTokenUseCase(tokenService, userService)
 const createPrintMethodUC = new CreatePrintMethodUseCase(printMethodService)
+const getPrintMethodDetailUC = new GetPrintMethodDetailUseCase(printMethodService)
 
 const printMethodController = controllerFactory.createPrintMethodController(printMethodSchemas, presenter, errorTranslator)
 
@@ -45,6 +47,7 @@ const authMW = middlewareFactory.createAuthMiddleware(tokenSchemas, errorTransla
 
 
 printMethodRoutes.use(authMW.protect(getUserByTokenUC))
+printMethodRoutes.get("/:printMethodID", printMethodController.getPrintMethodDetail(getPrintMethodDetailUC))
 printMethodRoutes.use(authMW.checkAllowedRoles(['ADMIN']))
 printMethodRoutes.post("/", printMethodController.createPrintMethod(createPrintMethodUC))
 

@@ -1,6 +1,7 @@
 import { ZodEffects, ZodPipeline, ZodSchema, ZodString, z } from "zod";
 import PrintMethodVSchema from "../../../../interfaces/validators/schemas/PrintMethodVSchema";
 import PrintMethodCreationRequestDTO from "../../../../interfaces/dtos/printMethod/PrintMethodCreationRequestDTO";
+import PrintMethodIdDTO from "../../../../interfaces/dtos/printMethod/singular/PrintMethodIdDTO";
 
 class PrintMethodVSchemaZod implements PrintMethodVSchema {
     private static instance: PrintMethodVSchemaZod
@@ -48,6 +49,18 @@ class PrintMethodVSchemaZod implements PrintMethodVSchema {
             .email({
                 message: "Invalid email"
             })
+        })
+    }
+
+    getPrintMethodByIdRequestSchema(): ZodSchema<PrintMethodIdDTO> {
+        return z.object({
+            id: this.setNoEmptyString(
+                "Print Method ID",
+                z.string({
+                    required_error: "Print Method ID is required",
+                    invalid_type_error: "Print Method ID must be a string"
+                })
+            )
         })
     }
 }

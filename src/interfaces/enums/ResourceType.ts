@@ -4,7 +4,8 @@ enum ResourceType {
     PRODUCT = "PRODUCT",
     COLOR = "COLOR",
     SIZE = "SIZE",
-    ITEM = "ITEM"
+    ITEM = "ITEM",
+    PRINT_METHOD="PRINT METHOD"
 }
 
 export default ResourceType
